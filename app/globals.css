@@ -1,0 +1,262 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  background: theme("colors.bg-deep");
+  color: theme("colors.cream");
+  height: 100%;
+  overflow: hidden;
+}
+
+.app-scroll {
+  position: fixed;
+  inset: 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1;
+  border-radius: 18px;
+}
+
+.chrome-frame {
+  position: fixed;
+  inset: 14px;
+  border: 3px solid theme("colors.chrome-dim");
+  border-radius: 18px;
+  pointer-events: none;
+  z-index: 5;
+  box-shadow:
+    inset 0 0 0 6px theme("colors.bg-deep"),
+    inset 0 0 0 8px theme("colors.chrome-dim");
+}
+.chrome-frame::before,
+.chrome-frame::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: theme("colors.gold");
+  box-shadow: 0 0 0 2px theme("colors.chrome-dim");
+}
+.chrome-frame::before {
+  top: -6px;
+  left: -6px;
+}
+.chrome-frame::after {
+  bottom: -6px;
+  right: -6px;
+}
+
+.title-stroke {
+  -webkit-text-stroke: 3px theme("colors.charcoal");
+  text-shadow:
+    4px 4px 0 theme("colors.magenta"),
+    4px 4px 0 theme("colors.charcoal");
+}
+
+.sun-rays {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 900px;
+  height: 900px;
+  transform: translate(-50%, -50%);
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(244, 180, 0, 0.06) 0deg 6deg,
+    transparent 6deg 12deg
+  );
+  border-radius: 50%;
+  animation: spin 90s linear infinite;
+  z-index: 0;
+}
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.jeep-valance {
+  background: repeating-linear-gradient(
+    115deg,
+    theme("colors.magenta") 0 18px,
+    theme("colors.gold") 18px 36px
+  );
+  height: 26px;
+  border-bottom: 4px solid theme("colors.charcoal");
+}
+
+/* ---- Transit-themed page backgrounds ---- */
+
+/* Faint blueprint grid, evokes a transit map sheet */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(207, 224, 221, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(207, 224, 221, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Soft colored washes in the line colors */
+.bg-wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 12% 18%,
+      rgba(244, 180, 0, 0.09),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 88% 32%,
+      rgba(56, 189, 248, 0.09),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 50% 92%,
+      rgba(230, 57, 107, 0.09),
+      transparent 45%
+    );
+}
+
+/* Slow-drifting diagonal rails */
+.bg-rails {
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: repeating-linear-gradient(
+    62deg,
+    transparent 0 90px,
+    rgba(143, 173, 168, 0.07) 90px 92px,
+    transparent 92px 180px
+  );
+  animation: rail-drift 34s linear infinite;
+}
+
+@keyframes rail-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-180px, -95px, 0);
+  }
+}
+
+/* ---- Background train ---- */
+
+/* A horizontal rail the train runs along */
+.bg-train-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(143, 173, 168, 0.16) 0 14px,
+    transparent 14px 22px
+  );
+}
+
+.bg-train-track--upper {
+  top: 22%;
+}
+
+.bg-train-track--lower {
+  bottom: 18%;
+}
+
+/* The train itself — travels the full width, then loops */
+.bg-train {
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  opacity: 0.22;
+  will-change: transform;
+}
+
+.bg-train--upper {
+  top: 22%;
+  transform: translateY(-100%);
+  animation: train-run-right 26s linear infinite;
+}
+
+.bg-train--lower {
+  bottom: 18%;
+  animation: train-run-left 34s linear infinite;
+  animation-delay: -12s;
+}
+
+.bg-train__car {
+  width: 34px;
+  height: 15px;
+  border-radius: 4px 6px 2px 2px;
+  background: theme("colors.chrome-dim");
+  position: relative;
+}
+
+.bg-train__car--engine {
+  width: 42px;
+  height: 19px;
+  border-radius: 10px 5px 2px 2px;
+  background: theme("colors.gold");
+}
+
+/* little lit windows */
+.bg-train__car::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 5px;
+  right: 5px;
+  height: 4px;
+  border-radius: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(253, 246, 232, 0.75) 0 5px,
+    transparent 5px 9px
+  );
+}
+
+@keyframes train-run-right {
+  from {
+    left: -220px;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+@keyframes train-run-left {
+  from {
+    left: 100%;
+  }
+  to {
+    left: -220px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-rails,
+  .bg-train--upper,
+  .bg-train--lower {
+    animation: none;
+  }
+  .bg-train {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun-rays {
+    animation: none;
+  }
+}
