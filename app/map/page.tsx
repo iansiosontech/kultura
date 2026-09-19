@@ -1,24 +1,22 @@
 import Link from "next/link";
-import MapScreen from "@/components/MapScreen";
 import TransitBackground from "@/components/TransitBackground";
+import LineChoices from "@/components/LineChoices";
 
 export default function MapPage() {
   return (
-    <main className="relative flex h-full flex-col overflow-hidden bg-bg-deep px-[3vw] py-4 sm:px-[4vw]">
+    <main className="relative h-full overflow-hidden">
       <TransitBackground />
 
-      <div className="relative z-10 mb-4 flex shrink-0 items-center justify-between">
+      <div className="absolute left-5 top-5 z-30">
         <Link
           href="/"
-          className="rounded-full border border-chrome-dim px-4 py-2 font-mono text-[11px] tracking-wider text-chrome hover:border-gold hover:text-gold"
+          className="rounded-full border-2 border-[#3D3222] bg-[#FFFBF0] px-4 py-2 font-mono text-[11px] tracking-wider text-[#3D3222] shadow-[0_3px_0_#3D3222]"
         >
           &larr; Bumalik
         </Link>
-        <p className="font-display text-sm text-gold">KulturApp</p>
       </div>
-      <div className="relative z-10 min-h-0 flex-1">
-        <MapScreen />
-      </div>
+
+      <LineChoices />
     </main>
   );
 }
