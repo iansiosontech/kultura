@@ -12,8 +12,12 @@ export const scenes: Scene[] = Array.from({ length: 36 }, (_, i) => ({
 }));
 
 export const pad = (n: number) => String(n).padStart(2, "0");
-export const imageSrc = (n: number) => `/kwento/images/${pad(n)}.jpg`;
-// Files are named like "VO. SCENE 1.mp3" — spaces must be URL-encoded,
+
+// Matches the basePath GitHub Pages serves the site under (see next.config.mjs).
+const basePath = process.env.NODE_ENV === "production" ? "/kultura" : "";
+
+export const imageSrc = (n: number) => `${basePath}/images/${n}.jpg`;
+// Files are named like "VO. SCENE 1.mp4" — spaces must be URL-encoded,
 // so encode the filename only (not the folder slashes).
 export const audioSrc = (n: number) =>
-  `/kwento/audio/${encodeURIComponent(`VO. SCENE ${n}.mp4`)}`;
+  `${basePath}/audio/${encodeURIComponent(`VO. SCENE ${n}.mp4`)}`;
