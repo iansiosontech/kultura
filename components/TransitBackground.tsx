@@ -33,11 +33,7 @@ export default function TransitBackground() {
           SUSUNOD NA TREN<em>_</em>
         </u>
         <u>
-          <span className="tsbg-cg">AUTHOR</span>
-          <span className="tsbg-dot"> &middot; </span>
           <span className="tsbg-cm">MAIKLING KWENTO</span>
-          <span className="tsbg-dot"> &middot; </span>
-          <span className="tsbg-cs">ACTIVITIES</span>
         </u>
       </div>
 

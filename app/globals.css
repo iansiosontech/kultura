@@ -61,10 +61,7 @@
 .tsbg-board u+u{font-weight:700;letter-spacing:.14em;}
 .tsbg-board em{font-style:normal;animation:tsbg-blink 2.4s steps(1) infinite;}
 @keyframes tsbg-blink{0%,68%{opacity:1}69%,100%{opacity:.2}}
-.tsbg-cg{color:#F5B700}
 .tsbg-cm{color:#FF7A9C}
-.tsbg-cs{color:#6FD0F5}
-.tsbg-dot{color:rgba(217,201,164,.6)}
 
 .tsbg-pillar{position:absolute;top:13%;bottom:15%;width:18px;pointer-events:none;
   background:linear-gradient(90deg,#BFA87F,#E0D2B0 45%,#BFA87F);
@@ -211,12 +208,8 @@
   border-radius:50%;background:#E3CCA2;border:3px solid #3D3222;}
 .lc-card::before{left:-9px}
 .lc-card::after{right:-9px}
-.lc-author .lc-tag{background:#F5B700}
-.lc-author .lc-stripe,.lc-author .lc-ticket{background:#F5B700}
 .lc-kwento .lc-tag{background:#FF7A9C}
 .lc-kwento .lc-stripe,.lc-kwento .lc-ticket{background:#E6396B}
-.lc-acts .lc-tag{background:#6FD0F5}
-.lc-acts .lc-stripe,.lc-acts .lc-ticket{background:#2BA8DE}
 
 @media (prefers-reduced-motion: reduce){
   .tsbg-train,.tsbg-lamp i,.tsbg-steam b,.tsbg-motes i,
@@ -310,28 +303,4 @@
   .mk-btn{width:38px;height:34px}
   .mk-btn--play{width:46px}
   .mk-rail{order:5;flex-basis:100%}
-}
-
-/* ================= Author / Activities station list ================= */
-.sl{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;
-  padding:14px 3vw 12px;gap:14px;}
-.sl-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;}
-.sl-title{font:800 15px/1 ui-monospace,monospace;letter-spacing:.22em;color:#2A2317;
-  text-transform:uppercase;text-shadow:0 1px 0 rgba(255,255,255,.5);}
-.sl-list{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;
-  gap:14px;max-width:640px;width:100%;margin:0 auto;padding-bottom:8px;}
-.sl-card{position:relative;background:linear-gradient(180deg,#FFFBF0,#F6EBD4);
-  border:3px solid #3D3222;border-radius:12px;box-shadow:0 6px 0 #3D3222;
-  padding:14px 18px 14px 22px;border-left-width:10px;}
-.sl-num{font:700 10px/1 ui-monospace,monospace;letter-spacing:.14em;color:#6B5B3E;}
-.sl-name{margin-top:4px;font:800 17px/1.3 system-ui,sans-serif;color:#2A2317;}
-.sl-sub{margin-top:2px;font:700 12px/1.4 system-ui,sans-serif;color:#8A5A2B;}
-.sl-body{margin-top:8px;font:400 14px/1.6 Georgia,serif;color:#2A2317;}
-
-@media (max-width:860px){
-  .sl{padding:10px 4vw 10px;}
-  .sl-title{font-size:11px;letter-spacing:.14em}
-  .sl-card{padding:12px 14px 12px 16px;border-left-width:8px;}
-  .sl-name{font-size:15px}
-  .sl-body{font-size:13.5px}
 }
