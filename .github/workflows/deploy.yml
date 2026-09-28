@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # lets you trigger it manually from the Actions tab
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -41,6 +41,18 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
+
+      # Fallback publish for repos whose Pages "Source" is set to
+      # "Deploy from a branch" instead of "GitHub Actions" — in that mode
+      # the actions/deploy-pages step below reports success but the live
+      # site never actually changes, since branch-based Pages ignores the
+      # Actions artifact and only serves what's physically on this branch.
+      - name: Publish to gh-pages branch (fallback)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: out
+          publish_branch: gh-pages
 
   deploy:
     needs: build
