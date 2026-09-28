@@ -79,7 +79,7 @@ export default function KwentoPlayer() {
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
-    boundariesRef.current = [];
+    boundariesRef.current = beatBoundaries(scene.beats);
     a.load();
     if (playing) {
       a.play().catch(() => setPlaying(false));
@@ -104,13 +104,6 @@ export default function KwentoPlayer() {
         .then(() => setPlaying(true))
         .catch(() => setPlaying(false));
     }
-  };
-
-  // once duration is known, precompute when each beat's image should show
-  const handleLoadedMetadata = () => {
-    const a = audioRef.current;
-    if (!a || !isFinite(a.duration)) return;
-    boundariesRef.current = beatBoundaries(scene.beats, a.duration);
   };
 
   // advance the on-screen image/caption as the single scene audio plays
@@ -263,7 +256,6 @@ export default function KwentoPlayer() {
       <audio
         ref={audioRef}
         src={audioSrc(scene.scene)}
-        onLoadedMetadata={handleLoadedMetadata}
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleEnded}
         onPlay={() => setPlaying(true)}

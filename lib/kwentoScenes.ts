@@ -114,17 +114,20 @@ export const imageSrc = (n: number) => `${basePath}/images/${n}.jpg`;
 export const audioSrc = (scene: number) =>
   `${basePath}/audio/${encodeURIComponent(`VO. SCENE ${scene}.mp4`)}`;
 
-// Rough per-beat timing within one scene's audio, weighted by how much text
-// each beat carries (a proxy for how long it takes to narrate). There are no
-// real timestamps in the source material, so this is an approximation: it
-// splits the track's duration proportionally instead of into equal slices.
-export function beatBoundaries(beats: Beat[], duration: number): number[] {
-  const weights = beats.map((b) => b.text.length);
-  const total = weights.reduce((a, b) => a + b, 0) || 1;
+// Rough narration pace used to time when each beat's image/caption should
+// appear. There are no real per-word timestamps in the source material, so
+// this estimates each beat's on-screen window from its word count instead
+// of a fraction of audio.duration — some of the voice-over files report
+// duration as Infinity until they've finished playing once, which made the
+// old duration-based split silently never advance past the first beat.
+const WORDS_PER_SECOND = 2.2;
+
+export function beatBoundaries(beats: Beat[]): number[] {
   let acc = 0;
-  return weights.map((w) => {
-    const start = (acc / total) * duration;
-    acc += w;
+  return beats.map((b) => {
+    const start = acc;
+    const words = b.text.split(/\s+/).filter(Boolean).length;
+    acc += words / WORDS_PER_SECOND;
     return start;
   });
 }
