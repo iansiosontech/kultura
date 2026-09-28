@@ -2,12 +2,19 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { scenes, imageSrc, audioSrc, pad } from "@/lib/kwentoScenes";
+import {
+  scenes,
+  imageSrc,
+  audioSrc,
+  pad,
+  beatBoundaries,
+} from "@/lib/kwentoScenes";
 
-const STORAGE_KEY = "kultura-kwento-progress-v1";
+const STORAGE_KEY = "kultura-kwento-progress-v2";
 
 export default function KwentoPlayer() {
-  const [idx, setIdx] = useState(0);
+  const [sceneIdx, setSceneIdx] = useState(0);
+  const [beatIdx, setBeatIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [auto, setAuto] = useState(true);
   const [muted, setMuted] = useState(false);
@@ -16,16 +23,23 @@ export default function KwentoPlayer() {
   const [hydrated, setHydrated] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const scene = scenes[idx];
+  const boundariesRef = useRef<number[]>([]);
+
+  const scene = scenes[sceneIdx];
+  const beat = scene.beats[beatIdx];
 
   // restore last position
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const p = JSON.parse(raw) as { idx: number; seen: number[] };
-        if (typeof p.idx === "number" && p.idx >= 0 && p.idx < scenes.length) {
-          setIdx(p.idx);
+        const p = JSON.parse(raw) as { sceneIdx: number; seen: number[] };
+        if (
+          typeof p.sceneIdx === "number" &&
+          p.sceneIdx >= 0 &&
+          p.sceneIdx < scenes.length
+        ) {
+          setSceneIdx(p.sceneIdx);
         }
         if (Array.isArray(p.seen)) setSeen(p.seen);
       }
@@ -39,35 +53,39 @@ export default function KwentoPlayer() {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ idx, seen }));
+      window.localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ sceneIdx, seen })
+      );
     } catch {
       /* ignore */
     }
-  }, [idx, seen, hydrated]);
+  }, [sceneIdx, seen, hydrated]);
 
   // mark current scene as seen
   useEffect(() => {
-    setSeen((prev) => (prev.includes(scene.n) ? prev : [...prev, scene.n]));
-  }, [scene.n]);
+    setSeen((prev) =>
+      prev.includes(scene.scene) ? prev : [...prev, scene.scene]
+    );
+  }, [scene.scene]);
 
-  const go = useCallback(
-    (next: number) => {
-      const clamped = Math.max(0, Math.min(scenes.length - 1, next));
-      setIdx(clamped);
-    },
-    []
-  );
+  const goScene = useCallback((next: number) => {
+    const clamped = Math.max(0, Math.min(scenes.length - 1, next));
+    setSceneIdx(clamped);
+    setBeatIdx(0);
+  }, []);
 
   // load + optionally play whenever the scene changes
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
+    boundariesRef.current = [];
     a.load();
     if (playing) {
       a.play().catch(() => setPlaying(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idx]);
+  }, [sceneIdx]);
 
   useEffect(() => {
     const a = audioRef.current;
@@ -88,9 +106,28 @@ export default function KwentoPlayer() {
     }
   };
 
+  // once duration is known, precompute when each beat's image should show
+  const handleLoadedMetadata = () => {
+    const a = audioRef.current;
+    if (!a || !isFinite(a.duration)) return;
+    boundariesRef.current = beatBoundaries(scene.beats, a.duration);
+  };
+
+  // advance the on-screen image/caption as the single scene audio plays
+  const handleTimeUpdate = () => {
+    const a = audioRef.current;
+    const bounds = boundariesRef.current;
+    if (!a || bounds.length === 0) return;
+    let next = 0;
+    for (let i = 0; i < bounds.length; i++) {
+      if (a.currentTime >= bounds[i]) next = i;
+    }
+    setBeatIdx((prev) => (prev === next ? prev : next));
+  };
+
   const handleEnded = () => {
-    if (auto && idx < scenes.length - 1) {
-      go(idx + 1);
+    if (auto && sceneIdx < scenes.length - 1) {
+      goScene(sceneIdx + 1);
     } else {
       setPlaying(false);
     }
@@ -99,8 +136,8 @@ export default function KwentoPlayer() {
   // keyboard nav
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") go(idx + 1);
-      if (e.key === "ArrowLeft") go(idx - 1);
+      if (e.key === "ArrowRight") goScene(sceneIdx + 1);
+      if (e.key === "ArrowLeft") goScene(sceneIdx - 1);
       if (e.key === " ") {
         e.preventDefault();
         togglePlay();
@@ -109,9 +146,9 @@ export default function KwentoPlayer() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idx, playing]);
+  }, [sceneIdx, playing]);
 
-  const pct = ((idx + 1) / scenes.length) * 100;
+  const pct = ((sceneIdx + 1) / scenes.length) * 100;
 
   return (
     <>
@@ -122,27 +159,27 @@ export default function KwentoPlayer() {
           </Link>
           <div className="mk-title">Maikling Kwento</div>
           <div className="mk-count">
-            EKSENA {pad(scene.n)} / {scenes.length}
+            SCENE {pad(scene.scene)} / {pad(scenes.length)}
           </div>
         </div>
 
         <div className="mk-stage">
           <div className="mk-window">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={imageSrc(scene.n)} alt={`Eksena ${scene.n}`} />
+            <img src={imageSrc(beat.n)} alt={`Larawan ${beat.n}`} />
           </div>
         </div>
 
         <div className="mk-text">
-          <p>{scene.text}</p>
+          <p>{beat.text}</p>
         </div>
 
         <div className="mk-ctrl">
           <button
             type="button"
             className="mk-btn"
-            onClick={() => go(idx - 1)}
-            disabled={idx === 0}
+            onClick={() => goScene(sceneIdx - 1)}
+            disabled={sceneIdx === 0}
             aria-label="Nakaraang eksena"
           >
             &#8676;
@@ -158,8 +195,8 @@ export default function KwentoPlayer() {
           <button
             type="button"
             className="mk-btn"
-            onClick={() => go(idx + 1)}
-            disabled={idx === scenes.length - 1}
+            onClick={() => goScene(sceneIdx + 1)}
+            disabled={sceneIdx === scenes.length - 1}
             aria-label="Susunod na eksena"
           >
             &#8677;
@@ -170,7 +207,7 @@ export default function KwentoPlayer() {
             onClick={(e) => {
               const r = e.currentTarget.getBoundingClientRect();
               const ratio = (e.clientX - r.left) / r.width;
-              go(Math.round(ratio * (scenes.length - 1)));
+              goScene(Math.round(ratio * (scenes.length - 1)));
             }}
           >
             <div className="mk-fill" style={{ width: `${pct}%` }} />
@@ -205,23 +242,29 @@ export default function KwentoPlayer() {
       <div className={`mk-jump ${jumpOpen ? "open" : ""}`}>
         {scenes.map((s, i) => (
           <b
-            key={s.n}
+            key={s.scene}
             className={
-              i === idx ? "cur" : seen.includes(s.n) ? "seen" : undefined
+              i === sceneIdx
+                ? "cur"
+                : seen.includes(s.scene)
+                ? "seen"
+                : undefined
             }
             onClick={() => {
-              go(i);
+              goScene(i);
               setJumpOpen(false);
             }}
           >
-            {s.n}
+            {s.scene}
           </b>
         ))}
       </div>
 
       <audio
         ref={audioRef}
-        src={audioSrc(scene.n)}
+        src={audioSrc(scene.scene)}
+        onLoadedMetadata={handleLoadedMetadata}
+        onTimeUpdate={handleTimeUpdate}
         onEnded={handleEnded}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
