@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Bungee, Literata, Space_Mono } from "next/font/google";
 import "./globals.css";
-import { VisitedProvider } from "@/components/VisitedProvider";
 
 const bungee = Bungee({
   subsets: ["latin"],
@@ -37,9 +36,7 @@ export default function RootLayout({
       <body
         className={`${bungee.variable} ${literata.variable} ${spaceMono.variable} font-body`}
       >
-        <div className="app-scroll">
-          <VisitedProvider>{children}</VisitedProvider>
-        </div>
+        <div className="app-scroll">{children}</div>
         <div className="chrome-frame" />
       </body>
     </html>
