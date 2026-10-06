@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   scenes,
   imageSrc,
@@ -14,12 +15,15 @@ import StationMap from "@/components/StationMap";
 const STORAGE_KEY = "kultura-kwento-progress-v2";
 
 export default function KwentoPlayer() {
+  const router = useRouter();
   const [sceneIdx, setSceneIdx] = useState(0);
   const [beatIdx, setBeatIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [auto, setAuto] = useState(true);
   const [muted, setMuted] = useState(false);
-  const [jumpOpen, setJumpOpen] = useState(false);
+  // the station map is the entry screen — it's open until a station is picked
+  const [jumpOpen, setJumpOpen] = useState(true);
+  const [started, setStarted] = useState(false);
   const [seen, setSeen] = useState<number[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
@@ -42,7 +46,10 @@ export default function KwentoPlayer() {
         ) {
           setSceneIdx(p.sceneIdx);
         }
-        if (Array.isArray(p.seen)) setSeen(p.seen);
+        if (Array.isArray(p.seen) && p.seen.length > 0) {
+          setSeen(p.seen);
+          setStarted(true);
+        }
       }
     } catch {
       /* ignore */
@@ -240,9 +247,15 @@ export default function KwentoPlayer() {
           seen={seen}
           onSelect={(station) => {
             goScene(station - 1);
+            setStarted(true);
             setJumpOpen(false);
           }}
-          onClose={() => setJumpOpen(false)}
+          onClose={() => {
+            // before anything's been picked, the back arrow exits Kwento
+            // entirely — there's no player view yet to fall back to.
+            if (started) setJumpOpen(false);
+            else router.push("/map");
+          }}
         />
       )}
 
