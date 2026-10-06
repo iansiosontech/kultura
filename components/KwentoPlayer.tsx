@@ -9,6 +9,7 @@ import {
   pad,
   beatBoundaries,
 } from "@/lib/kwentoScenes";
+import StationMap from "@/components/StationMap";
 
 const STORAGE_KEY = "kultura-kwento-progress-v2";
 
@@ -227,31 +228,23 @@ export default function KwentoPlayer() {
             className="mk-toggle"
             onClick={() => setJumpOpen((v) => !v)}
           >
-            EKSENA
+            ISTASYON
           </button>
         </div>
       </div>
 
-      <div className={`mk-jump ${jumpOpen ? "open" : ""}`}>
-        {scenes.map((s, i) => (
-          <b
-            key={s.scene}
-            className={
-              i === sceneIdx
-                ? "cur"
-                : seen.includes(s.scene)
-                ? "seen"
-                : undefined
-            }
-            onClick={() => {
-              goScene(i);
-              setJumpOpen(false);
-            }}
-          >
-            {s.scene}
-          </b>
-        ))}
-      </div>
+      {jumpOpen && (
+        <StationMap
+          total={scenes.length}
+          current={scene.scene}
+          seen={seen}
+          onSelect={(station) => {
+            goScene(station - 1);
+            setJumpOpen(false);
+          }}
+          onClose={() => setJumpOpen(false)}
+        />
+      )}
 
       <audio
         ref={audioRef}
