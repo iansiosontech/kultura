@@ -245,6 +245,7 @@ export default function KwentoPlayer() {
           total={scenes.length}
           current={scene.scene}
           seen={seen}
+          titles={scenes.map((s) => s.title)}
           onSelect={(station) => {
             goScene(station - 1);
             setStarted(true);

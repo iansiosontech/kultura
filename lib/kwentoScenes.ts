@@ -5,6 +5,7 @@ export type Beat = {
 
 export type Scene = {
   scene: number; // 1-10 — resolves to the "VO. SCENE {scene}.mp4" audio file
+  title: string; // short label for the station map
   beats: Beat[]; // images/captions that advance while that one audio plays
 };
 
@@ -17,6 +18,7 @@ export type Scene = {
 export const scenes: Scene[] = [
   {
     scene: 1,
+    title: "Pag-alis sa Tutuban",
     beats: [
       { n: 1, text: "Ang tren ay tumulak sa gitna ng sali-salimuot na mga ingay." },
       { n: 2, text: "Nagsisigawan ang mga batang nagtitinda ng mga babasahin — Tibune, mama, Tribune, Taliba. Ubos na po. Liwayway, bagong labas." },
@@ -26,6 +28,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 2,
+    title: "Sa Loob ng Tren",
     beats: [
       { n: 5, text: "Huminga nang maluwag ang kanyang Tiya Juana at ang sabi, \"Salamat at tayo'y nakatulak na rin. Kay init doon sa istasyon.\"" },
       { n: 6, text: "Ang galaw ng makina ngayon ay mabilis na't tugma-tugma, tila pintig ng isang pusong wala nang alinlangan." },
@@ -35,6 +38,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 3,
+    title: "Pagdating sa Malawig",
     beats: [
       { n: 9, text: "Isang daang makitid, paliko-liko, natatalukapan ng makapal at manilaw-nilaw na alikabok." },
       { n: 10, text: "Mga puno ng kawayan, mangga, niyog at akasya. Mga bahay na pawid, luma na ang karamihan at sunog sa araw ang mga dingding at bubong." },
@@ -43,6 +47,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 4,
+    title: "Mga Kamag-anak",
     beats: [
       { n: 12, text: "Hindi mapatid-patid ang pagpapakilala ng kanyang Tiya Juana." },
       { n: 13, text: "Sila ang iyong Lolo Tasyo, at sila ang iyong Lola Ines. Ang mga pinsan mong Juan, Seling, Marya at Asyas. Ang iyong Nana Bito. Ang iyong Tata Enteng. Yukod at ngiti rito, halik ng kamay roon." },
@@ -52,6 +57,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 5,
+    title: "Sa Harap ng Bangkay",
     beats: [
       { n: 16, text: "Isang manipis na dingding ng sawali ang tanging nakapagitan sa bulwagan at sa pinakaloob ng bahay, na siyang kinabuburulan ng patay." },
       { n: 17, text: "Napawi sa kanyang pandinig ang alingawngaw sa labas, at dumampi sa kanyang puso ang katahimikan ng kamatayan." },
@@ -61,6 +67,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 6,
+    title: "Mga Alaala",
     beats: [
       { n: 20, text: "Umabot siya ng isang album sa mesang kalapit, binuksan iyon, at pinagmuni-muni ang mahiwaga at makapangyarihang kaugnayan ng dugo na nagbubuklod ng mga tao." },
       { n: 21, text: "Pagkakain ng tanghalian ay nanaog si Danding at nagtungo sa bukid sa may likuran ng bahay." },
@@ -71,6 +78,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 7,
+    title: "Kwento ni Lolo Tasyo",
     beats: [
       { n: 25, text: "\"May mga sandali pong kailangan ng tao ang mapag-isa.\"" },
       { n: 26, text: "Tumayo bigla si Lolo Tasyo at itinuro ng itak ang hangganan ng bukid. Doon siya malimit magpalipad ng saranggola noong bata pa siyang munti." },
@@ -80,6 +88,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 8,
+    title: "Ang Unang Tula",
     beats: [
       { n: 29, text: "\"At doon, sa kinauupuan mo kanina, doon niya isinulat ang kauna-unahan niyang tula — isang maikling papuri sa kagandahan ng isa sa mga dalagang nakilala niya sa bayan. May tagong kapilyohan ang ama mo.\"" },
       { n: 30, text: "\"Ano ang pinanood mo sa bukid?\" ang usisang biro ng isa sa mga bagong tuklas niyang pinsan. \"Ang araw,\" ang tugon ni Danding, sabay pikit ng mga mata niyang naninibago at hindi halos makakita sa agaw-dilim na tila nakalambong sa bahay." },
@@ -87,6 +96,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 9,
+    title: "Sa Libingan",
     beats: [
       { n: 31, text: "Ang libingan ay nasa gilid ng simbahan, bagay na nagpapagunita kay Danding ng sumpa ng Diyos kay Adan sa mga anak nito, at ng malungkot at batbat-sakit na pagkakawalay nila, na kamatayan lamang ang lubusang magwawakas." },
       { n: 32, text: "Handa na ang hukay. Wala na ang nalalabi kundi ang paghulog at pagtatabon sa kabaong. Ngunit sa huling sandali ay binuksang muli ang takip sa tapat ng mukha ng bangkay, upang ito'y minsan pang masulyapan ng mga naulila." },
@@ -95,6 +105,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 10,
+    title: "Pag-uwi sa Puso",
     beats: [
       { n: 34, text: "Lumulubog na ang araw, at nagsisimula nang lumamig ang hangin. Ang abuhing kamay ng takipsilim ay nakaamba na sa himpapawid. Umupo si Danding sa tabi ng pulutong ng mga kawayan at pinahid ang pawis sa kanyang mukha at leeg." },
       { n: 35, text: "Sa kapirasong lupang ito, na siyang sinilangan ng ama niya, ay napanatag ang kanyang puso." },
