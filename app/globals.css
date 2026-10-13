@@ -41,6 +41,54 @@
   .hero-bg img,.hero-rays,.hero-p{animation:none!important;}
 }
 
+/* ================= Map hero: train-window artwork ================= */
+
+.mapbg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#2B1B10;}
+.mapbg img{position:absolute;inset:-5%;width:110%;height:110%;object-fit:cover;
+  object-position:50% 46%;animation:mapbg-sway 15s ease-in-out infinite alternate;}
+@keyframes mapbg-sway{
+  0%{transform:translate3d(-1.1%,0,0) scale(1.03)}
+  50%{transform:translate3d(.4%,-.5%,0) scale(1.05)}
+  100%{transform:translate3d(1.1%,0,0) scale(1.03)}}
+
+.mapbg-glint{position:absolute;top:-20%;bottom:-20%;left:-30%;width:26%;pointer-events:none;
+  mix-blend-mode:screen;opacity:.5;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,244,210,.55) 50%,transparent 70%);
+  animation:mapbg-glint 9s ease-in-out infinite;animation-delay:1.5s;}
+@keyframes mapbg-glint{
+  0%,78%{transform:translateX(0)}
+  100%{transform:translateX(620%)}}
+
+.mapbg-dust{position:absolute;inset:0;pointer-events:none;}
+.mapbg-p{position:absolute;bottom:-5%;border-radius:50%;
+  background:radial-gradient(circle,#FFF2CF,rgba(255,242,207,0) 72%);
+  box-shadow:0 0 7px 2px rgba(255,225,160,.45);
+  animation:mapbg-float linear infinite;}
+@keyframes mapbg-float{
+  0%{transform:translateY(0) translateX(0);opacity:0}
+  14%{opacity:.7}
+  86%{opacity:.3}
+  100%{transform:translateY(-85vh) translateX(3vw);opacity:0}}
+.mapbg-p--1{left:10%;width:3px;height:3px;animation-duration:16s;animation-delay:-1s;}
+.mapbg-p--2{left:24%;width:4px;height:4px;animation-duration:20s;animation-delay:-8s;}
+.mapbg-p--3{left:38%;width:3px;height:3px;animation-duration:13s;animation-delay:-4s;}
+.mapbg-p--4{left:52%;width:5px;height:5px;animation-duration:22s;animation-delay:-11s;}
+.mapbg-p--5{left:64%;width:3px;height:3px;animation-duration:15s;animation-delay:-6s;}
+.mapbg-p--6{left:76%;width:4px;height:4px;animation-duration:18s;animation-delay:-2s;}
+.mapbg-p--7{left:86%;width:3px;height:3px;animation-duration:14s;animation-delay:-9s;}
+.mapbg-p--8{left:94%;width:4px;height:4px;animation-duration:19s;animation-delay:-5s;}
+
+.mapbg-scrim{position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(20,12,4,.45) 0%,rgba(20,12,4,0) 22%,rgba(20,12,4,0) 70%,rgba(20,12,4,.4) 100%);}
+
+.mapbg-vignette{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 46%,transparent 48%,rgba(12,7,3,.42) 100%);}
+
+@media (prefers-reduced-motion: reduce){
+  .mapbg img,.mapbg-glint,.mapbg-p{animation:none!important;}
+}
+
 /* ================= ambient animated background ================= */
 .amb{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
 
@@ -136,8 +184,8 @@
 /* ---- line choice: boarding pass ---- */
 .lc-wrap{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:20px;padding:0 4vw;}
-.lc-eyebrow{font:800 13px/1 ui-monospace,monospace;letter-spacing:.3em;color:#3D3222;
-  text-transform:uppercase;text-shadow:0 1px 0 rgba(255,255,255,.4);}
+.lc-eyebrow{font:800 13px/1 ui-monospace,monospace;letter-spacing:.3em;color:#FFE9BE;
+  text-transform:uppercase;text-shadow:0 2px 8px rgba(0,0,0,.6);}
 
 .lc-pass{position:relative;width:340px;max-width:90vw;min-width:0;border-radius:18px;
   cursor:pointer;background:linear-gradient(180deg,#FFFBF0,#F2E6CC);border:3px solid #3D3222;

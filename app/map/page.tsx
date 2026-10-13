@@ -1,11 +1,11 @@
 import Link from "next/link";
-import AmbientSky from "@/components/AmbientSky";
+import TrainWindowBackground from "@/components/TrainWindowBackground";
 import LineChoices from "@/components/LineChoices";
 
 export default function MapPage() {
   return (
     <main className="relative h-full overflow-hidden">
-      <AmbientSky />
+      <TrainWindowBackground />
 
       <div className="absolute left-5 top-5 z-30">
         <Link
