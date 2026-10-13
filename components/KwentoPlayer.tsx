@@ -12,7 +12,7 @@ import {
 } from "@/lib/kwentoScenes";
 import StationMap from "@/components/StationMap";
 
-const STORAGE_KEY = "kultura-kwento-progress-v2";
+const STORAGE_KEY = "kultura-kwento-progress-v3";
 
 export default function KwentoPlayer() {
   const router = useRouter();
@@ -25,7 +25,9 @@ export default function KwentoPlayer() {
   const [jumpOpen, setJumpOpen] = useState(true);
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
-  const [seen, setSeen] = useState<number[]>([]);
+  // scenes whose audio has actually played through at least once — this is
+  // what unlocks the next station, not merely having opened a scene.
+  const [completed, setCompleted] = useState<number[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -34,23 +36,28 @@ export default function KwentoPlayer() {
   const scene = scenes[sceneIdx];
   const beat = scene.beats[beatIdx];
 
+  // the next station that isn't finished yet — this is where the train sits
+  // on the map, and nothing past it is unlocked.
+  const maxCompleted = completed.length ? Math.max(...completed) : 0;
+  const activeStation = Math.min(maxCompleted + 1, scenes.length);
+
   // restore last position
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const p = JSON.parse(raw) as { sceneIdx: number; seen: number[] };
+        const p = JSON.parse(raw) as { sceneIdx: number; completed: number[] };
+        if (Array.isArray(p.completed)) setCompleted(p.completed);
+        const maxDone = p.completed?.length ? Math.max(...p.completed) : 0;
+        const allowedMax = Math.min(maxDone + 1, scenes.length) - 1;
         if (
           typeof p.sceneIdx === "number" &&
           p.sceneIdx >= 0 &&
-          p.sceneIdx < scenes.length
+          p.sceneIdx <= allowedMax
         ) {
           setSceneIdx(p.sceneIdx);
         }
-        if (Array.isArray(p.seen) && p.seen.length > 0) {
-          setSeen(p.seen);
-          setStarted(true);
-        }
+        if (p.completed?.length) setStarted(true);
       }
     } catch {
       /* ignore */
@@ -64,26 +71,23 @@ export default function KwentoPlayer() {
     try {
       window.localStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ sceneIdx, seen })
+        JSON.stringify({ sceneIdx, completed })
       );
     } catch {
       /* ignore */
     }
-  }, [sceneIdx, seen, hydrated]);
+  }, [sceneIdx, completed, hydrated]);
 
-  // mark current scene as seen
-  useEffect(() => {
-    setSeen((prev) =>
-      prev.includes(scene.scene) ? prev : [...prev, scene.scene]
-    );
-  }, [scene.scene]);
-
-  const goScene = useCallback((next: number) => {
-    const clamped = Math.max(0, Math.min(scenes.length - 1, next));
-    setSceneIdx(clamped);
-    setBeatIdx(0);
-    setEnded(false);
-  }, []);
+  const goScene = useCallback(
+    (next: number) => {
+      const maxUnlockedIdx = Math.min(activeStation, scenes.length) - 1;
+      const clamped = Math.max(0, Math.min(maxUnlockedIdx, next));
+      setSceneIdx(clamped);
+      setBeatIdx(0);
+      setEnded(false);
+    },
+    [activeStation]
+  );
 
   // load + optionally play whenever the scene changes
   useEffect(() => {
@@ -129,6 +133,9 @@ export default function KwentoPlayer() {
   };
 
   const handleEnded = () => {
+    setCompleted((prev) =>
+      prev.includes(scene.scene) ? prev : [...prev, scene.scene]
+    );
     if (auto && sceneIdx < scenes.length - 1) {
       goScene(sceneIdx + 1);
     } else {
@@ -217,7 +224,7 @@ export default function KwentoPlayer() {
             type="button"
             className="mk-btn"
             onClick={() => goScene(sceneIdx + 1)}
-            disabled={sceneIdx === scenes.length - 1}
+            disabled={scene.scene >= activeStation}
             aria-label="Susunod na eksena"
           >
             &#8677;
@@ -263,8 +270,8 @@ export default function KwentoPlayer() {
       {jumpOpen && (
         <StationMap
           total={scenes.length}
-          current={scene.scene}
-          seen={seen}
+          active={activeStation}
+          completed={completed}
           titles={scenes.map((s) => s.title)}
           onSelect={(station) => {
             goScene(station - 1);
