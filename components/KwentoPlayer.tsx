@@ -10,7 +10,7 @@ import {
   pad,
   beatBoundaries,
 } from "@/lib/kwentoScenes";
-import StationMap from "@/components/StationMap";
+import AtStation from "@/components/AtStation";
 
 const STORAGE_KEY = "kultura-kwento-progress-v3";
 
@@ -21,10 +21,14 @@ export default function KwentoPlayer() {
   const [playing, setPlaying] = useState(false);
   const [auto, setAuto] = useState(true);
   const [muted, setMuted] = useState(false);
-  // the station map is the entry screen — it's open until a station is picked
+  // the at-station screen is the entry screen — it's open until SIMULAN
+  // is pressed, and again automatically between stations.
   const [jumpOpen, setJumpOpen] = useState(true);
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
+  // true for the 3s "train chugging forward" transition after a station's
+  // audio ends, before the next station's sign is revealed
+  const [advancing, setAdvancing] = useState(false);
   // scenes whose audio has actually played through at least once — this is
   // what unlocks the next station, not merely having opened a scene.
   const [completed, setCompleted] = useState<number[]>([]);
@@ -136,10 +140,20 @@ export default function KwentoPlayer() {
     setCompleted((prev) =>
       prev.includes(scene.scene) ? prev : [...prev, scene.scene]
     );
-    if (auto && sceneIdx < scenes.length - 1) {
-      goScene(sceneIdx + 1);
+    setPlaying(false);
+    if (sceneIdx < scenes.length - 1) {
+      // the train "chugs forward" in place for 3s before the next
+      // station's sign is revealed — not an instant cut to station N+1
+      const nextIdx = sceneIdx + 1;
+      setAdvancing(true);
+      setJumpOpen(true);
+      setTimeout(() => {
+        setSceneIdx(nextIdx);
+        setBeatIdx(0);
+        setEnded(false);
+        setAdvancing(false);
+      }, 3000);
     } else {
-      setPlaying(false);
       setEnded(true);
     }
   };
@@ -268,13 +282,18 @@ export default function KwentoPlayer() {
       </div>
 
       {jumpOpen && (
-        <StationMap
-          total={scenes.length}
-          active={activeStation}
-          completed={completed}
-          titles={scenes.map((s) => s.title)}
-          onSelect={(station) => {
-            goScene(station - 1);
+        <AtStation
+          station={advancing ? scene.scene : activeStation}
+          title={
+            advancing
+              ? scene.title
+              : scenes[activeStation - 1]?.title ?? scene.title
+          }
+          advancing={advancing}
+          onStart={() => {
+            setSceneIdx(activeStation - 1);
+            setBeatIdx(0);
+            setEnded(false);
             setStarted(true);
             setJumpOpen(false);
           }}
