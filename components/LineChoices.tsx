@@ -90,8 +90,8 @@ export default function LineChoices() {
           ref={gateRef}
           className={`tk-gate ${stage === "inserted" ? "tk-gate--open" : ""}`}
         >
-          <div className="tk-gate-arm tk-gate-arm--l" />
-          <div className="tk-gate-arm tk-gate-arm--r" />
+          <div className="tk-gate-arm tk-gate-arm--t" />
+          <div className="tk-gate-arm tk-gate-arm--b" />
           <div className="tk-gate-pad">
             <span className="tk-gate-icon">
               {stage === "inserted" ? "✓" : "🎫"}
