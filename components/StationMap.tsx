@@ -1,13 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import AmbientSky from "@/components/AmbientSky";
-
-// Zigzagging x positions (percent) for each station along the line, winding
-// bottom (station 1) to top (station `total`) — matches the hand-drawn
-// station-map reference from the client.
-const ZIGZAG_X = [30, 68];
+import StationPlatformBackground from "@/components/StationPlatformBackground";
 
 type StationMapProps = {
   total: number;
@@ -26,31 +21,42 @@ export default function StationMap({
   onSelect,
   onClose,
 }: StationMapProps) {
-  const currentRef = useRef<HTMLButtonElement | null>(null);
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const nodeRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [activeX, setActiveX] = useState<number | null>(null);
+
+  const stations = Array.from({ length: total }, (_, i) => i + 1);
+  const stillBoarding = !completed.includes(active);
+
+  const measure = () => {
+    const btn = nodeRefs.current[active - 1];
+    if (!btn) return;
+    setActiveX(btn.offsetLeft + btn.offsetWidth / 2);
+  };
+
+  useLayoutEffect(() => {
+    measure();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, total]);
 
   useEffect(() => {
-    currentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, []);
+    const onResize = () => measure();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
 
-  const points = Array.from({ length: total }, (_, i) => {
-    const t = total === 1 ? 0 : i / (total - 1);
-    return {
-      station: i + 1,
-      x: ZIGZAG_X[i % 2],
-      y: 92 - t * 84, // station 1 near the bottom, station `total` near the top
-      side: i % 2 === 0 ? "right" : "left", // which side the title sits on
-    };
-  });
-
-  const polyline = points.map((p) => `${p.x},${p.y}`).join(" ");
-
-  const trainFrom = points[Math.max(0, active - 2)];
-  const trainTo = points[Math.min(total, active) - 1];
-  const stillBoarding = !completed.includes(active);
+  useEffect(() => {
+    nodeRefs.current[active - 1]?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [active]);
 
   return (
     <div className="stn-overlay">
-      <AmbientSky variant="map" />
+      <StationPlatformBackground />
 
       <div className="stn-head">
         <button
@@ -70,81 +76,81 @@ export default function StationMap({
         </span>
       </div>
 
-      <div className="stn-path">
-        <svg
-          className="stn-line"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
-          <polyline className="stn-rail-bed" points={polyline} vectorEffect="non-scaling-stroke" />
-          <polyline className="stn-rail-mid" points={polyline} vectorEffect="non-scaling-stroke" />
-          <polyline className="stn-rail-tie" points={polyline} vectorEffect="non-scaling-stroke" />
-        </svg>
+      <div className="stn-strip-wrap">
+        <div className="stn-row" ref={rowRef}>
+          <div className="stn-rail-bed" aria-hidden="true" />
+          <div className="stn-rail-mid" aria-hidden="true" />
+          <div className="stn-rail-tie" aria-hidden="true" />
 
-        {points.map((p) => {
-          const isDone = completed.includes(p.station);
-          const isActive = p.station === active;
-          const isLocked = p.station > active;
-          return (
+          {stations.map((station) => {
+            const isDone = completed.includes(station);
+            const isActive = station === active;
+            const isLocked = station > active;
+            return (
+              <div key={station} className="stn-col">
+                <span
+                  className={`stn-sign ${isLocked ? "stn-sign--locked" : ""}`}
+                >
+                  {isLocked ? "???" : titles[station - 1]}
+                </span>
+                <span className="stn-post" aria-hidden="true" />
+                <button
+                  ref={(el) => {
+                    nodeRefs.current[station - 1] = el;
+                  }}
+                  type="button"
+                  className={`stn-node ${isActive ? "cur" : isDone ? "seen" : ""} ${
+                    isLocked ? "locked" : ""
+                  }`}
+                  disabled={isLocked}
+                  onClick={() => !isLocked && onSelect(station)}
+                  aria-label={
+                    isLocked
+                      ? `Eksena ${station}: naka-lock pa`
+                      : `Eksena ${station}: ${titles[station - 1] ?? ""}`
+                  }
+                >
+                  {isActive && <span className="stn-pulse" />}
+                  {isDone && !isActive && (
+                    <span className="stn-check">&#10003;</span>
+                  )}
+                  {isLocked ? (
+                    <span className="stn-lock" aria-hidden="true">
+                      &#128274;
+                    </span>
+                  ) : (
+                    <>
+                      <span className="stn-node-num">{station}</span>
+                      <span className="stn-node-bar" />
+                    </>
+                  )}
+                </button>
+              </div>
+            );
+          })}
+
+          {activeX !== null && stillBoarding && (
             <div
-              key={p.station}
-              className="stn-stop"
-              style={{ left: `${p.x}%`, top: `${p.y}%` }}
+              className="stn-board"
+              style={{ left: activeX }}
+              aria-hidden="true"
             >
-              <button
-                ref={isActive ? currentRef : undefined}
-                type="button"
-                className={`stn-node ${isActive ? "cur" : isDone ? "seen" : ""} ${
-                  isLocked ? "locked" : ""
-                }`}
-                disabled={isLocked}
-                onClick={() => !isLocked && onSelect(p.station)}
-                aria-label={
-                  isLocked
-                    ? `Eksena ${p.station}: naka-lock pa`
-                    : `Eksena ${p.station}: ${titles[p.station - 1] ?? ""}`
-                }
-              >
-                {isActive && <span className="stn-pulse" />}
-                {isDone && !isActive && <span className="stn-check">&#10003;</span>}
-                {isLocked ? (
-                  <span className="stn-lock" aria-hidden="true">
-                    &#128274;
-                  </span>
-                ) : (
-                  <>
-                    <span className="stn-node-num">{p.station}</span>
-                    <span className="stn-node-bar" />
-                  </>
-                )}
-              </button>
-              <span
-                className={`stn-label stn-label--${p.side} ${
-                  isLocked ? "stn-label--locked" : ""
-                }`}
-              >
-                {isLocked ? "???" : titles[p.station - 1]}
-              </span>
-
-              {isActive && stillBoarding && (
-                <div className="stn-board" aria-hidden="true">
-                  <span className="stn-pax stn-pax--1">&#128694;</span>
-                  <span className="stn-pax stn-pax--2">&#128694;</span>
-                </div>
-              )}
+              <span className="stn-pax stn-pax--1">&#128694;</span>
+              <span className="stn-pax stn-pax--2">&#128694;</span>
             </div>
-          );
-        })}
+          )}
 
-        <motion.div
-          className="stn-train-pos"
-          initial={{ left: `${trainFrom.x}%`, top: `${trainFrom.y}%` }}
-          animate={{ left: `${trainTo.x}%`, top: `${trainTo.y}%` }}
-          transition={{ duration: 1.6, ease: "easeInOut" }}
-          aria-hidden="true"
-        >
-          <span className="stn-train">&#128642;</span>
-        </motion.div>
+          {activeX !== null && (
+            <motion.div
+              className="stn-train-pos"
+              animate={{ left: activeX }}
+              transition={{ duration: 1.2, ease: "easeInOut" }}
+              aria-hidden="true"
+            >
+              <span className="stn-train">&#128642;</span>
+            </motion.div>
+          )}
+        </div>
       </div>
     </div>
   );

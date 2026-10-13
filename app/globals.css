@@ -337,10 +337,40 @@
 .mk-dot{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;
   background:#F5B700;border:2px solid #3D3222;transform:translate(-50%,-50%);}
 
-/* ---- station map (scene picker) ---- */
-.stn-overlay{position:fixed;inset:0;z-index:50;overflow-y:auto;overflow-x:hidden;
-  background:#E3CCA2;}
-.stn-head{position:sticky;top:0;z-index:51;display:flex;align-items:center;gap:12px;
+/* ---- station platform background ---- */
+.stnbg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#1C140A;}
+.stnbg img{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;
+  object-position:50% 42%;animation:hero-pan 42s ease-in-out infinite alternate;}
+
+.stnbg-rays{position:absolute;inset:-20%;mix-blend-mode:screen;opacity:.55;pointer-events:none;
+  background:conic-gradient(from 200deg at 18% 8%,
+    transparent 0deg,rgba(255,236,190,.3) 6deg,transparent 20deg,
+    transparent 336deg,rgba(255,236,190,.2) 350deg,transparent 360deg);
+  animation:hero-rotate 80s linear infinite;}
+
+.stnbg-particles{position:absolute;inset:0;pointer-events:none;}
+.stnbg-p{position:absolute;bottom:-5%;border-radius:50%;
+  background:radial-gradient(circle,#FFE3A3,rgba(255,227,163,0) 72%);
+  box-shadow:0 0 8px 2px rgba(255,200,120,.5);animation:hero-float linear infinite;}
+.stnbg-p--1{left:8%;width:4px;height:4px;animation-duration:18s;animation-delay:-2s;}
+.stnbg-p--2{left:24%;width:3px;height:3px;animation-duration:14s;animation-delay:-8s;}
+.stnbg-p--3{left:42%;width:5px;height:5px;animation-duration:21s;animation-delay:-4s;}
+.stnbg-p--4{left:61%;width:3px;height:3px;animation-duration:16s;animation-delay:-11s;}
+.stnbg-p--5{left:78%;width:4px;height:4px;animation-duration:19s;animation-delay:-6s;}
+.stnbg-p--6{left:92%;width:3px;height:3px;animation-duration:15s;animation-delay:-13s;}
+
+.stnbg-scrim{position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(20,14,6,.22) 0%,rgba(20,14,6,0) 26%,rgba(20,14,6,.1) 56%,rgba(16,11,4,.68) 100%);}
+
+@media (prefers-reduced-motion: reduce){
+  .stnbg img,.stnbg-rays,.stnbg-p{animation:none!important;}
+}
+
+/* ---- station map (scene picker): a horizontal row of stops ---- */
+.stn-overlay{position:fixed;inset:0;z-index:50;overflow:hidden;
+  display:flex;flex-direction:column;background:#1C140A;}
+.stn-head{position:relative;z-index:51;flex-shrink:0;display:flex;align-items:center;gap:12px;
   padding:14px 16px;background:linear-gradient(180deg,#2E4A44,#24433D);
   border-bottom:3px solid #D9C9A4;box-shadow:0 4px 14px rgba(0,0,0,.28);}
 .stn-back{flex-shrink:0;width:40px;height:40px;border-radius:50%;
@@ -352,42 +382,41 @@
 .stn-head-icon{font-size:16px;filter:drop-shadow(0 1px 0 rgba(0,0,0,.4));}
 .stn-cursor{font-style:normal;margin-left:2px;animation:tsbg-blink 2.4s steps(1) infinite;}
 
-.stn-path{position:relative;z-index:1;min-height:1400px;width:100%;
-  padding:48px 6vw 100px;}
-.stn-line{position:absolute;inset:0;width:100%;height:100%;}
-.stn-line polyline{fill:none;stroke-linecap:round;stroke-linejoin:round;}
-.stn-rail-bed{stroke:#6B4A2B;stroke-width:15;
-  filter:drop-shadow(0 4px 4px rgba(50,32,10,.4));}
-.stn-rail-mid{stroke:#C9B48A;stroke-width:8;}
-.stn-rail-tie{stroke:#FFFBF0;stroke-width:2.5;stroke-dasharray:1 9;opacity:.9;}
+.stn-strip-wrap{position:relative;z-index:1;flex:1;min-height:0;
+  display:flex;align-items:flex-end;overflow-x:auto;overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;}
 
-.stn-stop{position:absolute;width:0;height:0;}
+.stn-row{position:relative;display:inline-flex;align-items:flex-end;
+  gap:72px;padding:0 10vw 15vh;min-width:100%;}
 
-.stn-train-pos{position:absolute;z-index:5;pointer-events:none;}
-.stn-train{display:block;transform:translate(-50%,-125%);
-  font-size:27px;line-height:1;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45));
-  animation:stn-bob 1.6s ease-in-out infinite;}
-@keyframes stn-bob{0%,100%{margin-top:0}50%{margin-top:-7px}}
+.stn-rail-bed{position:absolute;left:0;right:0;bottom:20px;height:14px;border-radius:7px;
+  background:#6B4A2B;box-shadow:0 4px 4px rgba(50,32,10,.35);}
+.stn-rail-mid{position:absolute;left:0;right:0;bottom:23px;height:8px;border-radius:4px;background:#C9B48A;}
+.stn-rail-tie{position:absolute;left:0;right:0;bottom:25.75px;height:2.5px;opacity:.9;
+  background:repeating-linear-gradient(90deg,#FFFBF0 0 2px,transparent 2px 11px);}
 
-.stn-board{position:absolute;left:50%;top:33px;transform:translateX(-50%);
-  display:flex;gap:10px;pointer-events:none;z-index:4;}
-.stn-pax{font-size:14px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4));
-  animation:stn-walk 1.3s ease-in-out infinite;}
-.stn-pax--2{animation-delay:-.65s;}
-@keyframes stn-walk{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.stn-col{position:relative;z-index:1;flex-shrink:0;display:flex;flex-direction:column;
+  align-items:center;gap:0;width:116px;}
 
-.stn-node{position:absolute;left:0;top:0;transform:translate(-50%,-50%);
-  flex-shrink:0;width:54px;height:54px;border-radius:50%;overflow:hidden;
-  border:4px solid #E6396B;background:#FFFBF0;color:#3D3222;
+.stn-sign{min-height:44px;width:100%;display:flex;align-items:center;justify-content:center;
+  text-align:center;font:700 11px/1.3 system-ui,sans-serif;color:#2A2317;
+  background:#FFFBF0;border:2px solid #3D3222;border-radius:8px;
+  padding:6px 9px;box-shadow:0 3px 0 #3D3222;margin-bottom:10px;}
+.stn-sign--locked{opacity:.6;color:#6B6054;}
+
+.stn-post{width:4px;height:30px;background:#8A7F6C;box-shadow:0 0 0 1px rgba(0,0,0,.12);}
+
+.stn-node{position:relative;z-index:1;flex-shrink:0;width:54px;height:54px;border-radius:50%;
+  overflow:hidden;border:4px solid #E6396B;background:#FFFBF0;color:#3D3222;
   cursor:pointer;box-shadow:0 4px 0 #3D3222,0 6px 14px rgba(0,0,0,.28);
   transition:transform .15s ease;}
-.stn-node:hover{transform:translate(-50%,-50%) scale(1.08);}
-.stn-node:active{transform:translate(-50%,-50%) scale(.96);}
+.stn-node:hover{transform:scale(1.08);}
+.stn-node:active{transform:scale(.96);}
 .stn-node.seen{background:#8FD694;border-color:#3D8B52;}
 .stn-node.cur{background:#E6396B;color:#FFFBF0;border-color:#FFD98A;}
 .stn-node.locked{background:#C8BBA0;border-color:#8A7F6C;color:#6B6054;
   cursor:not-allowed;box-shadow:0 4px 0 #6B6054,0 6px 14px rgba(0,0,0,.2);}
-.stn-node.locked:hover,.stn-node.locked:active{transform:translate(-50%,-50%);}
+.stn-node.locked:hover,.stn-node.locked:active{transform:none;}
 
 .stn-lock{position:relative;z-index:1;display:block;text-align:center;
   padding-top:14px;font-size:17px;opacity:.75;}
@@ -407,22 +436,34 @@
   border-radius:50%;background:#3D8B52;color:#FFFBF0;font:700 11px/1 sans-serif;
   display:grid;place-items:center;border:2px solid #FFFBF0;}
 
-.stn-label{position:absolute;top:0;transform:translateY(-50%);
-  font:700 12px/1.3 system-ui,sans-serif;color:#2A2317;
-  background:#FFFBF0;border:2px solid #3D3222;border-radius:8px;
-  padding:6px 11px;box-shadow:0 3px 0 #3D3222;width:max-content;max-width:38vw;}
-.stn-label--right{left:37px;}
-.stn-label--left{right:37px;text-align:right;}
-.stn-label--locked{opacity:.55;color:#6B6054;}
+.stn-train-pos{position:absolute;z-index:5;bottom:27px;pointer-events:none;
+  transform:translateX(-50%);}
+.stn-train{display:block;transform:translateY(-125%);
+  font-size:27px;line-height:1;filter:drop-shadow(0 4px 4px rgba(0,0,0,.45));
+  animation:stn-bob 1.6s ease-in-out infinite;}
+@keyframes stn-bob{0%,100%{margin-top:0}50%{margin-top:-7px}}
+
+.stn-board{position:absolute;z-index:4;bottom:66px;pointer-events:none;
+  transform:translateX(-50%);display:flex;gap:10px;}
+.stn-pax{font-size:14px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4));
+  animation:stn-walk 1.3s ease-in-out infinite;}
+.stn-pax--2{animation-delay:-.65s;}
+@keyframes stn-walk{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 
 @media (max-width:860px){
+  .stn-row{gap:48px;padding:0 8vw 13vh;}
+  .stn-col{width:92px;}
+  .stn-sign{font-size:10px;min-height:38px;padding:5px 7px;}
+  .stn-rail-bed{bottom:15px}
+  .stn-rail-mid{bottom:18px}
+  .stn-rail-tie{bottom:20.75px}
   .stn-node{width:44px;height:44px}
   .stn-node-num{padding-top:7px;font-size:14px}
   .stn-node-bar{bottom:6px}
+  .stn-train-pos{bottom:22px;}
   .stn-train{font-size:19px}
-  .stn-board{top:27px;gap:7px;}
+  .stn-board{bottom:54px;gap:7px;}
   .stn-pax{font-size:12px;}
-  .stn-label{font-size:11px;max-width:120px;padding:5px 9px}
   .stn-head-title{font-size:11px;letter-spacing:.14em}
 }
 
