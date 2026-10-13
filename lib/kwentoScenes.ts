@@ -1,6 +1,13 @@
 export type Beat = {
   n: number; // image number — resolves to /images/{n}.jpg
   text: string; // narration line shown while this beat is current
+  // Optional manual override: seconds into the SCENE's audio when this
+  // beat's image/caption should appear. Leave unset to use the automatic
+  // word-count estimate (see beatBoundaries below). Listen to the real
+  // "VO. SCENE {n}.mp4" file, note the second where that line starts
+  // being spoken, and set it here to pin it exactly — it doesn't affect
+  // the timing of any other beat.
+  at?: number;
 };
 
 export type Scene = {
@@ -136,9 +143,9 @@ const WORDS_PER_SECOND = 2.2;
 export function beatBoundaries(beats: Beat[]): number[] {
   let acc = 0;
   return beats.map((b) => {
-    const start = acc;
+    const estimated = acc;
     const words = b.text.split(/\s+/).filter(Boolean).length;
     acc += words / WORDS_PER_SECOND;
-    return start;
+    return b.at ?? estimated;
   });
 }
