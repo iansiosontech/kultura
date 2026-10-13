@@ -218,7 +218,7 @@
 @keyframes tk-bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-4px)}}
 @keyframes tk-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 
-.tk-track{position:absolute;left:148px;right:148px;bottom:30px;height:0;
+.tk-track{position:absolute;left:148px;right:198px;bottom:58px;height:0;
   border-top:3px dashed rgba(61,50,34,.4);pointer-events:none;}
 
 .tk-card{position:absolute;left:150px;bottom:24px;width:150px;min-width:150px;z-index:2;
@@ -230,13 +230,15 @@
 .tk-card-route{font:700 12px/1.3 system-ui,sans-serif;color:#2A2317;}
 .tk-card-title{font:800 13px/1.2 system-ui,sans-serif;color:#8A5A2B;}
 
-.tk-gate{position:absolute;right:0;bottom:0;width:120px;height:200px;
-  display:flex;align-items:flex-end;justify-content:center;}
-.tk-gate-arm{position:absolute;bottom:0;width:20px;height:170px;border-radius:8px;
-  background:linear-gradient(180deg,#D9C9A4,#BFA87F);border:3px solid #3D3222;box-shadow:0 6px 0 #3D3222;}
-.tk-gate-arm--l{left:4px}
-.tk-gate-arm--r{right:4px}
-.tk-gate-pad{position:relative;z-index:1;margin-bottom:60px;width:56px;height:56px;border-radius:12px;
+/* gate rotated 90deg from the original turnstile-post layout: now a
+   horizontal reader, two bars (top/bottom) sandwiching the tap pad */
+.tk-gate{position:absolute;right:0;bottom:13px;width:190px;height:96px;
+  display:flex;align-items:center;justify-content:center;}
+.tk-gate-arm{position:absolute;left:0;width:100%;height:20px;border-radius:8px;
+  background:linear-gradient(90deg,#D9C9A4,#BFA87F);border:3px solid #3D3222;box-shadow:0 4px 0 #3D3222;}
+.tk-gate-arm--t{top:0}
+.tk-gate-arm--b{bottom:0}
+.tk-gate-pad{position:relative;z-index:1;width:56px;height:56px;border-radius:12px;
   background:#2E4A44;border:3px solid #16231D;display:flex;align-items:center;justify-content:center;
   box-shadow:0 0 0 4px rgba(245,183,0,.35);transition:box-shadow .3s ease,background .3s ease;}
 .tk-gate-icon{font-size:24px;filter:drop-shadow(0 1px 0 rgba(0,0,0,.3));}
@@ -259,8 +261,20 @@
 }
 
 /* keep this LAST — it must override the card rules above */
+/* mobile: stack machine -> card -> gate vertically instead of side by side */
 @media (max-width:680px){
-  .tk-scene{transform:scale(.72);transform-origin:center center;}
+  .tk-scene{width:min(300px,88vw);height:430px;}
+
+  .tk-machine{left:50%;top:0;bottom:auto;transform:translateX(-50%);}
+  .tk-machine:hover:not(:disabled){transform:translateX(-50%) translateY(-3px);}
+  .tk-machine:active:not(:disabled){transform:translateX(-50%) translateY(4px);}
+
+  .tk-track{left:50%;right:auto;top:224px;bottom:88px;width:0;height:auto;
+    border-top:none;border-left:3px dashed rgba(61,50,34,.4);transform:translateX(-50%);}
+
+  .tk-card{left:calc(50% - 75px);top:212px;bottom:auto;}
+
+  .tk-gate{left:50%;right:auto;bottom:0;transform:translateX(-50%);width:170px;}
 }
 
 /* ================= Maikling Kwento player ================= */
