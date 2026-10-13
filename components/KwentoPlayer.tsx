@@ -24,6 +24,7 @@ export default function KwentoPlayer() {
   // the station map is the entry screen — it's open until a station is picked
   const [jumpOpen, setJumpOpen] = useState(true);
   const [started, setStarted] = useState(false);
+  const [ended, setEnded] = useState(false);
   const [seen, setSeen] = useState<number[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
@@ -81,6 +82,7 @@ export default function KwentoPlayer() {
     const clamped = Math.max(0, Math.min(scenes.length - 1, next));
     setSceneIdx(clamped);
     setBeatIdx(0);
+    setEnded(false);
   }, []);
 
   // load + optionally play whenever the scene changes
@@ -131,6 +133,7 @@ export default function KwentoPlayer() {
       goScene(sceneIdx + 1);
     } else {
       setPlaying(false);
+      setEnded(true);
     }
   };
 
@@ -168,6 +171,23 @@ export default function KwentoPlayer() {
           <div className="mk-window">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={imageSrc(beat.n)} alt={`Larawan ${beat.n}`} />
+            {ended && (
+              <div className="mk-end">
+                <div className="mk-end-title">
+                  Eksena {scene.scene} Tapos
+                </div>
+                <button
+                  type="button"
+                  className="mk-end-btn"
+                  onClick={() => {
+                    setEnded(false);
+                    setJumpOpen(true);
+                  }}
+                >
+                  &larr; Bumalik sa Istasyon
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
