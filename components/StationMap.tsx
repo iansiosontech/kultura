@@ -45,6 +45,7 @@ export default function StationMap({
   return (
     <div className="stn-overlay">
       <div className="stn-sky" />
+      <div className="stn-hills" />
       <div className="stn-clouds">
         <b />
         <b />
@@ -61,7 +62,13 @@ export default function StationMap({
         >
           &larr;
         </button>
-        <span className="stn-head-title">Pumili ng Eksena</span>
+        <span className="stn-head-title">
+          <span className="stn-head-icon" aria-hidden="true">
+            &#128646;
+          </span>
+          Pumili ng Eksena
+          <em className="stn-cursor">_</em>
+        </span>
       </div>
 
       <div className="stn-path">
@@ -70,7 +77,9 @@ export default function StationMap({
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
-          <polyline points={polyline} vectorEffect="non-scaling-stroke" />
+          <polyline className="stn-rail-bed" points={polyline} vectorEffect="non-scaling-stroke" />
+          <polyline className="stn-rail-mid" points={polyline} vectorEffect="non-scaling-stroke" />
+          <polyline className="stn-rail-tie" points={polyline} vectorEffect="non-scaling-stroke" />
         </svg>
 
         {points.map((p) => {
@@ -82,6 +91,11 @@ export default function StationMap({
               className="stn-stop"
               style={{ left: `${p.x}%`, top: `${p.y}%` }}
             >
+              {isCurrent && (
+                <span className="stn-train" aria-hidden="true">
+                  &#128642;
+                </span>
+              )}
               <button
                 ref={isCurrent ? currentRef : undefined}
                 type="button"
@@ -91,7 +105,8 @@ export default function StationMap({
               >
                 {isCurrent && <span className="stn-pulse" />}
                 {isSeen && !isCurrent && <span className="stn-check">&#10003;</span>}
-                {p.station}
+                <span className="stn-node-num">{p.station}</span>
+                <span className="stn-node-bar" />
               </button>
               <span className={`stn-label stn-label--${p.side}`}>
                 {titles[p.station - 1]}
