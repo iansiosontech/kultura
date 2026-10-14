@@ -382,7 +382,7 @@
   color:#FFD98A;text-transform:uppercase;}
 
 .ats-scene{position:relative;z-index:1;flex:1;min-height:0;
-  display:flex;align-items:flex-end;justify-content:center;gap:12vw;padding:0 6vw 15vh;}
+  display:flex;align-items:flex-end;justify-content:center;padding:0 6vw 15vh;}
 
 .ats-rail-bed{position:absolute;z-index:1;left:0;right:0;bottom:calc(15vh - 7px);height:14px;
   border-radius:7px;background:#6B4A2B;box-shadow:0 4px 4px rgba(50,32,10,.35);}
@@ -401,25 +401,47 @@
   display:grid;place-items:center;border:4px solid #E6396B;background:#E6396B;color:#FFFBF0;
   font:800 20px/1 ui-monospace,monospace;box-shadow:0 4px 0 #3D3222,0 6px 14px rgba(0,0,0,.28);}
 
-.trp{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
-.trp-body{display:block;font-size:84px;line-height:1;
-  filter:drop-shadow(0 8px 10px rgba(0,0,0,.45));transform:scaleX(-1);}
-.trp-wheels{display:flex;gap:10px;margin-top:-10px;}
-.trp-wheel{width:14px;height:14px;border-radius:50%;background:#2A2317;
-  border:3px solid #6B4A2B;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25);}
-.trp-smoke{position:absolute;top:-18px;left:18px;pointer-events:none;}
-.trp-smoke b{position:absolute;width:14px;height:14px;border-radius:50%;
+/* a big train-head placeholder, docked off the left edge of the screen so
+   only its front (nose + headlamp + stack) peeks into frame — not a full
+   train, just the head, per the client's spec. */
+.trp-dock{position:absolute;z-index:2;left:-18vh;bottom:calc(15vh - 6px);
+  width:52vh;height:50vh;pointer-events:none;}
+.trp{position:relative;width:100%;height:100%;}
+
+.trp-cab{position:absolute;z-index:1;right:0;bottom:14%;width:72%;height:70%;
+  border-radius:38% 16% 8% 8%/50% 26% 8% 8%;
+  background:linear-gradient(135deg,#C62E3A,#8E1F28 55%,#4C0E14);
+  box-shadow:0 14px 30px rgba(0,0,0,.45),inset 0 0 0 7px rgba(0,0,0,.18);}
+.trp-band{position:absolute;left:0;right:0;top:34%;height:14%;background:rgba(0,0,0,.18);}
+.trp-light{position:absolute;right:8%;top:22%;width:28%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,#FFF3D2,#FFD98A 55%,#B8860B);
+  box-shadow:0 0 30px 10px rgba(255,217,138,.6),inset 0 0 0 4px rgba(0,0,0,.2);}
+.trp-stack{position:absolute;left:18%;top:-26%;width:20%;height:38%;
+  border-radius:40% 40% 6% 6%;background:linear-gradient(180deg,#2A2317,#120D08);
+  box-shadow:0 6px 10px rgba(0,0,0,.4);}
+
+.trp-wheels{position:absolute;z-index:1;right:14%;bottom:-4%;width:58%;
+  display:flex;justify-content:space-between;}
+.trp-wheel{width:26%;aspect-ratio:1;border-radius:50%;background:#15110B;
+  border:5px solid #3A2A12;box-shadow:inset 0 0 0 3px rgba(255,255,255,.12);}
+
+.trp-smoke{position:absolute;left:18%;top:-58%;pointer-events:none;}
+.trp-smoke b{position:absolute;width:30%;aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle,rgba(255,252,244,.8),transparent 70%);
   animation:trp-puff 1.1s ease-out infinite;}
-.trp-smoke b:nth-child(2){left:10px;animation-delay:-.35s}
-.trp-smoke b:nth-child(3){left:20px;animation-delay:-.7s}
+.trp-smoke b:nth-child(2){left:40%;animation-delay:-.35s}
+.trp-smoke b:nth-child(3){left:80%;animation-delay:-.7s}
 @keyframes trp-puff{0%{transform:translateY(0) scale(.5);opacity:.7}
-  100%{transform:translateY(-34px) scale(1.5);opacity:0}}
+  100%{transform:translateY(-120%) scale(1.8);opacity:0}}
 
-.trp--moving .trp-body{animation:trp-float .5s ease-in-out infinite;}
-@keyframes trp-float{0%,100%{transform:scaleX(-1) translateY(0)}50%{transform:scaleX(-1) translateY(-6px)}}
+.trp--moving{animation:trp-float .5s ease-in-out infinite;}
+@keyframes trp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3%)}}
 .trp--moving .trp-wheel{animation:trp-spin .4s linear infinite;}
 @keyframes trp-spin{to{transform:rotate(360deg)}}
+
+@media (max-width:860px){
+  .trp-dock{left:-16vh;width:42vh;height:40vh;bottom:calc(13vh - 6px);}
+}
 
 .ats-bottom{position:absolute;left:0;right:0;bottom:4vh;z-index:3;
   display:flex;justify-content:center;}
