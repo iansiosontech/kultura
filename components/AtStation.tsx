@@ -46,10 +46,6 @@ export default function AtStation({
         </div>
       </div>
 
-      <div className="ats-rail-bed" aria-hidden="true" />
-      <div className="ats-rail-mid" aria-hidden="true" />
-      <div className="ats-rail-tie" aria-hidden="true" />
-
       <div className="ats-bottom">
         {advancing ? (
           <div className="ats-advancing-label">
