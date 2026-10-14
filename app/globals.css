@@ -397,8 +397,8 @@
 /* the parked train: a generated painting, docked off the left edge of the
    screen so only its head (cowcatcher + headlamp + smokestack) peeks into
    frame — not a full train, just the head, per the client's spec. */
-.trp-dock{position:absolute;z-index:2;left:0;bottom:11vh;
-  height:56vh;overflow:visible;pointer-events:none;}
+.trp-dock{position:absolute;z-index:2;left:0;bottom:15vh;
+  height:30vh;overflow:visible;pointer-events:none;}
 .trp{position:relative;height:100%;}
 .trp-img{position:absolute;left:0;bottom:0;height:100%;width:auto;max-width:none;
   filter:drop-shadow(0 16px 20px rgba(0,0,0,.5));}
@@ -416,7 +416,7 @@
 @keyframes trp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5%)}}
 
 @media (max-width:860px){
-  .trp-dock{left:-6vh;height:34vh;bottom:9vh;}
+  .trp-dock{left:-3vh;height:22vh;bottom:13vh;}
 }
 
 .ats-bottom{position:absolute;left:0;right:0;bottom:4vh;z-index:3;
