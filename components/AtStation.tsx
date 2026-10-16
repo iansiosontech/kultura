@@ -34,11 +34,9 @@ export default function AtStation({
         <span className="ats-head-title">Nasa Istasyon</span>
       </div>
 
-      <div className="trp-dock">
-        <TrainParked moving={advancing} />
-      </div>
-
       <div className="ats-scene">
+        <TrainParked moving={advancing} />
+
         <div className="ats-indicator">
           <span className="ats-sign">{title}</span>
           <span className="ats-post" aria-hidden="true" />
