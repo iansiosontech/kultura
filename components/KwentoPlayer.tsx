@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   scenes,
@@ -179,9 +178,16 @@ export default function KwentoPlayer() {
     <>
       <div className="mk">
         <div className="mk-top">
-          <Link href="/map" className="mk-back">
+          <button
+            type="button"
+            className="mk-back"
+            onClick={() => {
+              audioRef.current?.pause();
+              setJumpOpen(true);
+            }}
+          >
             &larr; BUMALIK
-          </Link>
+          </button>
           <div className="mk-title">Maikling Kwento</div>
           <div className="mk-count">
             SCENE {pad(scene.scene)} / {pad(scenes.length)}
@@ -291,11 +297,21 @@ export default function KwentoPlayer() {
           }
           advancing={advancing}
           onStart={() => {
-            setSceneIdx(activeStation - 1);
-            setBeatIdx(0);
+            const nextIdx = activeStation - 1;
             setEnded(false);
             setStarted(true);
             setJumpOpen(false);
+            setPlaying(true);
+            if (nextIdx !== sceneIdx) {
+              // scene is changing — the [sceneIdx] effect below will load
+              // the new audio and play it once `playing` is true
+              setBeatIdx(0);
+              setSceneIdx(nextIdx);
+            } else {
+              // same scene already loaded (e.g. first visit) — start it
+              // directly instead of waiting on an effect that won't rerun
+              audioRef.current?.play().catch(() => setPlaying(false));
+            }
           }}
           onClose={() => {
             // before anything's been picked, the back arrow exits Kwento

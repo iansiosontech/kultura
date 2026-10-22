@@ -382,7 +382,7 @@
   color:#FFD98A;text-transform:uppercase;}
 
 .ats-scene{position:relative;z-index:1;flex:1;min-height:0;
-  display:flex;align-items:flex-end;justify-content:center;gap:12vw;padding:0 6vw 15vh;}
+  display:flex;align-items:flex-end;justify-content:center;padding:0 6vw 15vh;}
 
 .ats-indicator{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
 .ats-sign{min-height:44px;max-width:44vw;display:flex;align-items:center;justify-content:center;
@@ -394,25 +394,30 @@
   display:grid;place-items:center;border:4px solid #E6396B;background:#E6396B;color:#FFFBF0;
   font:800 20px/1 ui-monospace,monospace;box-shadow:0 4px 0 #3D3222,0 6px 14px rgba(0,0,0,.28);}
 
-.trp{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
-.trp-body{display:block;font-size:84px;line-height:1;
-  filter:drop-shadow(0 8px 10px rgba(0,0,0,.45));transform:scaleX(-1);}
-.trp-wheels{display:flex;gap:10px;margin-top:-10px;}
-.trp-wheel{width:14px;height:14px;border-radius:50%;background:#2A2317;
-  border:3px solid #6B4A2B;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25);}
-.trp-smoke{position:absolute;top:-18px;left:18px;pointer-events:none;}
-.trp-smoke b{position:absolute;width:14px;height:14px;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,252,244,.8),transparent 70%);
-  animation:trp-puff 1.1s ease-out infinite;}
-.trp-smoke b:nth-child(2){left:10px;animation-delay:-.35s}
-.trp-smoke b:nth-child(3){left:20px;animation-delay:-.7s}
-@keyframes trp-puff{0%{transform:translateY(0) scale(.5);opacity:.7}
-  100%{transform:translateY(-34px) scale(1.5);opacity:0}}
+/* the parked train: a generated painting, docked off the left edge of the
+   screen so only its head (cowcatcher + headlamp + smokestack) peeks into
+   frame — not a full train, just the head, per the client's spec. */
+.trp-dock{position:absolute;z-index:2;left:0;bottom:15vh;
+  height:30vh;overflow:visible;pointer-events:none;}
+.trp{position:relative;height:100%;}
+.trp-img{position:absolute;left:0;bottom:0;height:100%;width:auto;max-width:none;
+  transform:scaleX(-1);filter:drop-shadow(0 16px 20px rgba(0,0,0,.5));}
 
-.trp--moving .trp-body{animation:trp-float .5s ease-in-out infinite;}
-@keyframes trp-float{0%,100%{transform:scaleX(-1) translateY(0)}50%{transform:scaleX(-1) translateY(-6px)}}
-.trp--moving .trp-wheel{animation:trp-spin .4s linear infinite;}
-@keyframes trp-spin{to{transform:rotate(360deg)}}
+.trp-smoke{position:absolute;left:38%;top:-18%;pointer-events:none;}
+.trp-smoke b{position:absolute;width:14%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,252,244,.85),transparent 70%);
+  animation:trp-puff 1.1s ease-out infinite;}
+.trp-smoke b:nth-child(2){left:40%;animation-delay:-.35s}
+.trp-smoke b:nth-child(3){left:80%;animation-delay:-.7s}
+@keyframes trp-puff{0%{transform:translateY(0) scale(.5);opacity:.7}
+  100%{transform:translateY(-160%) scale(1.8);opacity:0}}
+
+.trp--moving .trp-img{animation:trp-float .5s ease-in-out infinite;}
+@keyframes trp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5%)}}
+
+@media (max-width:860px){
+  .trp-dock{left:-3vh;height:22vh;bottom:13vh;}
+}
 
 .ats-bottom{position:absolute;left:0;right:0;bottom:4vh;z-index:3;
   display:flex;justify-content:center;}
