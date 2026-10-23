@@ -28,7 +28,7 @@ export const scenes: Scene[] = [
     title: "Pag-alis sa Tutuban",
     beats: [
       { n: 1, text: "Ang tren ay tumulak sa gitna ng sali-salimuot na mga ingay." },
-      { n: 2, text: "Nagsisigawan ang mga batang nagtitinda ng mga babasahin — Tibune, mama, Tribune, Taliba. Ubos na po. Liwayway, bagong labas. Alingawngaw ng mga habilinan at pagpapaalam. Huwag mong kalimutan, Sindo, ang baba mo ay sa Sta. Isabel, tingnan mo ang istasyon. Temiong, huwag mong mabitiw-bitiwan ang supot na iyan. Nagkalat ang mga magnanakaw, mag-ingat ka! Kamusta na lang sa Ka Uweng. Sela, sabihin mong sa Mahal Na Araw na kami uuwi. Ang pases mo Kiko, baka mawaglit." },
+      { n: 2, at: 4, text: "Nagsisigawan ang mga batang nagtitinda ng mga babasahin — Tibune, mama, Tribune, Taliba. Ubos na po. Liwayway, bagong labas. Alingawngaw ng mga habilinan at pagpapaalam. Huwag mong kalimutan, Sindo, ang baba mo ay sa Sta. Isabel, tingnan mo ang istasyon. Temiong, huwag mong mabitiw-bitiwan ang supot na iyan. Nagkalat ang mga magnanakaw, mag-ingat ka! Kamusta na lang sa Ka Uweng. Sela, sabihin mong sa Mahal Na Araw na kami uuwi. Ang pases mo Kiko, baka mawaglit." },
       { n: 3, text: "Maligayang paglalakbay, Gng. Enriquez. Ngumiti ka naman, Ben, hindi naman ako magtatagal doon at susulat ako araw-araw. Kamusta na lamang. Paalam. Paalam. Hanggang sa muli. Ang tren ay nabuhay at dahan-dahang kumilos. H-s-s-s-Tsug. Tsug." },
       { n: 4, text: "Naiwan sa likuran nina Danding ang takipsilim ng Tutuban, at sila'y napagitna sa malayang hangin at sa liwanag ng umaga." },
     ],
