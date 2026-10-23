@@ -187,6 +187,27 @@ export default function KwentoPlayer() {
           </div>
         </div>
 
+        {completed.length > 0 && (
+          <div className="mk-nodes" aria-label="Mga naratingang istasyon">
+            {scenes
+              .filter((s) => completed.includes(s.scene))
+              .sort((a, b) => a.scene - b.scene)
+              .map((s) => (
+                <button
+                  key={s.scene}
+                  type="button"
+                  className={`mk-node ${
+                    s.scene === scene.scene ? "mk-node--active" : ""
+                  }`}
+                  onClick={() => goScene(s.scene - 1)}
+                  aria-label={`Balikan ang Istasyon ${s.scene}`}
+                >
+                  {s.scene}
+                </button>
+              ))}
+          </div>
+        )}
+
         <div className="mk-stage">
           <div className="mk-window">
             {/* eslint-disable-next-line @next/next/no-img-element */}

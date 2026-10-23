@@ -292,6 +292,15 @@
   background:#FFD98A;border:2px solid #3D3222;border-radius:99px;padding:6px 12px;
   box-shadow:0 3px 0 #3D3222;}
 
+.mk-nodes{display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;justify-content:flex-start;}
+.mk-node{width:30px;height:30px;flex-shrink:0;border-radius:50%;border:2px solid #3D3222;
+  background:#FFFBF0;font:800 12px/1 ui-monospace,monospace;color:#3D3222;
+  box-shadow:0 3px 0 #3D3222;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:transform .15s ease, box-shadow .15s ease;}
+.mk-node:hover{transform:translateY(-1px);box-shadow:0 4px 0 #3D3222;}
+.mk-node:active{transform:translateY(2px);box-shadow:0 1px 0 #3D3222;}
+.mk-node--active{background:#F5B700;}
+
 .mk-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;}
 .mk-window{position:relative;height:100%;aspect-ratio:16/9;max-width:100%;
   border-radius:26px;overflow:hidden;background:#2E4A44;border:10px solid #E8763A;
@@ -466,6 +475,7 @@
 @media (max-width:860px){
   .mk{padding:10px 4vw 10px;gap:8px;justify-content:flex-start;overflow-y:auto;}
   .mk-title{font-size:11px;letter-spacing:.14em}
+  .mk-node{width:26px;height:26px;font-size:11px;}
   .mk-window{border-width:7px;box-shadow:0 0 0 4px #F2C14E,0 10px 22px rgba(80,55,20,.35)}
   .mk-text{max-height:26vh;padding:10px 13px}
   .mk-text p{font-size:13.5px}
