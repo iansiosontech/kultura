@@ -266,8 +266,11 @@ export default function KwentoPlayer() {
                     type="button"
                     className="mk-end-btn"
                     onClick={() => {
-                      audioRef.current?.pause();
-                      router.push("/map");
+                      // closes the popup and shows the at-station screen
+                      // for the next station — stays inside Kwento instead
+                      // of leaving to the kiosk
+                      setEnded(false);
+                      setJumpOpen(true);
                     }}
                   >
                     LUMABAS
