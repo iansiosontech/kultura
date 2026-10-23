@@ -10,6 +10,7 @@ import {
   beatBoundaries,
 } from "@/lib/kwentoScenes";
 import AtStation from "@/components/AtStation";
+import QuizScoreBadge from "@/components/QuizScoreBadge";
 
 const STORAGE_KEY = "kultura-kwento-progress-v3";
 
@@ -150,10 +151,13 @@ export default function KwentoPlayer() {
     }
   };
 
-  // closes the at-station screen and plays the given scene from its start —
-  // used both for SIMULAN (next unlocked station) and for jumping back to
-  // any already-completed station
-  const startScene = (idx: number) => {
+  // closes the at-station screen and plays the given scene — used for
+  // SIMULAN (next unlocked station), continuing a paused in-progress
+  // station, and jumping back to any already-completed station.
+  // `restart` forces playback back to 0:00 instead of resuming where it
+  // was left off (always true when jumping to a *different* scene, since
+  // that scene's audio hasn't started yet).
+  const startScene = (idx: number, { restart = false } = {}) => {
     setEnded(false);
     setJumpOpen(false);
     setPlaying(true);
@@ -163,11 +167,24 @@ export default function KwentoPlayer() {
       setBeatIdx(0);
       setSceneIdx(idx);
     } else {
-      // same scene already loaded — start it directly instead of
+      // same scene already loaded — start/resume it directly instead of
       // waiting on an effect that won't rerun
-      audioRef.current?.play().catch(() => setPlaying(false));
+      const a = audioRef.current;
+      if (restart) {
+        setBeatIdx(0);
+        if (a) a.currentTime = 0;
+      }
+      a?.play().catch(() => setPlaying(false));
     }
   };
+
+  // true when the currently active (unfinished) station has been paused
+  // partway through, rather than never started — this is what decides
+  // whether the at-station screen offers "continue" vs just "start"
+  const activeHasProgress =
+    sceneIdx === activeStation - 1 &&
+    !ended &&
+    (audioRef.current?.currentTime ?? 0) > 0.5;
 
   // keyboard nav
   useEffect(() => {
@@ -189,6 +206,7 @@ export default function KwentoPlayer() {
   return (
     <>
       <div className="mk">
+        <QuizScoreBadge />
         <div className="mk-top">
           <button
             type="button"
@@ -257,7 +275,7 @@ export default function KwentoPlayer() {
                   <button
                     type="button"
                     className="mk-end-btn"
-                    onClick={() => router.push("/map/quiz")}
+                    onClick={() => router.push(`/map/quiz?scene=${scene.scene}`)}
                   >
                     PAGSUSULIT
                   </button>
@@ -344,8 +362,12 @@ export default function KwentoPlayer() {
             .filter((s) => completed.includes(s.scene))
             .sort((a, b) => a.scene - b.scene)
             .map((s) => ({ scene: s.scene, title: s.title }))}
+          hasProgress={activeHasProgress}
           onStart={() => startScene(activeStation - 1)}
-          onRevisit={(sceneNumber) => startScene(sceneNumber - 1)}
+          onRestart={() => startScene(activeStation - 1, { restart: true })}
+          onRevisit={(sceneNumber) =>
+            startScene(sceneNumber - 1, { restart: true })
+          }
           onClose={() => {
             // the at-station screen's back arrow always exits Kwento
             // back to the ticket kiosk

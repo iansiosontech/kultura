@@ -2,12 +2,15 @@
 
 import StationPlatformBackground from "@/components/StationPlatformBackground";
 import TrainParked from "@/components/TrainParked";
+import QuizScoreBadge from "@/components/QuizScoreBadge";
 
 type AtStationProps = {
   station: number;
   title: string;
   visited: { scene: number; title: string }[];
+  hasProgress: boolean;
   onStart: () => void;
+  onRestart: () => void;
   onClose: () => void;
   onRevisit: (scene: number) => void;
 };
@@ -16,13 +19,16 @@ export default function AtStation({
   station,
   title,
   visited,
+  hasProgress,
   onStart,
+  onRestart,
   onClose,
   onRevisit,
 }: AtStationProps) {
   return (
     <div className="ats-overlay">
       <StationPlatformBackground />
+      <QuizScoreBadge />
 
       <div className="ats-head">
         <button
@@ -68,9 +74,24 @@ export default function AtStation({
       </div>
 
       <div className="ats-bottom">
-        <button type="button" className="ats-start" onClick={onStart}>
-          SIMULAN &rarr;
-        </button>
+        {hasProgress ? (
+          <>
+            <button type="button" className="ats-start" onClick={onStart}>
+              IPAGPATULOY &rarr;
+            </button>
+            <button
+              type="button"
+              className="ats-start ats-start--alt"
+              onClick={onRestart}
+            >
+              MULA SA SIMULA
+            </button>
+          </>
+        ) : (
+          <button type="button" className="ats-start" onClick={onStart}>
+            SIMULAN &rarr;
+          </button>
+        )}
       </div>
     </div>
   );
