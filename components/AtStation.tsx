@@ -38,11 +38,14 @@ export default function AtStation({
         <TrainParked moving={advancing} />
       </div>
 
+      <div className="ats-platform" aria-hidden="true" />
+
       <div className="ats-scene">
         <div className="ats-indicator">
           <span className="ats-sign">{title}</span>
           <span className="ats-post" aria-hidden="true" />
           <span className="ats-node">{station}</span>
+          <span className="ats-stand" aria-hidden="true" />
         </div>
       </div>
 

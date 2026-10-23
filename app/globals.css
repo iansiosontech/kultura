@@ -381,7 +381,7 @@
 .ats-head-title{font:800 13px/1 ui-monospace,monospace;letter-spacing:.22em;
   color:#FFD98A;text-transform:uppercase;}
 
-.ats-scene{position:relative;z-index:1;flex:1;min-height:0;
+.ats-scene{position:relative;z-index:3;flex:1;min-height:0;
   display:flex;align-items:flex-end;justify-content:center;padding:0 6vw 15vh;}
 
 .ats-indicator{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;}
@@ -393,6 +393,17 @@
 .ats-node{flex-shrink:0;width:56px;height:56px;border-radius:50%;margin-top:-1px;
   display:grid;place-items:center;border:4px solid #E6396B;background:#E6396B;color:#FFFBF0;
   font:800 20px/1 ui-monospace,monospace;box-shadow:0 4px 0 #3D3222,0 6px 14px rgba(0,0,0,.28);}
+.ats-stand{width:38px;height:12px;margin-top:-3px;
+  background:linear-gradient(180deg,#8A7F6C,#5C5243);
+  border-radius:0 0 10px 10px;box-shadow:0 3px 0 rgba(0,0,0,.25);}
+
+/* a station platform spanning the full width, its top edge deliberately
+   overlapping the lower portion of the parked train's wheels so the
+   train reads as standing on it rather than floating in front of it. */
+.ats-platform{position:absolute;left:0;right:0;bottom:0;z-index:2;height:19vh;
+  background:linear-gradient(180deg,#E3CCA2,#CDB183);border-top:3px solid #A8906A;}
+.ats-platform::before{content:"";position:absolute;top:3px;left:0;right:0;height:9px;
+  background:repeating-linear-gradient(115deg,#F5B700 0 12px,#3D3222 12px 24px);opacity:.7;}
 
 /* the parked train: a hand-drawn vector locomotive, straight side profile,
    facing right, docked off the left edge of the screen so only its front
@@ -433,7 +444,7 @@
   .trp-dock{left:-18vh;height:22vh;bottom:13vh;}
 }
 
-.ats-bottom{position:absolute;left:0;right:0;bottom:4vh;z-index:3;
+.ats-bottom{position:absolute;left:0;right:0;bottom:4vh;z-index:4;
   display:flex;justify-content:center;}
 .ats-start{border:3px solid #2A2317;background:linear-gradient(180deg,#F0527C,#E6396B);
   border-radius:99px;padding:14px 32px;font:800 14px/1 ui-monospace,monospace;letter-spacing:.16em;
@@ -450,6 +461,8 @@
   .ats-scene{gap:8vw;padding:0 5vw 13vh;}
   .ats-sign{font-size:11px;min-height:38px;padding:6px 11px;max-width:40vw;}
   .ats-node{width:46px;height:46px;font-size:16px;}
+  .ats-stand{width:32px;height:10px;}
+  .ats-platform{height:16vh;}
   .ats-head-title{font-size:11px;letter-spacing:.14em}
 }
 
