@@ -391,6 +391,16 @@
 .ats-head-title{font:800 13px/1 ui-monospace,monospace;letter-spacing:.22em;
   color:#FFD98A;text-transform:uppercase;}
 
+.ats-revisit{position:relative;z-index:51;flex-shrink:0;display:flex;flex-wrap:wrap;
+  gap:8px;padding:10px 16px 0;}
+.ats-revisit-btn{width:30px;height:30px;flex-shrink:0;border-radius:50%;
+  border:2px solid #D9C9A4;background:#FFFBF0;font:800 12px/1 ui-monospace,monospace;
+  color:#2E4A44;box-shadow:0 3px 0 rgba(0,0,0,.35);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s ease, box-shadow .15s ease;}
+.ats-revisit-btn:hover{transform:translateY(-1px);box-shadow:0 4px 0 rgba(0,0,0,.35);}
+.ats-revisit-btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35);}
+
 .ats-scene{position:relative;z-index:3;flex:1;min-height:0;
   display:flex;align-items:flex-end;justify-content:center;padding:0 6vw 15vh;}
 

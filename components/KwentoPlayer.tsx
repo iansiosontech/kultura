@@ -150,6 +150,25 @@ export default function KwentoPlayer() {
     }
   };
 
+  // closes the at-station screen and plays the given scene from its start —
+  // used both for SIMULAN (next unlocked station) and for jumping back to
+  // any already-completed station
+  const startScene = (idx: number) => {
+    setEnded(false);
+    setJumpOpen(false);
+    setPlaying(true);
+    if (idx !== sceneIdx) {
+      // scene is changing — the [sceneIdx] effect below will load
+      // the new audio and play it once `playing` is true
+      setBeatIdx(0);
+      setSceneIdx(idx);
+    } else {
+      // same scene already loaded — start it directly instead of
+      // waiting on an effect that won't rerun
+      audioRef.current?.play().catch(() => setPlaying(false));
+    }
+  };
+
   // keyboard nav
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -321,22 +340,12 @@ export default function KwentoPlayer() {
         <AtStation
           station={activeStation}
           title={scenes[activeStation - 1]?.title ?? scene.title}
-          onStart={() => {
-            const nextIdx = activeStation - 1;
-            setEnded(false);
-            setJumpOpen(false);
-            setPlaying(true);
-            if (nextIdx !== sceneIdx) {
-              // scene is changing — the [sceneIdx] effect below will load
-              // the new audio and play it once `playing` is true
-              setBeatIdx(0);
-              setSceneIdx(nextIdx);
-            } else {
-              // same scene already loaded (e.g. first visit) — start it
-              // directly instead of waiting on an effect that won't rerun
-              audioRef.current?.play().catch(() => setPlaying(false));
-            }
-          }}
+          visited={scenes
+            .filter((s) => completed.includes(s.scene))
+            .sort((a, b) => a.scene - b.scene)
+            .map((s) => ({ scene: s.scene, title: s.title }))}
+          onStart={() => startScene(activeStation - 1)}
+          onRevisit={(sceneNumber) => startScene(sceneNumber - 1)}
           onClose={() => {
             // the at-station screen's back arrow always exits Kwento
             // back to the ticket kiosk
