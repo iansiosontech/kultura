@@ -48,7 +48,7 @@ export const scenes: Scene[] = [
     title: "Pagdating sa Malawig",
     beats: [
       { n: 9, text: "Sa unang malas, ang Malawig ay walang pagkakaiba sa alinmang nayon sa Kalagitnaang Luzon." },
-      { n: 10, text: "Isang daang makitid, paliko-liko, natatalukapan ng makapal at manilaw-nilaw na alikabok." },
+      { n: 10, at: 8, text: "Isang daang makitid, paliko-liko, natatalukapan ng makapal at manilaw-nilaw na alikabok." },
       { n: 10, text: "Mga puno ng kawayan, mangga, niyog at akasya. Mga bahay na pawid, luma na ang karamihan at sunog sa araw ang mga dingding at bubong. Pasalit-salit, isang tindahang hindi mapagwari kung tititigan sa malapit. Doon at dito, nasisilip sa kabila ang madalang na hanay ng mga bahay. At sa ibabaw ng lahat," },
       { n: 11, text: "Nakangiti at puno ng ningning ng umaga, ang bughaw, maaliwalas at walang ulap na langit. \"Walang maganda rito kundi ang langit,\" ang sabing pabiro ng kutsero ng karitelang sinasakyan nila. Pinaglalabanan ni Danding ang sulak ng pagkabigo sa kanyang dibdib. \"Hindi po naman,\" ang marahan niyang tugon. Naisaloob niyang sa mga nayong tulad nito isinilang at nagsilaki sina del Pilar, at iba pang bayani ng lahi, at sa gayong mga bukid nagtining ang diwa ng kabayanihan ng himagsikan laban sa mga Kastila. Ang alaalang iyon ay nakaaaliw sa kanya, nagbigay ng bagong anyo sa lahat ng bagay sa paligidligid." },
     ],
@@ -58,7 +58,7 @@ export const scenes: Scene[] = [
     title: "Mga Kamag-anak",
     beats: [
       { n: 11, text: "Kay rami pala niyang kamag-anak doon." },
-      { n: 12, text: "Hindi mapatid-patid ang pagpapakilala ng kanyang Tiya Juana." },
+      { n: 12, at: 5, text: "Hindi mapatid-patid ang pagpapakilala ng kanyang Tiya Juana." },
       { n: 13, text: "Sila ang iyong Lolo Tasyo, at sila ang iyong Lola Ines. Ang mga pinsan mong Juan, Seling, Marya at Asyas. Ang iyong Nana Bito. Ang iyong Tata Enteng. Yukod at ngiti rito, halik ng kamay roon. Mga kamaganak na malapit at malayo, tunay at hawa lamang, matatanda at mga bata. Ang lahat yata ng tao sa bahay, buhat sa mga nangasapuno ng hagdan hanggang sa nangasaloob ay pawang kamag-anak ni Danding. \"Mabuti na lamang at likas na sarat ang ilong ko,\" ang naisaloob niya. \"Kung hindi ay pulpol na marahil ngayon.\" Sapagkat sila lamang ang nagsipanggaling sa Maynila, sa pagtitipong iyon ay napako kina Danding ang pansin ng lahat. Umugong ang kamustahan." },
       { n: 14, text: "Balana ang nagtanong kay Danding ng kung ano ang lagay ng kanyang amang may sakit at ng kanyang inang siya na lamang ngayong bumubuhay sa kanilang maganak. Sinulyapan ng kanyang Tiya Juana si Danding at sinikap na saluhin ang mga tanong. Bantad na siya sa pagkamaramdamin ng kanyang pamangkin, at alam niyang ang kasawian ng ama nito ay talusaling na sugat sa puso nito." },
       { n: 15, text: "Ngunit hindi niya maunahan ng pagtugon kay Danding, na tila magaan ngayon ang bibig at palagay na ang loob sa piling ng mga kamag-anak na ngayon lamang nakilala." },
@@ -142,14 +142,18 @@ export const audioSrc = (scene: number) =>
 // of a fraction of audio.duration — some of the voice-over files report
 // duration as Infinity until they've finished playing once, which made the
 // old duration-based split silently never advance past the first beat.
-const WORDS_PER_SECOND = 2.2;
+const WORDS_PER_SECOND = 2.5;
 
 export function beatBoundaries(beats: Beat[]): number[] {
+  // Rebase the running estimate off each beat's actual `at` (when set)
+  // instead of ignoring it — otherwise a manual correction on one beat
+  // never propagates, and every later beat in the scene keeps drifting
+  // further off from the word-count estimate alone.
   let acc = 0;
   return beats.map((b) => {
-    const estimated = acc;
+    const at = b.at ?? acc;
     const words = b.text.split(/\s+/).filter(Boolean).length;
-    acc += words / WORDS_PER_SECOND;
-    return b.at ?? estimated;
+    acc = at + words / WORDS_PER_SECOND;
+    return at;
   });
 }

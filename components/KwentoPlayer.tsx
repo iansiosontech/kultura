@@ -23,10 +23,9 @@ export default function KwentoPlayer() {
   // the at-station screen is the entry screen — it's open until SIMULAN
   // is pressed, and again automatically between stations.
   const [jumpOpen, setJumpOpen] = useState(true);
+  // true once the current scene's audio has played through — shows the
+  // REPEAT / EXIT / QUIZ choice instead of auto-advancing to the next station
   const [ended, setEnded] = useState(false);
-  // true for the 3s "train chugging forward" transition after a station's
-  // audio ends, before the next station's sign is revealed
-  const [advancing, setAdvancing] = useState(false);
   // scenes whose audio has actually played through at least once — this is
   // what unlocks the next station, not merely having opened a scene.
   const [completed, setCompleted] = useState<number[]>([]);
@@ -138,20 +137,16 @@ export default function KwentoPlayer() {
       prev.includes(scene.scene) ? prev : [...prev, scene.scene]
     );
     setPlaying(false);
-    if (sceneIdx < scenes.length - 1) {
-      // the train "chugs forward" in place for 3s before the next
-      // station's sign is revealed — not an instant cut to station N+1
-      const nextIdx = sceneIdx + 1;
-      setAdvancing(true);
-      setJumpOpen(true);
-      setTimeout(() => {
-        setSceneIdx(nextIdx);
-        setBeatIdx(0);
-        setEnded(false);
-        setAdvancing(false);
-      }, 3000);
-    } else {
-      setEnded(true);
+    setEnded(true);
+  };
+
+  const handleRepeat = () => {
+    const a = audioRef.current;
+    setEnded(false);
+    setBeatIdx(0);
+    if (a) {
+      a.currentTime = 0;
+      a.play().catch(() => setPlaying(false));
     }
   };
 
@@ -201,16 +196,32 @@ export default function KwentoPlayer() {
                 <div className="mk-end-title">
                   Eksena {scene.scene} Tapos
                 </div>
-                <button
-                  type="button"
-                  className="mk-end-btn"
-                  onClick={() => {
-                    setEnded(false);
-                    setJumpOpen(true);
-                  }}
-                >
-                  &larr; Bumalik sa Istasyon
-                </button>
+                <div className="mk-end-choices">
+                  <button
+                    type="button"
+                    className="mk-end-btn"
+                    onClick={handleRepeat}
+                  >
+                    ULITIN
+                  </button>
+                  <button
+                    type="button"
+                    className="mk-end-btn"
+                    onClick={() => {
+                      audioRef.current?.pause();
+                      router.push("/map");
+                    }}
+                  >
+                    LUMABAS
+                  </button>
+                  <button
+                    type="button"
+                    className="mk-end-btn"
+                    onClick={() => router.push("/map/quiz")}
+                  >
+                    PAGSUSULIT
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -287,13 +298,8 @@ export default function KwentoPlayer() {
 
       {jumpOpen && (
         <AtStation
-          station={advancing ? scene.scene : activeStation}
-          title={
-            advancing
-              ? scene.title
-              : scenes[activeStation - 1]?.title ?? scene.title
-          }
-          advancing={advancing}
+          station={activeStation}
+          title={scenes[activeStation - 1]?.title ?? scene.title}
           onStart={() => {
             const nextIdx = activeStation - 1;
             setEnded(false);
