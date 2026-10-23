@@ -6,15 +6,19 @@ import TrainParked from "@/components/TrainParked";
 type AtStationProps = {
   station: number;
   title: string;
+  visited: { scene: number; title: string }[];
   onStart: () => void;
   onClose: () => void;
+  onRevisit: (scene: number) => void;
 };
 
 export default function AtStation({
   station,
   title,
+  visited,
   onStart,
   onClose,
+  onRevisit,
 }: AtStationProps) {
   return (
     <div className="ats-overlay">
@@ -31,6 +35,22 @@ export default function AtStation({
         </button>
         <span className="ats-head-title">Nasa Istasyon</span>
       </div>
+
+      {visited.length > 0 && (
+        <div className="ats-revisit" aria-label="Mga naratingang istasyon">
+          {visited.map((v) => (
+            <button
+              key={v.scene}
+              type="button"
+              className="ats-revisit-btn"
+              onClick={() => onRevisit(v.scene)}
+              aria-label={`Balikan ang Istasyon ${v.scene}`}
+            >
+              {v.scene}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="trp-dock">
         <TrainParked />
