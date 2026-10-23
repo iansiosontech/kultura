@@ -23,7 +23,6 @@ export default function KwentoPlayer() {
   // the at-station screen is the entry screen — it's open until SIMULAN
   // is pressed, and again automatically between stations.
   const [jumpOpen, setJumpOpen] = useState(true);
-  const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
   // true for the 3s "train chugging forward" transition after a station's
   // audio ends, before the next station's sign is revealed
@@ -60,7 +59,6 @@ export default function KwentoPlayer() {
         ) {
           setSceneIdx(p.sceneIdx);
         }
-        if (p.completed?.length) setStarted(true);
       }
     } catch {
       /* ignore */
@@ -299,7 +297,6 @@ export default function KwentoPlayer() {
           onStart={() => {
             const nextIdx = activeStation - 1;
             setEnded(false);
-            setStarted(true);
             setJumpOpen(false);
             setPlaying(true);
             if (nextIdx !== sceneIdx) {
@@ -314,10 +311,10 @@ export default function KwentoPlayer() {
             }
           }}
           onClose={() => {
-            // before anything's been picked, the back arrow exits Kwento
-            // entirely — there's no player view yet to fall back to.
-            if (started) setJumpOpen(false);
-            else router.push("/map");
+            // the at-station screen's back arrow always exits Kwento
+            // back to the ticket kiosk
+            audioRef.current?.pause();
+            router.push("/map");
           }}
         />
       )}
