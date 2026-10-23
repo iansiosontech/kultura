@@ -10,6 +10,7 @@ import {
   beatBoundaries,
 } from "@/lib/kwentoScenes";
 import AtStation from "@/components/AtStation";
+import QuizScoreBadge from "@/components/QuizScoreBadge";
 
 const STORAGE_KEY = "kultura-kwento-progress-v3";
 
@@ -205,6 +206,7 @@ export default function KwentoPlayer() {
   return (
     <>
       <div className="mk">
+        <QuizScoreBadge />
         <div className="mk-top">
           <button
             type="button"
@@ -273,7 +275,7 @@ export default function KwentoPlayer() {
                   <button
                     type="button"
                     className="mk-end-btn"
-                    onClick={() => router.push("/map/quiz")}
+                    onClick={() => router.push(`/map/quiz?scene=${scene.scene}`)}
                   >
                     PAGSUSULIT
                   </button>

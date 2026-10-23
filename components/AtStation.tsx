@@ -2,6 +2,7 @@
 
 import StationPlatformBackground from "@/components/StationPlatformBackground";
 import TrainParked from "@/components/TrainParked";
+import QuizScoreBadge from "@/components/QuizScoreBadge";
 
 type AtStationProps = {
   station: number;
@@ -27,6 +28,7 @@ export default function AtStation({
   return (
     <div className="ats-overlay">
       <StationPlatformBackground />
+      <QuizScoreBadge />
 
       <div className="ats-head">
         <button

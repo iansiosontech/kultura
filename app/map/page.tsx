@@ -1,11 +1,13 @@
 import Link from "next/link";
 import TrainWindowBackground from "@/components/TrainWindowBackground";
 import LineChoices from "@/components/LineChoices";
+import QuizScoreBadge from "@/components/QuizScoreBadge";
 
 export default function MapPage() {
   return (
     <main className="relative h-full overflow-hidden">
       <TrainWindowBackground />
+      <QuizScoreBadge />
 
       <div className="absolute left-5 top-5 z-30">
         <Link
