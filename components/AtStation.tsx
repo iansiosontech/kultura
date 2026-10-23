@@ -6,7 +6,6 @@ import TrainParked from "@/components/TrainParked";
 type AtStationProps = {
   station: number;
   title: string;
-  advancing: boolean;
   onStart: () => void;
   onClose: () => void;
 };
@@ -14,7 +13,6 @@ type AtStationProps = {
 export default function AtStation({
   station,
   title,
-  advancing,
   onStart,
   onClose,
 }: AtStationProps) {
@@ -35,7 +33,7 @@ export default function AtStation({
       </div>
 
       <div className="trp-dock">
-        <TrainParked moving={advancing} />
+        <TrainParked />
       </div>
 
       <div className="ats-platform" aria-hidden="true" />
@@ -50,15 +48,9 @@ export default function AtStation({
       </div>
 
       <div className="ats-bottom">
-        {advancing ? (
-          <div className="ats-advancing-label">
-            Papunta na sa Istasyon {station + 1}&hellip;
-          </div>
-        ) : (
-          <button type="button" className="ats-start" onClick={onStart}>
-            SIMULAN &rarr;
-          </button>
-        )}
+        <button type="button" className="ats-start" onClick={onStart}>
+          SIMULAN &rarr;
+        </button>
       </div>
     </div>
   );

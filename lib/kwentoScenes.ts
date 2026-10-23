@@ -47,7 +47,8 @@ export const scenes: Scene[] = [
     scene: 3,
     title: "Pagdating sa Malawig",
     beats: [
-      { n: 9, text: "Sa unang malas, ang Malawig ay walang pagkakaiba sa alinmang nayon sa Kalagitnaang Luzon. Isang daang makitid, paliko-liko, natatalukapan ng makapal at manilaw-nilaw na alikabok." },
+      { n: 9, text: "Sa unang malas, ang Malawig ay walang pagkakaiba sa alinmang nayon sa Kalagitnaang Luzon." },
+      { n: 10, at: 8, text: "Isang daang makitid, paliko-liko, natatalukapan ng makapal at manilaw-nilaw na alikabok." },
       { n: 10, text: "Mga puno ng kawayan, mangga, niyog at akasya. Mga bahay na pawid, luma na ang karamihan at sunog sa araw ang mga dingding at bubong. Pasalit-salit, isang tindahang hindi mapagwari kung tititigan sa malapit. Doon at dito, nasisilip sa kabila ang madalang na hanay ng mga bahay. At sa ibabaw ng lahat," },
       { n: 11, text: "Nakangiti at puno ng ningning ng umaga, ang bughaw, maaliwalas at walang ulap na langit. \"Walang maganda rito kundi ang langit,\" ang sabing pabiro ng kutsero ng karitelang sinasakyan nila. Pinaglalabanan ni Danding ang sulak ng pagkabigo sa kanyang dibdib. \"Hindi po naman,\" ang marahan niyang tugon. Naisaloob niyang sa mga nayong tulad nito isinilang at nagsilaki sina del Pilar, at iba pang bayani ng lahi, at sa gayong mga bukid nagtining ang diwa ng kabayanihan ng himagsikan laban sa mga Kastila. Ang alaalang iyon ay nakaaaliw sa kanya, nagbigay ng bagong anyo sa lahat ng bagay sa paligidligid." },
     ],
@@ -56,7 +57,8 @@ export const scenes: Scene[] = [
     scene: 4,
     title: "Mga Kamag-anak",
     beats: [
-      { n: 12, text: "Hindi mapatid-patid ang pagpapakilala ng kanyang Tiya Juana." },
+      { n: 11, text: "Kay rami pala niyang kamag-anak doon." },
+      { n: 12, at: 5, text: "Hindi mapatid-patid ang pagpapakilala ng kanyang Tiya Juana." },
       { n: 13, text: "Sila ang iyong Lolo Tasyo, at sila ang iyong Lola Ines. Ang mga pinsan mong Juan, Seling, Marya at Asyas. Ang iyong Nana Bito. Ang iyong Tata Enteng. Yukod at ngiti rito, halik ng kamay roon. Mga kamaganak na malapit at malayo, tunay at hawa lamang, matatanda at mga bata. Ang lahat yata ng tao sa bahay, buhat sa mga nangasapuno ng hagdan hanggang sa nangasaloob ay pawang kamag-anak ni Danding. \"Mabuti na lamang at likas na sarat ang ilong ko,\" ang naisaloob niya. \"Kung hindi ay pulpol na marahil ngayon.\" Sapagkat sila lamang ang nagsipanggaling sa Maynila, sa pagtitipong iyon ay napako kina Danding ang pansin ng lahat. Umugong ang kamustahan." },
       { n: 14, text: "Balana ang nagtanong kay Danding ng kung ano ang lagay ng kanyang amang may sakit at ng kanyang inang siya na lamang ngayong bumubuhay sa kanilang maganak. Sinulyapan ng kanyang Tiya Juana si Danding at sinikap na saluhin ang mga tanong. Bantad na siya sa pagkamaramdamin ng kanyang pamangkin, at alam niyang ang kasawian ng ama nito ay talusaling na sugat sa puso nito." },
       { n: 15, text: "Ngunit hindi niya maunahan ng pagtugon kay Danding, na tila magaan ngayon ang bibig at palagay na ang loob sa piling ng mga kamag-anak na ngayon lamang nakilala." },
@@ -114,7 +116,9 @@ export const scenes: Scene[] = [
     scene: 10,
     title: "Pag-uwi sa Puso",
     beats: [
-      { n: 34, text: "Ibig niyang mapag-isa kaya't nang makita niyang may taong naiwan sa bahay ay patalilis siyang nagtungo sa bukid. Lumulubog na ang araw, at nagsisimula nang lumamig ang hangin. Ang abuhing kamay ng takipsilim ay nakaamba na sa himpapawid. Umupo si Danding sa tabi ng pulutong ng mga kawayan at pinahid ang pawis sa kanyang mukha at leeg. Ang kapayapaan ng bukid ay tila kamay ng isang inang humahaplos sa nag-iinit na noo ni Danding. Huminga siya nang malalim, umupo sa lupa, at ipinikit ang mga mata. Dahan-dahang inunat niya ang kanyang mga paa, itinukod sa lupa ang mga palad; tumingala at binayaang maglaro sa ligalig niyang mukha ang banayad na hangin. Kay lamig at kay bango ng hanging iyon. Unti-unti siyang pinanawan ng lumbay at agam-agam, at natiwasay ang pagod niyang katawan." },
+      { n: 33, text: "Ibig niyang mapag-isa kaya't nang makita niyang may taong naiwan sa bahay ay patalilis siyang nagtungo sa bukid." },
+      { n: 34, text: "Lumulubog na ang araw, at nagsisimula nang lumamig ang hangin. Ang abuhing kamay ng takipsilim ay nakaamba na sa himpapawid. Umupo si Danding sa tabi ng pulutong ng mga kawayan at pinahid ang pawis sa kanyang mukha at leeg. Ang kapayapaan ng bukid ay tila kamay ng isang inang humahaplos sa nag-iinit na noo ni Danding. Huminga siya nang malalim, umupo sa lupa, at ipinikit ang mga mata. Dahan-dahang inunat niya ang kanyang mga paa, itinukod sa lupa ang mga palad; tumingala at binayaang maglaro sa ligalig niyang mukha ang banayad na hangin. Kay lamig at kay bango ng hanging iyon." },
+      { n: 34, text: "Unti-unti siyang pinanawan ng lumbay at agam-agam, at natiwasay ang pagod niyang katawan." },
       { n: 35, text: "Sa kapirasong lupang ito, na siyang sinilangan ng ama niya, ay napanatag ang kanyang puso. Palakas nang palakas ang hangin, na nagtataglay ng amoy ng lupa at kay bango ng nakamandalang palay! Naalala ni Danding ang mga kuwento ni Lolo Tasyo tungkol sa kanyang ama, at siya'y napangiti nang lihim. Ang pagsasaranggola sa bukid, ang pagkahulog sa kalabaw, dalaga sa bunton ng palay, ang lahat ay nananariwa sa kanyang gunita. Tumawa nang marahan si Danding at pinag-igi pang lalo ang pagkakasalampak niya sa lupa. Tila isang punong kababaon doon ang mga ugat, siya'y nakaramdam ng pagkakaugnay sa bukid na minsa'y nadilig na mga luha at umalingawngaw sa mga halakhak ng kanyang ama. Sa sandaling iyon ay tila hawak ni Danding sa palad ang lihim ng tinatawag na pag-ibig sa lupang tinubuan. Nauunawaan niya kung bakit ang pagkakatapon sa ibang bansa ay napakabigat na parusa, at kung bakit ang mga nawawalay na anak ay sumasalunga sa bagyo at baha makauwi lamang sa Inang Bayan. Kung bakit walang atubiling naghain ng dugo sina Rizal at Bonifacio. Sa kabila ng mga magigiting na pangungusap ng pambihirang mga pagmamalasakit, at ng kamatayan ng mga bayani ay nasulyapan ni Danding ang kapirasong lupa, na kinatitirikan ng kanilang mga tahanan, kinabubuhayan ng kanilang mga kamag-anak, kasalo sa kanilang mga lihim at nagtatago na pamana ng kanilang mga angkan. Muli siyang napangiti." },
       { n: 36, text: "Sa dako ng baybay ay nakarinig siya ng mga tinig, at nauulinigan niyang tinatawag ang kanyang pangalan. Dahan-dahan siyang tumayo. Gabi na, kagat na ang dilim sa lahat ng dako. Walang buwan at may kadiliman ang langit. Ngunit nababanaagan pa niya ang dulo ng mga kawayang nakapanood ng paglikha ng unang tula ng kanyang ama, at ang ilang aandap-andap na bituing saksi ng unang pag-ibig nito." },
     ],
@@ -138,14 +142,18 @@ export const audioSrc = (scene: number) =>
 // of a fraction of audio.duration — some of the voice-over files report
 // duration as Infinity until they've finished playing once, which made the
 // old duration-based split silently never advance past the first beat.
-const WORDS_PER_SECOND = 2.2;
+const WORDS_PER_SECOND = 2.5;
 
 export function beatBoundaries(beats: Beat[]): number[] {
+  // Rebase the running estimate off each beat's actual `at` (when set)
+  // instead of ignoring it — otherwise a manual correction on one beat
+  // never propagates, and every later beat in the scene keeps drifting
+  // further off from the word-count estimate alone.
   let acc = 0;
   return beats.map((b) => {
-    const estimated = acc;
+    const at = b.at ?? acc;
     const words = b.text.split(/\s+/).filter(Boolean).length;
-    acc += words / WORDS_PER_SECOND;
-    return b.at ?? estimated;
+    acc = at + words / WORDS_PER_SECOND;
+    return at;
   });
 }
