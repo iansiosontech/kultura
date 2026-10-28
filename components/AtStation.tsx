@@ -2,13 +2,14 @@
 
 import StationPlatformBackground from "@/components/StationPlatformBackground";
 import TrainParked from "@/components/TrainParked";
-import QuizScoreBadge from "@/components/QuizScoreBadge";
+import ScoreBadge from "@/components/ScoreBadge";
 
 type AtStationProps = {
   station: number;
   title: string;
   visited: { scene: number; title: string }[];
   hasProgress: boolean;
+  score: number;
   onStart: () => void;
   onRestart: () => void;
   onClose: () => void;
@@ -20,6 +21,7 @@ export default function AtStation({
   title,
   visited,
   hasProgress,
+  score,
   onStart,
   onRestart,
   onClose,
@@ -28,7 +30,7 @@ export default function AtStation({
   return (
     <div className="ats-overlay">
       <StationPlatformBackground />
-      <QuizScoreBadge />
+      <ScoreBadge score={score} />
 
       <div className="ats-head">
         <button

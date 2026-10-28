@@ -506,22 +506,8 @@
   background:#FFD98A;border:2px solid #3D3222;border-radius:99px;
   padding:8px 14px;box-shadow:0 3px 0 #3D3222;}
 
-.quiz-card{max-width:420px;border-radius:20px;border:3px solid #3D3222;
-  background:linear-gradient(180deg,#FFFBF0,#F6EBD4);box-shadow:0 8px 0 #3D3222;
-  padding:32px 28px;}
 .quiz-eyebrow{font:700 11px/1 ui-monospace,monospace;letter-spacing:.18em;
-  color:#8A6A3A;text-transform:uppercase;margin-bottom:10px;}
-.quiz-title{font:800 20px/1.2 ui-monospace,monospace;letter-spacing:.2em;
-  color:#2A2317;text-transform:uppercase;}
-.quiz-pattern{margin-top:14px;font:800 clamp(20px,6vw,30px)/1.4 ui-monospace,monospace;
-  letter-spacing:.14em;color:#B5451B;word-break:break-all;}
-.quiz-sub{margin-top:10px;font:500 13px/1.5 ui-monospace,monospace;color:#5A4A32;}
-
-.quiz-form{margin-top:22px;display:flex;flex-direction:column;align-items:center;gap:12px;}
-.quiz-input{width:100%;border:2px solid #3D3222;border-radius:12px;padding:12px 14px;
-  font:700 15px/1 ui-monospace,monospace;letter-spacing:.08em;color:#2A2317;
-  background:#FFFBF0;text-align:center;text-transform:uppercase;}
-.quiz-input:focus{outline:3px solid #F2C14E;}
+  color:#FFD98A;text-transform:uppercase;margin-bottom:10px;opacity:.85;}
 
 .quiz-btn{border:3px solid #3D3222;background:linear-gradient(180deg,#F0527C,#E6396B);
   border-radius:99px;padding:12px 28px;font:800 13px/1 ui-monospace,monospace;
@@ -531,5 +517,16 @@
 .quiz-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #3D1627;}
 
 .quiz-feedback{margin-top:16px;font:700 13px/1.5 ui-monospace,monospace;letter-spacing:.04em;}
-.quiz-feedback--correct{color:#2E7D4F;}
-.quiz-feedback--wrong{color:#B5451B;margin-top:4px;}
+.quiz-feedback--correct{color:#8CE0A8;}
+.quiz-feedback--wrong{color:#FF9B7A;margin-top:4px;}
+
+.salita-quiz{margin:4px 0 18px;}
+.salita-boxes{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:16px;}
+.salita-box{width:30px;height:38px;flex-shrink:0;border:2px solid #FFD98A;border-radius:8px;
+  background:rgba(0,0,0,.25);color:#FFD98A;font:800 17px/1 ui-monospace,monospace;
+  text-align:center;text-transform:uppercase;}
+.salita-box:focus{outline:2px solid #F2C14E;}
+.salita-fixed{width:30px;height:38px;flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;border-radius:8px;background:rgba(255,217,138,.16);
+  color:#FFD98A;font:800 17px/1 ui-monospace,monospace;}
+.salita-space{width:12px;flex-shrink:0;}
