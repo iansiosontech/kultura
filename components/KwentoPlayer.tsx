@@ -34,6 +34,9 @@ export default function KwentoPlayer() {
   // true once the current scene's audio has played through — shows the
   // REPEAT / EXIT / QUIZ choice instead of auto-advancing to the next station
   const [ended, setEnded] = useState(false);
+  // true once PAGSUSULIT is pressed — swaps the three choices for that
+  // scene's SALITA puzzle instead of showing it automatically
+  const [quizOpen, setQuizOpen] = useState(false);
   // scenes whose audio has actually played through at least once — this is
   // what unlocks the next station, not merely having opened a scene.
   const [completed, setCompleted] = useState<number[]>([]);
@@ -99,6 +102,7 @@ export default function KwentoPlayer() {
       setSceneIdx(clamped);
       setBeatIdx(0);
       setEnded(false);
+      setQuizOpen(false);
     },
     [activeStation]
   );
@@ -152,11 +156,13 @@ export default function KwentoPlayer() {
     );
     setPlaying(false);
     setEnded(true);
+    setQuizOpen(false);
   };
 
   const handleRepeat = () => {
     const a = audioRef.current;
     setEnded(false);
+    setQuizOpen(false);
     setBeatIdx(0);
     if (a) {
       a.currentTime = 0;
@@ -172,6 +178,7 @@ export default function KwentoPlayer() {
   // that scene's audio hasn't started yet).
   const startScene = (idx: number, { restart = false } = {}) => {
     setEnded(false);
+    setQuizOpen(false);
     setJumpOpen(false);
     setPlaying(true);
     if (idx !== sceneIdx) {
@@ -268,41 +275,63 @@ export default function KwentoPlayer() {
                   Eksena {scene.scene} Tapos
                 </div>
 
-                {quizItems
-                  .filter((q) => q.scene === scene.scene)
-                  .map((q) => (
-                    <SalitaQuiz
-                      key={q.scene}
-                      item={q}
-                      solved={quizSolved.includes(q.scene)}
-                      onCorrect={() =>
-                        setQuizSolved(markQuizCorrect(q.scene))
-                      }
-                    />
-                  ))}
-
-                <div className="mk-end-choices">
-                  <button
-                    type="button"
-                    className="mk-end-btn"
-                    onClick={handleRepeat}
-                  >
-                    ULITIN
-                  </button>
-                  <button
-                    type="button"
-                    className="mk-end-btn"
-                    onClick={() => {
-                      // closes the popup and shows the at-station screen
-                      // for the next station — stays inside Kwento instead
-                      // of leaving to the kiosk
-                      setEnded(false);
-                      setJumpOpen(true);
-                    }}
-                  >
-                    LUMABAS
-                  </button>
-                </div>
+                {quizOpen ? (
+                  <>
+                    {quizItems
+                      .filter((q) => q.scene === scene.scene)
+                      .map((q) => (
+                        <SalitaQuiz
+                          key={q.scene}
+                          item={q}
+                          solved={quizSolved.includes(q.scene)}
+                          onCorrect={() =>
+                            setQuizSolved(markQuizCorrect(q.scene))
+                          }
+                        />
+                      ))}
+                    <div className="mk-end-choices">
+                      <button
+                        type="button"
+                        className="mk-end-btn"
+                        onClick={() => setQuizOpen(false)}
+                      >
+                        &larr; BUMALIK
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="mk-end-choices">
+                    <button
+                      type="button"
+                      className="mk-end-btn"
+                      onClick={handleRepeat}
+                    >
+                      ULITIN
+                    </button>
+                    <button
+                      type="button"
+                      className="mk-end-btn"
+                      onClick={() => {
+                        // closes the popup and shows the at-station screen
+                        // for the next station — stays inside Kwento
+                        // instead of leaving to the kiosk
+                        setEnded(false);
+                        setJumpOpen(true);
+                      }}
+                    >
+                      LUMABAS
+                    </button>
+                    {quizItems.some((q) => q.scene === scene.scene) && (
+                      <button
+                        type="button"
+                        className="mk-end-btn"
+                        onClick={() => setQuizOpen(true)}
+                      >
+                        PAGSUSULIT
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
