@@ -60,7 +60,6 @@ export const scenes: Scene[] = [
   },
   {
     scene: 4,
-    pace: 1.8,
     title: "Mga Kamag-anak",
     beats: [
       { n: 11, text: "Kay rami pala niyang kamag-anak doon." },
