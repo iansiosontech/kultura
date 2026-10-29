@@ -12,11 +12,13 @@ import {
 import AtStation from "@/components/AtStation";
 import ScoreBadge from "@/components/ScoreBadge";
 import SalitaQuiz from "@/components/SalitaQuiz";
+import QuizResults from "@/components/QuizResults";
 import {
   quizItems,
-  readQuizProgress,
-  markQuizCorrect,
+  readQuizAnswers,
+  recordQuizAnswer,
   POINTS_PER_CORRECT,
+  type QuizAnswer,
 } from "@/lib/kwentoQuiz";
 
 const STORAGE_KEY = "kultura-kwento-progress-v3";
@@ -34,17 +36,21 @@ export default function KwentoPlayer() {
   // true once the current scene's audio has played through — shows the
   // REPEAT / EXIT / QUIZ choice instead of auto-advancing to the next station
   const [ended, setEnded] = useState(false);
-  // true once PAGSUSULIT is pressed — swaps the three choices for that
-  // scene's SALITA puzzle instead of showing it automatically
-  const [quizOpen, setQuizOpen] = useState(false);
+  // what the end-of-scene popup is showing — the default three choices,
+  // that scene's own SALITA puzzle (via PAGSUSULIT), or the all-scenes
+  // results screen (via RESULTA, only offered on the last scene)
+  const [endView, setEndView] = useState<"choices" | "quiz" | "results">(
+    "choices"
+  );
   // scenes whose audio has actually played through at least once — this is
   // what unlocks the next station, not merely having opened a scene.
   const [completed, setCompleted] = useState<number[]>([]);
-  // scenes whose SALITA puzzle has been answered correctly — owned here
-  // (rather than read fresh per screen) so the score badge updates live
-  // the moment a puzzle is solved, without needing a remount
-  const [quizSolved, setQuizSolved] = useState<number[]>([]);
-  const score = quizSolved.length * POINTS_PER_CORRECT;
+  // one submitted answer per scene — owned here (rather than read fresh
+  // per screen) so the score badge updates live the moment a puzzle is
+  // answered, without needing a remount
+  const [quizAnswers, setQuizAnswers] = useState<QuizAnswer[]>([]);
+  const score =
+    quizAnswers.filter((a) => a.correct).length * POINTS_PER_CORRECT;
   const [hydrated, setHydrated] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -80,7 +86,7 @@ export default function KwentoPlayer() {
     } finally {
       setHydrated(true);
     }
-    setQuizSolved(readQuizProgress());
+    setQuizAnswers(readQuizAnswers());
   }, []);
 
   useEffect(() => {
@@ -102,7 +108,7 @@ export default function KwentoPlayer() {
       setSceneIdx(clamped);
       setBeatIdx(0);
       setEnded(false);
-      setQuizOpen(false);
+      setEndView("choices");
     },
     [activeStation]
   );
@@ -156,13 +162,13 @@ export default function KwentoPlayer() {
     );
     setPlaying(false);
     setEnded(true);
-    setQuizOpen(false);
+    setEndView("choices");
   };
 
   const handleRepeat = () => {
     const a = audioRef.current;
     setEnded(false);
-    setQuizOpen(false);
+    setEndView("choices");
     setBeatIdx(0);
     if (a) {
       a.currentTime = 0;
@@ -178,7 +184,7 @@ export default function KwentoPlayer() {
   // that scene's audio hasn't started yet).
   const startScene = (idx: number, { restart = false } = {}) => {
     setEnded(false);
-    setQuizOpen(false);
+    setEndView("choices");
     setJumpOpen(false);
     setPlaying(true);
     if (idx !== sceneIdx) {
@@ -275,7 +281,7 @@ export default function KwentoPlayer() {
                   Eksena {scene.scene} Tapos
                 </div>
 
-                {quizOpen ? (
+                {endView === "quiz" && (
                   <>
                     {quizItems
                       .filter((q) => q.scene === scene.scene)
@@ -283,9 +289,13 @@ export default function KwentoPlayer() {
                         <SalitaQuiz
                           key={q.scene}
                           item={q}
-                          solved={quizSolved.includes(q.scene)}
-                          onCorrect={() =>
-                            setQuizSolved(markQuizCorrect(q.scene))
+                          answered={quizAnswers.some(
+                            (a) => a.scene === q.scene
+                          )}
+                          onSubmit={(guess, correct) =>
+                            setQuizAnswers(
+                              recordQuizAnswer(q.scene, guess, correct)
+                            )
                           }
                         />
                       ))}
@@ -293,13 +303,30 @@ export default function KwentoPlayer() {
                       <button
                         type="button"
                         className="mk-end-btn"
-                        onClick={() => setQuizOpen(false)}
+                        onClick={() => setEndView("choices")}
                       >
                         &larr; BUMALIK
                       </button>
                     </div>
                   </>
-                ) : (
+                )}
+
+                {endView === "results" && (
+                  <>
+                    <QuizResults answers={quizAnswers} score={score} />
+                    <div className="mk-end-choices">
+                      <button
+                        type="button"
+                        className="mk-end-btn"
+                        onClick={() => setEndView("choices")}
+                      >
+                        &larr; BUMALIK
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {endView === "choices" && (
                   <div className="mk-end-choices">
                     <button
                       type="button"
@@ -325,9 +352,18 @@ export default function KwentoPlayer() {
                       <button
                         type="button"
                         className="mk-end-btn"
-                        onClick={() => setQuizOpen(true)}
+                        onClick={() => setEndView("quiz")}
                       >
                         PAGSUSULIT
+                      </button>
+                    )}
+                    {scene.scene === scenes.length && (
+                      <button
+                        type="button"
+                        className="mk-end-btn"
+                        onClick={() => setEndView("results")}
+                      >
+                        RESULTA
                       </button>
                     )}
                   </div>
