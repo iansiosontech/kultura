@@ -14,6 +14,10 @@ export type Scene = {
   scene: number; // 1-10 — resolves to the "VO. SCENE {scene}.mp4" audio file
   title: string; // short label for the station map
   beats: Beat[]; // images/captions that advance while that one audio plays
+  // Optional per-scene override of the words-per-second pace used for the
+  // automatic estimate (see WORDS_PER_SECOND below). Lower = slower assumed
+  // speech = later switches. Leave unset to use the global default.
+  pace?: number;
 };
 
 // Script: "Lupang Tinubuan" ni Narciso G. Reyes.
@@ -45,6 +49,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 3,
+    pace: 1.8,
     title: "Pagdating sa Malawig",
     beats: [
       { n: 9, text: "Sa unang malas, ang Malawig ay walang pagkakaiba sa alinmang nayon sa Kalagitnaang Luzon." },
@@ -55,6 +60,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 4,
+    pace: 1.8,
     title: "Mga Kamag-anak",
     beats: [
       { n: 11, text: "Kay rami pala niyang kamag-anak doon." },
@@ -66,6 +72,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 5,
+    pace: 1.8,
     title: "Sa Harap ng Bangkay",
     beats: [
       { n: 16, text: "Isang manipis na dingding ng sawali ang tanging nakapagitan sa bulwagan at sa pinakaloob ng bahay, na siyang kinabuburulan ng patay. At sa bukas na lagusan, na napapalamutihan sa magkabilang panig ng mga puting kurtina salo ng pinagbuhol na lasong itim, ay walang tigil ang pagyayaot-yaot dito ng mga taong nakikiramay sa mga namatayan, nagmamasid sa bangkay. Ngunit pagpasok na pagpasok ni Danding ay nag-iba ang kanyang pakiramdam." },
@@ -76,6 +83,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 6,
+    pace: 1.8,
     title: "Mga Alaala",
     beats: [
       { n: 20, text: "Pagkaraan ng ilang sandali ay umabot siya ng isang album sa mesang kalapit, binuksan iyon, at pinagmuni-muni ang mahiwaga at makapangyarihang kaugnayan ng dugo na nagbubuklod ng mga tao." },
@@ -87,6 +95,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 7,
+    pace: 1.8,
     title: "Kwento ni Lolo Tasyo",
     beats: [
       { n: 25, text: "\"May mga sandali pong kailangan ng tao ang mapag-isa.\" \"Ganyan din siya kung magsalita, bata pa'y magulang na ang isip.\" \"Nasaksihan po ba ninyo ang kanyang kabataan?\" \"Nasaksihan!\" Napahalakhak si Lolo Tasyo. \"Ang batang ito! Ako ang nagbaon ng inunan ng ama mo. Ako ang gumawa ng mga una niyang laruan. Naulila agad siya sa ama.\"" },
@@ -97,6 +106,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 8,
+    pace: 1.8,
     title: "Ang Unang Tula",
     beats: [
       { n: 29, text: "\"At doon, sa kinauupuan mo kanina, doon niya isinulat ang kauna-unahan niyang tula — isang maikling papuri sa kagandahan ng isa sa mga dalagang nakilala niya sa bayan. May tagong kapilyohan ang ama mo.\" Napangiti si Danding. \"Ang dalaga po bang iyan ang naging sanhi ng pagkakaluwas niya sa Maynila?\" \"Oo,\" natigilan si Lolo Tasyo na tila nalalasap sa alaala ang mga nangyari. \"Nahuli sila sa tabi ng isang mandala ng palay.\" \"Nahuli po?\" \"Oo — sa liwanag ng aandap-andap na bituin.\" Marami pang ibig itanong si Danding, ngunit naalala niya ang patay at ang mga tao sa bahay, baka hinahanap na siya. Unti-unting pinutol niya ang pag-uusap nila ni Lolo Tasyo, at iniwan ang matanda sa mga alaala nito." },
@@ -105,6 +115,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 9,
+    pace: 1.8,
     title: "Sa Libingan",
     beats: [
       { n: 31, text: "Ang libingan ay nasa gilid ng simbahan, bagay na nagpapagunita kay Danding ng sumpa ng Diyos kay Adan sa mga anak nito, at ng malungkot at batbat-sakit na pagkakawalay nila, na kamatayan lamang ang lubusang magwawakas. Nagunita niya na sa maliit na bakurang ito ng mga patay na nakahimlay ang alabok ng kanyang ninuno, ang abang labi ng Katipunan, ng mga pag-asa, pag-ibig, lumbay at ligaya, ng palalong mga pangarap at mga pagkabigo na siyang pumana sa kanya ng kanyang angkan. Magaan ang pagyapak ni Danding sa malambot na lupa, at sinikap niyang huwag madaling maging ang pinakamaliit na halaman." },
@@ -114,6 +125,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 10,
+    pace: 1.8,
     title: "Pag-uwi sa Puso",
     beats: [
       { n: 33, text: "Ibig niyang mapag-isa kaya't nang makita niyang may taong naiwan sa bahay ay patalilis siyang nagtungo sa bukid." },
@@ -144,7 +156,7 @@ export const audioSrc = (scene: number) =>
 // old duration-based split silently never advance past the first beat.
 const WORDS_PER_SECOND = 2.5;
 
-export function beatBoundaries(beats: Beat[]): number[] {
+export function beatBoundaries(beats: Beat[], pace = WORDS_PER_SECOND): number[] {
   // Rebase the running estimate off each beat's actual `at` (when set)
   // instead of ignoring it — otherwise a manual correction on one beat
   // never propagates, and every later beat in the scene keeps drifting
@@ -153,7 +165,7 @@ export function beatBoundaries(beats: Beat[]): number[] {
   return beats.map((b) => {
     const at = b.at ?? acc;
     const words = b.text.split(/\s+/).filter(Boolean).length;
-    acc = at + words / WORDS_PER_SECOND;
+    acc = at + words / pace;
     return at;
   });
 }
