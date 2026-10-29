@@ -117,7 +117,7 @@ export default function KwentoPlayer() {
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
-    boundariesRef.current = beatBoundaries(scene.beats);
+    boundariesRef.current = beatBoundaries(scene.beats, scene.pace);
     a.load();
     if (playing) {
       a.play().catch(() => setPlaying(false));
