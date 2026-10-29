@@ -17,19 +17,16 @@ export const quizItems: QuizItem[] = [
   { scene: 7, pattern: "K_B_T_A_", answer: "KABATAAN" },
   { scene: 8, pattern: "B_L_K-T_N_W", answer: "BALIK-TANAW" },
   { scene: 9, pattern: "P_G_U_UKS_", answer: "PAGLULUKSA" },
-  { scene: 10, pattern: "L___NG_I__BU_N", answer: "LUPANG TINUBUAN" },
+  // pattern must be the exact same length as answer, character-for-character
+  // aligned (including the literal space and hyphen) — each "_" becomes one
+  // letter-box input
+  { scene: 10, pattern: "L___NG _I__BU_N", answer: "LUPANG TINUBUAN" },
 ];
 
 export const POINTS_PER_CORRECT = 10;
 export const MAX_SCORE = quizItems.length * POINTS_PER_CORRECT;
 
 const QUIZ_STORAGE_KEY = "kultura-kwento-quiz-v1";
-
-// letters only, case-insensitive — lets "kamag-anak", "kamag anak" and
-// "kamaganak" all count as the same answer
-export function normalizeAnswer(s: string): string {
-  return s.toUpperCase().replace(/[^A-Z]/g, "");
-}
 
 export function readQuizProgress(): number[] {
   try {

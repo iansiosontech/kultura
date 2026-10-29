@@ -1,12 +1,11 @@
 "use client";
 
-import { useQuizScore, MAX_SCORE } from "@/lib/kwentoQuiz";
+import { useQuizScore } from "@/lib/kwentoQuiz";
+import ScoreBadge from "@/components/ScoreBadge";
 
+// self-fetching wrapper for screens that don't otherwise track the score
+// reactively (it only re-reads localStorage on mount)
 export default function QuizScoreBadge() {
   const score = useQuizScore();
-  return (
-    <div className="quiz-score-badge" aria-label="Iskor sa pagsusulit">
-      {score} / {MAX_SCORE}
-    </div>
-  );
+  return <ScoreBadge score={score} />;
 }

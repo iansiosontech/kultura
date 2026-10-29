@@ -10,7 +10,14 @@ import {
   beatBoundaries,
 } from "@/lib/kwentoScenes";
 import AtStation from "@/components/AtStation";
-import QuizScoreBadge from "@/components/QuizScoreBadge";
+import ScoreBadge from "@/components/ScoreBadge";
+import SalitaQuiz from "@/components/SalitaQuiz";
+import {
+  quizItems,
+  readQuizProgress,
+  markQuizCorrect,
+  POINTS_PER_CORRECT,
+} from "@/lib/kwentoQuiz";
 
 const STORAGE_KEY = "kultura-kwento-progress-v3";
 
@@ -27,9 +34,17 @@ export default function KwentoPlayer() {
   // true once the current scene's audio has played through — shows the
   // REPEAT / EXIT / QUIZ choice instead of auto-advancing to the next station
   const [ended, setEnded] = useState(false);
+  // true once PAGSUSULIT is pressed — swaps the three choices for that
+  // scene's SALITA puzzle instead of showing it automatically
+  const [quizOpen, setQuizOpen] = useState(false);
   // scenes whose audio has actually played through at least once — this is
   // what unlocks the next station, not merely having opened a scene.
   const [completed, setCompleted] = useState<number[]>([]);
+  // scenes whose SALITA puzzle has been answered correctly — owned here
+  // (rather than read fresh per screen) so the score badge updates live
+  // the moment a puzzle is solved, without needing a remount
+  const [quizSolved, setQuizSolved] = useState<number[]>([]);
+  const score = quizSolved.length * POINTS_PER_CORRECT;
   const [hydrated, setHydrated] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -65,6 +80,7 @@ export default function KwentoPlayer() {
     } finally {
       setHydrated(true);
     }
+    setQuizSolved(readQuizProgress());
   }, []);
 
   useEffect(() => {
@@ -86,6 +102,7 @@ export default function KwentoPlayer() {
       setSceneIdx(clamped);
       setBeatIdx(0);
       setEnded(false);
+      setQuizOpen(false);
     },
     [activeStation]
   );
@@ -139,11 +156,13 @@ export default function KwentoPlayer() {
     );
     setPlaying(false);
     setEnded(true);
+    setQuizOpen(false);
   };
 
   const handleRepeat = () => {
     const a = audioRef.current;
     setEnded(false);
+    setQuizOpen(false);
     setBeatIdx(0);
     if (a) {
       a.currentTime = 0;
@@ -159,6 +178,7 @@ export default function KwentoPlayer() {
   // that scene's audio hasn't started yet).
   const startScene = (idx: number, { restart = false } = {}) => {
     setEnded(false);
+    setQuizOpen(false);
     setJumpOpen(false);
     setPlaying(true);
     if (idx !== sceneIdx) {
@@ -206,7 +226,7 @@ export default function KwentoPlayer() {
   return (
     <>
       <div className="mk">
-        <QuizScoreBadge />
+        <ScoreBadge score={score} />
         <div className="mk-top">
           <button
             type="button"
@@ -254,35 +274,64 @@ export default function KwentoPlayer() {
                 <div className="mk-end-title">
                   Eksena {scene.scene} Tapos
                 </div>
-                <div className="mk-end-choices">
-                  <button
-                    type="button"
-                    className="mk-end-btn"
-                    onClick={handleRepeat}
-                  >
-                    ULITIN
-                  </button>
-                  <button
-                    type="button"
-                    className="mk-end-btn"
-                    onClick={() => {
-                      // closes the popup and shows the at-station screen
-                      // for the next station — stays inside Kwento instead
-                      // of leaving to the kiosk
-                      setEnded(false);
-                      setJumpOpen(true);
-                    }}
-                  >
-                    LUMABAS
-                  </button>
-                  <button
-                    type="button"
-                    className="mk-end-btn"
-                    onClick={() => router.push(`/map/quiz?scene=${scene.scene}`)}
-                  >
-                    PAGSUSULIT
-                  </button>
-                </div>
+
+                {quizOpen ? (
+                  <>
+                    {quizItems
+                      .filter((q) => q.scene === scene.scene)
+                      .map((q) => (
+                        <SalitaQuiz
+                          key={q.scene}
+                          item={q}
+                          solved={quizSolved.includes(q.scene)}
+                          onCorrect={() =>
+                            setQuizSolved(markQuizCorrect(q.scene))
+                          }
+                        />
+                      ))}
+                    <div className="mk-end-choices">
+                      <button
+                        type="button"
+                        className="mk-end-btn"
+                        onClick={() => setQuizOpen(false)}
+                      >
+                        &larr; BUMALIK
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="mk-end-choices">
+                    <button
+                      type="button"
+                      className="mk-end-btn"
+                      onClick={handleRepeat}
+                    >
+                      ULITIN
+                    </button>
+                    <button
+                      type="button"
+                      className="mk-end-btn"
+                      onClick={() => {
+                        // closes the popup and shows the at-station screen
+                        // for the next station — stays inside Kwento
+                        // instead of leaving to the kiosk
+                        setEnded(false);
+                        setJumpOpen(true);
+                      }}
+                    >
+                      LUMABAS
+                    </button>
+                    {quizItems.some((q) => q.scene === scene.scene) && (
+                      <button
+                        type="button"
+                        className="mk-end-btn"
+                        onClick={() => setQuizOpen(true)}
+                      >
+                        PAGSUSULIT
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -361,6 +410,7 @@ export default function KwentoPlayer() {
         <AtStation
           station={activeStation}
           title={scenes[activeStation - 1]?.title ?? scene.title}
+          score={score}
           visited={scenes
             .filter((s) => completed.includes(s.scene))
             .sort((a, b) => a.scene - b.scene)
