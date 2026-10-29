@@ -23,12 +23,17 @@ export const quizItems: QuizItem[] = [
   { scene: 10, pattern: "L___NG _I__BU_N", answer: "LUPANG TINUBUAN" },
 ];
 
-export const POINTS_PER_CORRECT = 10;
+export const POINTS_PER_CORRECT = 1;
 export const MAX_SCORE = quizItems.length * POINTS_PER_CORRECT;
 
-const QUIZ_STORAGE_KEY = "kultura-kwento-quiz-v1";
+// one submitted answer per scene — kept (not just right/wrong) so the
+// results screen at the end can show what the player actually typed
+// next to the correct word
+export type QuizAnswer = { scene: number; guess: string; correct: boolean };
 
-export function readQuizProgress(): number[] {
+const QUIZ_STORAGE_KEY = "kultura-kwento-quiz-v2";
+
+export function readQuizAnswers(): QuizAnswer[] {
   try {
     const raw = window.localStorage.getItem(QUIZ_STORAGE_KEY);
     if (!raw) return [];
@@ -39,12 +44,17 @@ export function readQuizProgress(): number[] {
   }
 }
 
-// records a correct answer for a scene — idempotent, so re-answering
-// correctly never awards points twice
-export function markQuizCorrect(scene: number): number[] {
-  const current = readQuizProgress();
-  if (current.includes(scene)) return current;
-  const next = [...current, scene];
+// records (or replaces) the answer for a scene — one answer per scene,
+// correctness is never revealed back to the caller here on purpose
+export function recordQuizAnswer(
+  scene: number,
+  guess: string,
+  correct: boolean
+): QuizAnswer[] {
+  const next = [
+    ...readQuizAnswers().filter((a) => a.scene !== scene),
+    { scene, guess, correct },
+  ];
   try {
     window.localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(next));
   } catch {
@@ -58,7 +68,9 @@ export function markQuizCorrect(scene: number): number[] {
 export function useQuizScore(): number {
   const [score, setScore] = useState(0);
   useEffect(() => {
-    setScore(readQuizProgress().length * POINTS_PER_CORRECT);
+    setScore(
+      readQuizAnswers().filter((a) => a.correct).length * POINTS_PER_CORRECT
+    );
   }, []);
   return score;
 }

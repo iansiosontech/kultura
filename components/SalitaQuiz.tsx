@@ -5,11 +5,17 @@ import type { QuizItem } from "@/lib/kwentoQuiz";
 
 type SalitaQuizProps = {
   item: QuizItem;
-  solved: boolean;
-  onCorrect: () => void;
+  answered: boolean;
+  onSubmit: (guess: string, correct: boolean) => void;
 };
 
-export default function SalitaQuiz({ item, solved, onCorrect }: SalitaQuizProps) {
+// One submission per scene, no right/wrong reveal here — the player only
+// finds out at the results screen once all 10 scenes are done.
+export default function SalitaQuiz({
+  item,
+  answered,
+  onSubmit,
+}: SalitaQuizProps) {
   // indices into pattern/answer that are blanks — pattern and answer are
   // the same length and character-aligned, so these indices work for both
   const blankIdxs = [...item.pattern].reduce<number[]>((acc, ch, i) => {
@@ -20,13 +26,14 @@ export default function SalitaQuiz({ item, solved, onCorrect }: SalitaQuizProps)
   const [letters, setLetters] = useState<string[]>(() =>
     blankIdxs.map(() => "")
   );
-  const [wrong, setWrong] = useState(false);
+  const [incomplete, setIncomplete] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  if (solved) {
+  if (answered) {
     return (
-      <p className="quiz-feedback quiz-feedback--correct">
-        Tama! {item.answer}
+      <p className="quiz-feedback">
+        Naisumite na ang iyong sagot. Makikita ang resulta sa dulo ng
+        lahat ng eksena.
       </p>
     );
   }
@@ -38,7 +45,7 @@ export default function SalitaQuiz({ item, solved, onCorrect }: SalitaQuizProps)
       next[blankPos] = v;
       return next;
     });
-    setWrong(false);
+    setIncomplete(false);
     if (v && blankPos < blankIdxs.length - 1) {
       inputRefs.current[blankPos + 1]?.focus();
     }
@@ -52,14 +59,20 @@ export default function SalitaQuiz({ item, solved, onCorrect }: SalitaQuizProps)
     };
 
   const handleSubmit = () => {
+    if (letters.some((l) => !l)) {
+      setIncomplete(true);
+      return;
+    }
+    const guess = [...item.pattern]
+      .map((ch, i) => {
+        if (ch === "_") return letters[blankIdxs.indexOf(i)];
+        return ch;
+      })
+      .join("");
     const correct = blankIdxs.every(
       (charIdx, i) => letters[i] === item.answer[charIdx].toUpperCase()
     );
-    if (correct) {
-      onCorrect();
-    } else {
-      setWrong(true);
-    }
+    onSubmit(guess, correct);
   };
 
   return (
@@ -99,9 +112,9 @@ export default function SalitaQuiz({ item, solved, onCorrect }: SalitaQuizProps)
       <button type="button" className="quiz-btn" onClick={handleSubmit}>
         SUBUKAN
       </button>
-      {wrong && (
+      {incomplete && (
         <p className="quiz-feedback quiz-feedback--wrong">
-          Mali, subukan ulit!
+          Punan muna ang lahat ng kahon.
         </p>
       )}
     </div>
