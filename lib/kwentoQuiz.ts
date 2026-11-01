@@ -20,7 +20,7 @@ export const quizItems: QuizItem[] = [
   // pattern must be the exact same length as answer, character-for-character
   // aligned (including the literal space and hyphen) — each "_" becomes one
   // letter-box input
-  { scene: 10, pattern: "L___NG _I__BU_N", answer: "LUPANG TINUBUAN" },
+  { scene: 10, pattern: "L___NG-_I__BU_N", answer: "LUPANG-TINUBUAN" },
 ];
 
 export const POINTS_PER_CORRECT = 1;
