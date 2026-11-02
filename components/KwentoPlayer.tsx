@@ -279,9 +279,26 @@ export default function KwentoPlayer() {
             <img src={imageSrc(beat.n)} alt={`Larawan ${beat.n}`} />
             {ended && (
               <div className="mk-end">
+                {endView === "choices" && (
+                  <div className="mk-end-sparkles" aria-hidden="true">
+                    <span className="mk-sparkle" style={{ left: "12%", top: "18%", animationDelay: "0s" }}>✦</span>
+                    <span className="mk-sparkle" style={{ left: "85%", top: "22%", animationDelay: ".4s" }}>✦</span>
+                    <span className="mk-sparkle" style={{ left: "20%", top: "68%", animationDelay: ".8s" }}>✧</span>
+                    <span className="mk-sparkle" style={{ left: "78%", top: "72%", animationDelay: "1.2s" }}>✦</span>
+                    <span className="mk-sparkle" style={{ left: "50%", top: "10%", animationDelay: "1.6s" }}>✧</span>
+                  </div>
+                )}
+
+                {endView === "choices" && (
+                  <div className="mk-end-badge" aria-hidden="true">✓</div>
+                )}
+
                 <div className="mk-end-title">
-                  Eksena {scene.scene} Tapos
+                  {endView === "choices" ? "Eksena Tapos!" : `Eksena ${scene.scene} Tapos`}
                 </div>
+                {endView === "choices" && (
+                  <div className="mk-end-subtitle">{scene.title}</div>
+                )}
 
                 {endView === "quiz" && (
                   <>
