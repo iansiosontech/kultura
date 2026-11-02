@@ -232,7 +232,6 @@ export default function KwentoPlayer() {
   return (
     <>
       <div className="mk">
-        <ScoreBadge score={score} />
         <div className="mk-top">
           <button
             type="button"
@@ -245,8 +244,11 @@ export default function KwentoPlayer() {
             &larr; BUMALIK
           </button>
           <div className="mk-title">Maikling Kwento</div>
-          <div className="mk-count">
-            SCENE {pad(scene.scene)} / {pad(scenes.length)}
+          <div className="mk-top-right">
+            <div className="mk-count">
+              SCENE {pad(scene.scene)} / {pad(scenes.length)}
+            </div>
+            <ScoreBadge score={score} floating={false} />
           </div>
         </div>
 
