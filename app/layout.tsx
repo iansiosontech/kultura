@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bungee, Literata, Space_Mono } from "next/font/google";
 import "./globals.css";
+import SfxProvider from "@/components/SfxProvider";
 
 const bungee = Bungee({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
       >
         <div className="app-scroll">{children}</div>
         <div className="chrome-frame" />
+        <SfxProvider />
       </body>
     </html>
   );
