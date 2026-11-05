@@ -4,6 +4,7 @@ import StationPlatformBackground from "@/components/StationPlatformBackground";
 import TrainParked from "@/components/TrainParked";
 import ScoreBadge from "@/components/ScoreBadge";
 import { badges } from "@/lib/badges";
+import { trainTierFor } from "@/lib/trainTiers";
 
 type AtStationProps = {
   station: number;
@@ -11,6 +12,7 @@ type AtStationProps = {
   visited: { scene: number; title: string }[];
   hasProgress: boolean;
   score: number;
+  completedCount: number;
   onStart: () => void;
   onRestart: () => void;
   onClose: () => void;
@@ -23,11 +25,13 @@ export default function AtStation({
   visited,
   hasProgress,
   score,
+  completedCount,
   onStart,
   onRestart,
   onClose,
   onRevisit,
 }: AtStationProps) {
+  const tier = trainTierFor(completedCount);
   return (
     <div className="ats-overlay">
       <StationPlatformBackground />
@@ -62,8 +66,11 @@ export default function AtStation({
       )}
 
       <div className="trp-dock">
-        <TrainParked />
+        <TrainParked completedCount={completedCount} />
       </div>
+      {tier.id !== "classic" && (
+        <span className="trp-tier-tag">{tier.name}</span>
+      )}
 
       <div className="ats-platform" aria-hidden="true" />
 

@@ -497,24 +497,43 @@ html, body { height: 100%; margin: 0; }
    client's spec. Fully vector: no external art dependency. */
 .trp-dock{position:absolute;z-index:2;left:-25vh;bottom:15vh;
   height:30vh;overflow:visible;pointer-events:none;}
-.trp{position:relative;height:100%;}
+.trp-tier-tag{position:absolute;left:4vh;bottom:12vh;z-index:3;
+  font:800 9px/1 ui-monospace,monospace;letter-spacing:.08em;color:#2A2317;
+  background:#FFD98A;border:2px solid #3D3222;border-radius:99px;
+  padding:4px 10px;box-shadow:0 2px 0 #3D3222;white-space:nowrap;
+  animation:mk-pop-in .4s cubic-bezier(.34,1.56,.64,1) both;}
+.trp{position:relative;height:100%;
+  --trp-body:#1B140C;--trp-body-stroke:#120D08;--trp-trim:#D9A431;
+  --trp-rivet:#8A6A1F;--trp-beam:#6E1A22;--trp-pilot:#241A10;
+  --trp-wheel-tire:#15110B;--trp-wheel-hub:#D9A431;--trp-wheel-spoke:#8A6A1F;}
 .trp-img{position:absolute;left:0;bottom:0;height:100%;width:auto;max-width:none;
   overflow:visible;filter:drop-shadow(0 16px 20px rgba(0,0,0,.5));}
 
-.trp-body{fill:#1B140C;stroke:#120D08;stroke-width:3;}
-.trp-trim{fill:#D9A431;}
+.trp-body{fill:var(--trp-body);stroke:var(--trp-body-stroke);stroke-width:3;}
+.trp-trim{fill:var(--trp-trim);}
 .trp-window{fill:#FFFBF0;stroke:#120D08;stroke-width:2;}
-.trp-nose-rim{fill:none;stroke:#D9A431;stroke-width:4;}
-.trp-rivet{fill:#8A6A1F;}
+.trp-nose-rim{fill:none;stroke:var(--trp-trim);stroke-width:4;}
+.trp-rivet{fill:var(--trp-rivet);}
 .trp-lamp{fill:#FFE9A3;filter:drop-shadow(0 0 6px rgba(255,217,138,.8));}
-.trp-lamp-rim{fill:none;stroke:#D9A431;stroke-width:3;}
-.trp-beam{fill:#6E1A22;stroke:#120D08;stroke-width:2;}
-.trp-pilot{fill:#241A10;stroke:#120D08;stroke-width:3;}
-.trp-pilot-slat{stroke:#D9A431;stroke-width:4;}
+.trp-lamp-rim{fill:none;stroke:var(--trp-trim);stroke-width:3;}
+.trp-beam{fill:var(--trp-beam);stroke:#120D08;stroke-width:2;}
+.trp-pilot{fill:var(--trp-pilot);stroke:#120D08;stroke-width:3;}
+.trp-pilot-slat{stroke:var(--trp-trim);stroke-width:4;}
 
-.trp-wheel-tire{fill:#15110B;stroke:#D9A431;stroke-width:4;}
-.trp-wheel-hub{fill:#D9A431;}
-.trp-wheel-spoke{fill:#8A6A1F;}
+.trp-wheel-tire{fill:var(--trp-wheel-tire);stroke:var(--trp-trim);stroke-width:4;}
+.trp-wheel-hub{fill:var(--trp-wheel-hub);}
+.trp-wheel-spoke{fill:var(--trp-wheel-spoke);}
+
+/* unlocked liveries — purely cosmetic, same geometry */
+.trp--bronze{--trp-body:#4A2A14;--trp-body-stroke:#2A170B;--trp-trim:#E8A24A;
+  --trp-rivet:#B8702A;--trp-beam:#7A2E18;--trp-pilot:#3A2010;
+  --trp-wheel-tire:#2A170B;--trp-wheel-hub:#E8A24A;--trp-wheel-spoke:#B8702A;}
+.trp--green{--trp-body:#14402E;--trp-body-stroke:#0B2619;--trp-trim:#F2C14E;
+  --trp-rivet:#8FAD3E;--trp-beam:#1F5C3F;--trp-pilot:#0F2E20;
+  --trp-wheel-tire:#0B2619;--trp-wheel-hub:#F2C14E;--trp-wheel-spoke:#8FAD3E;}
+.trp--gold{--trp-body:#8A6A1F;--trp-body-stroke:#4A3A10;--trp-trim:#FFF4D6;
+  --trp-rivet:#FFE9A3;--trp-beam:#B5451B;--trp-pilot:#6A5218;
+  --trp-wheel-tire:#5A4616;--trp-wheel-hub:#FFF4D6;--trp-wheel-spoke:#FFE9A3;}
 
 .trp-smoke circle{fill:url(#trp-puff-grad);animation:trp-puff 1.1s ease-out infinite;
   transform-box:fill-box;transform-origin:center;}

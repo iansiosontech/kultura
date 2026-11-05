@@ -2,6 +2,8 @@
 // No external art dependency: fully vector, so it's crisp at any size and
 // costs nothing to keep tweaking.
 
+import { trainTierFor } from "@/lib/trainTiers";
+
 function Wheel({ cx, cy, r }: { cx: number; cy: number; r: number }) {
   return (
     <g className="trp-wheel" style={{ transformOrigin: `${cx}px ${cy}px` }}>
@@ -22,9 +24,18 @@ function Wheel({ cx, cy, r }: { cx: number; cy: number; r: number }) {
   );
 }
 
-export default function TrainParked({ moving = false }: { moving?: boolean }) {
+type TrainParkedProps = { moving?: boolean; completedCount?: number };
+
+export default function TrainParked({
+  moving = false,
+  completedCount = 0,
+}: TrainParkedProps) {
+  const tier = trainTierFor(completedCount);
   return (
-    <div className={`trp ${moving ? "trp--moving" : ""}`} aria-hidden="true">
+    <div
+      className={`trp ${moving ? "trp--moving" : ""} ${tier.className}`}
+      aria-hidden="true"
+    >
       <svg
         className="trp-img"
         viewBox="0 0 640 260"
