@@ -8,6 +8,7 @@ import {
   audioSrc,
   pad,
   beatBoundaries,
+  PROGRESS_STORAGE_KEY,
 } from "@/lib/kwentoScenes";
 import AtStation from "@/components/AtStation";
 import ScoreBadge from "@/components/ScoreBadge";
@@ -20,8 +21,6 @@ import {
   POINTS_PER_CORRECT,
   type QuizAnswer,
 } from "@/lib/kwentoQuiz";
-
-const STORAGE_KEY = "kultura-kwento-progress-v3";
 
 export default function KwentoPlayer() {
   const router = useRouter();
@@ -67,7 +66,7 @@ export default function KwentoPlayer() {
   // restore last position
   useEffect(() => {
     try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
+      const raw = window.localStorage.getItem(PROGRESS_STORAGE_KEY);
       if (raw) {
         const p = JSON.parse(raw) as { sceneIdx: number; completed: number[] };
         if (Array.isArray(p.completed)) setCompleted(p.completed);
@@ -93,7 +92,7 @@ export default function KwentoPlayer() {
     if (!hydrated) return;
     try {
       window.localStorage.setItem(
-        STORAGE_KEY,
+        PROGRESS_STORAGE_KEY,
         JSON.stringify({ sceneIdx, completed })
       );
     } catch {

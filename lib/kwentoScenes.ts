@@ -1,3 +1,7 @@
+// progress saved here: { sceneIdx, completed[] } — shared with the reset
+// utility, which needs to clear this same key
+export const PROGRESS_STORAGE_KEY = "kultura-kwento-progress-v3";
+
 export type Beat = {
   n: number; // image number — resolves to /images/{n}.jpg
   text: string; // narration line shown while this beat is current

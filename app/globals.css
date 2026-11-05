@@ -1,3 +1,21 @@
+/* Utilities only, deliberately no `base`/`components` — every visible
+   element in this app is hand-styled custom CSS, written and tuned with
+   no Tailwind reset ever active. Pulling in Preflight now would shift
+   margins/fonts on all of it. The few Tailwind utility classes used here
+   (on back-link buttons) were silently generating zero CSS until this was
+   added — this is the fix for that, not a decision to adopt Tailwind more
+   broadly. */
+@tailwind utilities;
+
+/* Every top-level page uses `<main className="relative h-full ...">`,
+   which needs an unbroken height:100% chain up to the viewport to mean
+   anything — without it `h-full` resolves to 0. This chain was never
+   written because `h-full` was a silent no-op before @tailwind utilities
+   was added above; main's box happened to still size itself from content
+   via normal flow. Completing the chain now that the utility is real. */
+html, body { height: 100%; margin: 0; }
+.app-scroll { height: 100%; }
+
 /* ================= Landing hero: generated station artwork ================= */
 
 .hero-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#1C140A;}
@@ -554,6 +572,13 @@
   background:#FFD98A;border:2px solid #3D3222;border-radius:99px;
   padding:8px 14px;box-shadow:0 3px 0 #3D3222;flex-shrink:0;}
 .quiz-score-badge--inline{position:static;top:auto;right:auto;}
+
+.reset-btn{border:2px solid #3D3222;background:#FFFBF0;border-radius:99px;
+  padding:8px 14px;font:700 11px/1 ui-monospace,monospace;letter-spacing:.1em;
+  color:#B5451B;box-shadow:0 3px 0 #3D3222;cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;}
+.reset-btn:hover{transform:translateY(-1px);box-shadow:0 4px 0 #3D3222;}
+.reset-btn:active{transform:translateY(2px) scale(.96);box-shadow:0 1px 0 #3D3222;}
 
 .quiz-eyebrow{font:700 11px/1 ui-monospace,monospace;letter-spacing:.18em;
   color:#FFD98A;text-transform:uppercase;margin-bottom:10px;opacity:.85;}

@@ -31,7 +31,7 @@ export const MAX_SCORE = quizItems.length * POINTS_PER_CORRECT;
 // next to the correct word
 export type QuizAnswer = { scene: number; guess: string; correct: boolean };
 
-const QUIZ_STORAGE_KEY = "kultura-kwento-quiz-v2";
+export const QUIZ_STORAGE_KEY = "kultura-kwento-quiz-v2";
 
 export function readQuizAnswers(): QuizAnswer[] {
   try {
