@@ -3,6 +3,7 @@ import TrainWindowBackground from "@/components/TrainWindowBackground";
 import LineChoices from "@/components/LineChoices";
 import QuizScoreBadge from "@/components/QuizScoreBadge";
 import ResetProgressButton from "@/components/ResetProgressButton";
+import BadgesPanel from "@/components/BadgesPanel";
 
 export default function MapPage() {
   return (
@@ -21,6 +22,7 @@ export default function MapPage() {
       </div>
 
       <LineChoices />
+      <BadgesPanel />
     </main>
   );
 }

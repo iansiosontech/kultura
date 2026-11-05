@@ -286,3 +286,17 @@ export function beatBoundaries(beats: Beat[], pace = WORDS_PER_SECOND): number[]
     return at;
   });
 }
+
+// reads which scenes have been completed — shared by anything that needs
+// to know progress without owning the full KwentoPlayer state (badges,
+// the completionist banner)
+export function readCompletedScenes(): number[] {
+  try {
+    const raw = window.localStorage.getItem(PROGRESS_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as { completed?: unknown };
+    return Array.isArray(parsed.completed) ? parsed.completed : [];
+  } catch {
+    return [];
+  }
+}
