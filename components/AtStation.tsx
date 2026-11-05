@@ -3,6 +3,7 @@
 import StationPlatformBackground from "@/components/StationPlatformBackground";
 import TrainParked from "@/components/TrainParked";
 import ScoreBadge from "@/components/ScoreBadge";
+import { badges } from "@/lib/badges";
 
 type AtStationProps = {
   station: number;
@@ -54,7 +55,7 @@ export default function AtStation({
               onClick={() => onRevisit(v.scene)}
               aria-label={`Balikan ang Istasyon ${v.scene}`}
             >
-              {v.scene}
+              {badges.find((b) => b.scene === v.scene)?.icon ?? v.scene}
             </button>
           ))}
         </div>

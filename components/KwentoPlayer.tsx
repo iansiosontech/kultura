@@ -21,6 +21,7 @@ import {
   POINTS_PER_CORRECT,
   type QuizAnswer,
 } from "@/lib/kwentoQuiz";
+import { badges } from "@/lib/badges";
 
 export default function KwentoPlayer() {
   const router = useRouter();
@@ -266,7 +267,7 @@ export default function KwentoPlayer() {
                   onClick={() => goScene(s.scene - 1)}
                   aria-label={`Balikan ang Istasyon ${s.scene}`}
                 >
-                  {s.scene}
+                  {badges.find((b) => b.scene === s.scene)?.icon ?? s.scene}
                 </button>
               ))}
           </div>
