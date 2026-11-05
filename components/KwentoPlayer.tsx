@@ -22,6 +22,7 @@ import {
   type QuizAnswer,
 } from "@/lib/kwentoQuiz";
 import { badges } from "@/lib/badges";
+import { playLevelComplete } from "@/lib/sfx";
 
 export default function KwentoPlayer() {
   const router = useRouter();
@@ -163,6 +164,7 @@ export default function KwentoPlayer() {
     setPlaying(false);
     setEnded(true);
     setEndView("choices");
+    playLevelComplete();
   };
 
   const handleRepeat = () => {
