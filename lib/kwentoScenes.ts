@@ -256,14 +256,11 @@ export const scenes: Scene[] = [
 
 export const pad = (n: number) => String(n).padStart(2, "0");
 
-// Matches the basePath GitHub Pages serves the site under (see next.config.mjs).
-const basePath = process.env.NODE_ENV === "production" ? "/kultura" : "";
-
-export const imageSrc = (n: number) => `${basePath}/images/${n}.jpg`;
+export const imageSrc = (n: number) => `/images/${n}.jpg`;
 // Files are named like "VO. SCENE 1.mp4" — spaces must be URL-encoded,
 // so encode the filename only (not the folder slashes).
 export const audioSrc = (scene: number) =>
-  `${basePath}/audio/${encodeURIComponent(`VO. SCENE ${scene}.mp4`)}`;
+  `/audio/${encodeURIComponent(`VO. SCENE ${scene}.mp4`)}`;
 
 // Rough narration pace used to time when each beat's image/caption should
 // appear. There are no real per-word timestamps in the source material, so
