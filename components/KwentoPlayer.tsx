@@ -466,6 +466,7 @@ export default function KwentoPlayer() {
           station={activeStation}
           title={scenes[activeStation - 1]?.title ?? scene.title}
           score={score}
+          completedCount={completed.length}
           visited={scenes
             .filter((s) => completed.includes(s.scene))
             .sort((a, b) => a.scene - b.scene)
