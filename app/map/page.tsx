@@ -4,6 +4,7 @@ import LineChoices from "@/components/LineChoices";
 import QuizScoreBadge from "@/components/QuizScoreBadge";
 import ResetProgressButton from "@/components/ResetProgressButton";
 import BadgesPanel from "@/components/BadgesPanel";
+import MapCompletionBar from "@/components/MapCompletionBar";
 
 export default function MapPage() {
   return (
@@ -34,6 +35,8 @@ export default function MapPage() {
           🚂
         </Link>
       </div>
+
+      <MapCompletionBar />
 
       <LineChoices />
       <BadgesPanel />

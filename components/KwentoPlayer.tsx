@@ -14,6 +14,7 @@ import AtStation from "@/components/AtStation";
 import ScoreBadge from "@/components/ScoreBadge";
 import SalitaQuiz from "@/components/SalitaQuiz";
 import QuizResults from "@/components/QuizResults";
+import CompletionBar from "@/components/CompletionBar";
 import {
   quizItems,
   readQuizAnswers,
@@ -252,6 +253,10 @@ export default function KwentoPlayer() {
             </div>
             <ScoreBadge score={score} floating={false} />
           </div>
+        </div>
+
+        <div className="mk-progress-row">
+          <CompletionBar completed={completed.length} total={scenes.length} />
         </div>
 
         {completed.length > 0 && (
