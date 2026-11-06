@@ -8,7 +8,8 @@ const SUBMITTED_KEY = "kultura-kwento-leaderboard-submitted-v1";
 
 type Status = "idle" | "loading" | "ready" | "unavailable";
 
-export default function Leaderboard({ score }: { score: number }) {
+export default function Leaderboard({ score }: { score?: number }) {
+  const canSubmit = typeof score === "number";
   const [status, setStatus] = useState<Status>("idle");
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [name, setName] = useState("");
@@ -43,7 +44,7 @@ export default function Leaderboard({ score }: { score: number }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = name.trim();
-    if (!trimmed || submitting) return;
+    if (!trimmed || submitting || !canSubmit) return;
     setSubmitting(true);
     const ok = await submitScore(trimmed, score);
     setSubmitting(false);
@@ -61,7 +62,7 @@ export default function Leaderboard({ score }: { score: number }) {
   return (
     <div className="leaderboard">
       <p className="quiz-eyebrow">PANGUNAHING MANLALAKBAY</p>
-      {!submitted && (
+      {canSubmit && !submitted && (
         <form className="leaderboard-form" onSubmit={handleSubmit}>
           <input
             className="leaderboard-input"
@@ -81,7 +82,9 @@ export default function Leaderboard({ score }: { score: number }) {
           </button>
         </form>
       )}
-      {submitted && <p className="leaderboard-submitted">Naipasa na ang iskor mo!</p>}
+      {canSubmit && submitted && (
+        <p className="leaderboard-submitted">Naipasa na ang iskor mo!</p>
+      )}
       <ol className="leaderboard-list">
         {status === "loading" && entries.length === 0 && (
           <li className="leaderboard-empty">Naglo-load...</li>
