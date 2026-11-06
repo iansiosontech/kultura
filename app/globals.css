@@ -276,7 +276,7 @@ html, body { height: 100%; margin: 0; }
 
 @media (prefers-reduced-motion: reduce){
   .tk-machine-hint,.tk-machine-hint em{animation:none!important;}
-  .trp-img,.trp-wheel,.trp-smoke circle{animation:none!important;}
+  .trp-img,.trp-wheel,.trp-smoke circle,.trp-idle-smoke circle,.trp-sheen{animation:none!important;}
 }
 
 /* keep this LAST — it must override the card rules above */
@@ -545,6 +545,25 @@ html, body { height: 100%; margin: 0; }
 .trp--moving .trp-wheel{animation:trp-spin .5s linear infinite;}
 @keyframes trp-spin{to{transform:rotate(360deg)}}
 
+/* gentle sway + idle steam while parked, so it doesn't look frozen */
+.trp--idle .trp-img{animation:trp-bob 3.2s ease-in-out infinite;}
+@keyframes trp-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1%)}}
+.trp-idle-smoke circle{fill:url(#trp-puff-grad);animation:trp-idle-puff 3.2s ease-out infinite;
+  transform-box:fill-box;transform-origin:center;opacity:.55;}
+@keyframes trp-idle-puff{0%{transform:translateY(0) scale(.4);opacity:.45}
+  100%{transform:translateY(-70px) scale(1.3);opacity:0}}
+
+/* departure: wheel-spin + float continue, train slides off toward the
+   right before the scene swaps in (timed from AtStation's setTimeout) */
+.trp--departing .trp-img{animation:trp-float .35s ease-in-out infinite,
+  trp-depart .6s cubic-bezier(.4,0,1,1) forwards;}
+@keyframes trp-depart{to{transform:translateX(70vw);opacity:0}}
+
+/* gold tier: a light sheen sweeps across the boiler on a slow loop */
+.trp-sheen{animation:trp-sheen-sweep 2.6s ease-in-out infinite;
+  transform-box:fill-box;transform-origin:center;}
+@keyframes trp-sheen-sweep{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+
 @media (max-width:860px){
   .trp-dock{left:-18vh;height:22vh;bottom:13vh;}
 }
@@ -561,6 +580,7 @@ html, body { height: 100%; margin: 0; }
   box-shadow:0 6px 0 #3D3222,0 14px 30px rgba(0,0,0,.4);}
 .ats-start--alt:hover{box-shadow:0 8px 0 #3D3222,0 16px 32px rgba(0,0,0,.42);}
 .ats-start--alt:active{box-shadow:0 2px 0 #3D3222;}
+.ats-start:disabled{opacity:.6;cursor:default;transform:none!important;}
 
 @media (max-width:860px){
   .ats-scene{gap:8vw;padding:0 5vw 13vh;}
@@ -651,6 +671,21 @@ html, body { height: 100%; margin: 0; }
   border-radius:16px;background:rgba(26,18,8,.72);border:1px solid rgba(255,255,255,.14);
   box-shadow:0 10px 30px rgba(0,0,0,.35);border-top:1px solid rgba(255,255,255,.14);}
 .leaderboard{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12);}
+
+/* ================= Train garage (collection screen) ================= */
+.garage-page{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:14px;padding:80px 20px 40px;text-align:center;}
+.garage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:440px;width:100%;}
+.garage-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 10px;
+  border-radius:16px;background:rgba(26,18,8,.72);border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);}
+.garage-train{position:relative;height:72px;width:100%;overflow:hidden;}
+.garage-train--locked{filter:grayscale(1) brightness(.55);}
+.garage-lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:22px;z-index:2;}
+.garage-name{font:800 11px/1.3 ui-monospace,monospace;color:#FFD98A;margin:0;}
+.garage-req{font:600 10px/1.3 ui-monospace,monospace;color:#FFFBF0;opacity:.7;margin:0;}
+@media (max-width:420px){.garage-grid{grid-template-columns:1fr;}}
 .leaderboard-form{display:flex;gap:8px;margin:8px 0 12px;}
 .leaderboard-input{flex:1;min-width:0;padding:10px 12px;border-radius:10px;
   border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);

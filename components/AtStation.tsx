@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import StationPlatformBackground from "@/components/StationPlatformBackground";
 import TrainParked from "@/components/TrainParked";
 import ScoreBadge from "@/components/ScoreBadge";
@@ -32,6 +33,23 @@ export default function AtStation({
   onRevisit,
 }: AtStationProps) {
   const tier = trainTierFor(completedCount);
+  const [departing, setDeparting] = useState(false);
+
+  // plays the train's slide-out animation before actually starting the
+  // scene — skipped for prefers-reduced-motion so those users aren't
+  // stuck waiting on an animation that CSS disabled anyway
+  const depart = (go: () => void) => {
+    const skip =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (skip) {
+      go();
+      return;
+    }
+    setDeparting(true);
+    window.setTimeout(go, 600);
+  };
+
   return (
     <div className="ats-overlay">
       <StationPlatformBackground />
@@ -66,7 +84,7 @@ export default function AtStation({
       )}
 
       <div className="trp-dock">
-        <TrainParked completedCount={completedCount} />
+        <TrainParked completedCount={completedCount} departing={departing} />
       </div>
       {tier.id !== "classic" && (
         <span className="trp-tier-tag">{tier.name}</span>
@@ -86,19 +104,30 @@ export default function AtStation({
       <div className="ats-bottom">
         {hasProgress ? (
           <>
-            <button type="button" className="ats-start" onClick={onStart}>
+            <button
+              type="button"
+              className="ats-start"
+              disabled={departing}
+              onClick={() => depart(onStart)}
+            >
               IPAGPATULOY &rarr;
             </button>
             <button
               type="button"
               className="ats-start ats-start--alt"
-              onClick={onRestart}
+              disabled={departing}
+              onClick={() => depart(onRestart)}
             >
               MULA SA SIMULA
             </button>
           </>
         ) : (
-          <button type="button" className="ats-start" onClick={onStart}>
+          <button
+            type="button"
+            className="ats-start"
+            disabled={departing}
+            onClick={() => depart(onStart)}
+          >
             SIMULAN &rarr;
           </button>
         )}

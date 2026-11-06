@@ -24,16 +24,24 @@ function Wheel({ cx, cy, r }: { cx: number; cy: number; r: number }) {
   );
 }
 
-type TrainParkedProps = { moving?: boolean; completedCount?: number };
+type TrainParkedProps = {
+  moving?: boolean;
+  departing?: boolean;
+  completedCount?: number;
+};
 
 export default function TrainParked({
   moving = false,
+  departing = false,
   completedCount = 0,
 }: TrainParkedProps) {
   const tier = trainTierFor(completedCount);
+  const active = moving || departing;
   return (
     <div
-      className={`trp ${moving ? "trp--moving" : ""} ${tier.className}`}
+      className={`trp ${active ? "trp--moving" : "trp--idle"} ${
+        departing ? "trp--departing" : ""
+      } ${tier.className}`}
       aria-hidden="true"
     >
       <svg
@@ -47,6 +55,11 @@ export default function TrainParked({
             <stop offset="70%" stopColor="#FFFCF4" stopOpacity="0.5" />
             <stop offset="100%" stopColor="#FFFCF4" stopOpacity="0" />
           </radialGradient>
+          <linearGradient id="trp-sheen-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+            <stop offset="50%" stopColor="#FFFFFF" stopOpacity=".55" />
+            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+          </linearGradient>
         </defs>
 
         {/* connecting rod linking the drivers */}
@@ -127,12 +140,28 @@ export default function TrainParked({
         <Wheel cx={410} cy={215} r={34} />
         <Wheel cx={520} cy={218} r={19} />
 
-        {moving && (
+        {active ? (
           <g className="trp-smoke">
             <circle cx="393" cy="30" r="14" style={{ animationDelay: "-.35s" }} />
             <circle cx="393" cy="30" r="18" style={{ animationDelay: "-.7s" }} />
             <circle cx="393" cy="30" r="11" />
           </g>
+        ) : (
+          <g className="trp-idle-smoke">
+            <circle cx="393" cy="30" r="9" />
+          </g>
+        )}
+
+        {tier.id === "gold" && (
+          <rect
+            x="140"
+            y="95"
+            width="330"
+            height="72"
+            rx="34"
+            fill="url(#trp-sheen-grad)"
+            className="trp-sheen"
+          />
         )}
       </svg>
     </div>

@@ -26,6 +26,13 @@ export default function MapPage() {
         >
           🏆
         </Link>
+        <Link
+          href="/garage"
+          aria-label="Mga Tren"
+          className="rounded-full border-2 border-[#3D3222] bg-[#FFFBF0] px-3 py-2 font-mono text-[14px] text-[#3D3222] no-underline shadow-[0_3px_0_#3D3222]"
+        >
+          🚂
+        </Link>
       </div>
 
       <LineChoices />
