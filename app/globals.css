@@ -645,6 +645,11 @@ html, body { height: 100%; margin: 0; }
   opacity:.7;overflow-wrap:anywhere;}
 
 /* ================= Leaderboard ================= */
+.leaderboard-page{position:absolute;inset:0;z-index:20;display:flex;
+  align-items:center;justify-content:center;padding:80px 20px 40px;}
+.leaderboard-page .leaderboard{width:100%;max-width:420px;margin:0;padding:20px;
+  border-radius:16px;background:rgba(26,18,8,.72);border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);border-top:1px solid rgba(255,255,255,.14);}
 .leaderboard{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12);}
 .leaderboard-form{display:flex;gap:8px;margin:8px 0 12px;}
 .leaderboard-input{flex:1;min-width:0;padding:10px 12px;border-radius:10px;
