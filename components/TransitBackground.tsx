@@ -1,10 +1,8 @@
-const basePath = process.env.NODE_ENV === "production" ? "/kultura" : "";
-
 export default function TransitBackground() {
   return (
     <div className="hero-bg" aria-hidden="true">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={`${basePath}/hero/landing-train.png`} alt="" />
+      <img src="/hero/landing-train.png" alt="" />
       <div className="hero-rays" />
       <div className="hero-particles">
         <b className="hero-p hero-p--1" />

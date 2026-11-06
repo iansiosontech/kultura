@@ -1,6 +1,7 @@
 "use client";
 
 import { quizItems, MAX_SCORE, type QuizAnswer } from "@/lib/kwentoQuiz";
+import Leaderboard from "@/components/Leaderboard";
 
 type QuizResultsProps = {
   answers: QuizAnswer[];
@@ -38,6 +39,7 @@ export default function QuizResults({ answers, score }: QuizResultsProps) {
           );
         })}
       </div>
+      <Leaderboard score={score} />
     </div>
   );
 }

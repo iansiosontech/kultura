@@ -1,10 +1,8 @@
-const basePath = process.env.NODE_ENV === "production" ? "/kultura" : "";
-
 export default function TrainWindowBackground() {
   return (
     <div className="mapbg" aria-hidden="true">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={`${basePath}/hero/map-window.png`} alt="" />
+      <img src="/hero/map-window.png" alt="" />
       <div className="mapbg-glint" />
       <div className="mapbg-dust">
         {Array.from({ length: 8 }).map((_, i) => (
