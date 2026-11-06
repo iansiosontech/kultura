@@ -6,14 +6,13 @@ import {
   scenes,
   imageSrc,
   audioSrc,
-  pad,
   beatBoundaries,
   PROGRESS_STORAGE_KEY,
 } from "@/lib/kwentoScenes";
 import AtStation from "@/components/AtStation";
-import ScoreBadge from "@/components/ScoreBadge";
 import SalitaQuiz from "@/components/SalitaQuiz";
 import QuizResults from "@/components/QuizResults";
+import CompletionBar from "@/components/CompletionBar";
 import {
   quizItems,
   readQuizAnswers,
@@ -246,12 +245,10 @@ export default function KwentoPlayer() {
             &larr; BUMALIK
           </button>
           <div className="mk-title">Maikling Kwento</div>
-          <div className="mk-top-right">
-            <div className="mk-count">
-              SCENE {pad(scene.scene)} / {pad(scenes.length)}
-            </div>
-            <ScoreBadge score={score} floating={false} />
-          </div>
+        </div>
+
+        <div className="mk-progress-row">
+          <CompletionBar completed={completed.length} total={scenes.length} />
         </div>
 
         {completed.length > 0 && (

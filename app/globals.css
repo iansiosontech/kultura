@@ -301,6 +301,9 @@ html, body { height: 100%; margin: 0; }
   padding:14px 3vw 12px;gap:10px;}
 
 .mk-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;}
+.mk-progress-row{flex-shrink:0;margin-top:8px;}
+.map-progress-row{position:absolute;left:5vw;right:5vw;top:76px;z-index:28;
+  max-width:260px;}
 .mk-top-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .mk-back{border:2px solid #3D3222;background:#FFFBF0;border-radius:99px;
   padding:7px 14px;font:700 11px/1 ui-monospace,monospace;letter-spacing:.1em;
@@ -663,6 +666,32 @@ html, body { height: 100%; margin: 0; }
   overflow-wrap:anywhere;}
 .quiz-results-answer{font:600 11px/1.3 ui-monospace,monospace;color:#FFD98A;
   opacity:.7;overflow-wrap:anywhere;}
+
+/* ================= Completion progress bar ================= */
+.completion-bar{display:flex;align-items:center;gap:8px;}
+.completion-bar-track{position:relative;flex:1;min-width:60px;height:10px;
+  border-radius:99px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.15);
+  overflow:hidden;}
+.completion-bar-fill{position:relative;height:100%;border-radius:99px;
+  background:linear-gradient(90deg,#F2C14E,#FFD98A);
+  transition:width .5s cubic-bezier(.34,1.56,.64,1);overflow:hidden;}
+.completion-bar-shine{position:absolute;inset:0;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.65) 50%,transparent 70%);
+  animation:completion-shine 2.2s ease-in-out infinite;}
+@keyframes completion-shine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.completion-bar-label{font:800 10px/1 ui-monospace,monospace;letter-spacing:.06em;
+  color:#FFD98A;white-space:nowrap;}
+.completion-bar--pop .completion-bar-track{animation:completion-pop .55s cubic-bezier(.34,1.56,.64,1);}
+@keyframes completion-pop{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(1)}}
+.completion-bar--pop .completion-bar-label{animation:completion-label-pop .55s cubic-bezier(.34,1.56,.64,1);
+  color:#FFF4D6;}
+@keyframes completion-label-pop{0%{transform:scale(1)}35%{transform:scale(1.35)}100%{transform:scale(1)}}
+
+@media (prefers-reduced-motion: reduce){
+  .completion-bar-shine,.completion-bar--pop .completion-bar-track,
+  .completion-bar--pop .completion-bar-label{animation:none!important;}
+  .completion-bar-fill{transition:none!important;}
+}
 
 /* ================= Leaderboard ================= */
 .leaderboard-page{position:absolute;inset:0;z-index:20;display:flex;

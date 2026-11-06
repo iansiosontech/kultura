@@ -1,15 +1,14 @@
 import Link from "next/link";
 import TrainWindowBackground from "@/components/TrainWindowBackground";
 import LineChoices from "@/components/LineChoices";
-import QuizScoreBadge from "@/components/QuizScoreBadge";
 import ResetProgressButton from "@/components/ResetProgressButton";
 import BadgesPanel from "@/components/BadgesPanel";
+import MapCompletionBar from "@/components/MapCompletionBar";
 
 export default function MapPage() {
   return (
     <main className="relative h-full overflow-hidden">
       <TrainWindowBackground />
-      <QuizScoreBadge />
 
       <div className="absolute left-5 top-5 z-30 flex flex-wrap items-center gap-2 right-5">
         <Link
@@ -34,6 +33,8 @@ export default function MapPage() {
           🚂
         </Link>
       </div>
+
+      <MapCompletionBar />
 
       <LineChoices />
       <BadgesPanel />
