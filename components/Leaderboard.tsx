@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchLeaderboard, submitScore, type LeaderboardEntry } from "@/lib/leaderboard";
 import { playClick } from "@/lib/sfx";
 import type { QuizAnswer } from "@/lib/kwentoQuiz";
+import { readStudentInfo, studentDisplayName } from "@/lib/studentInfo";
 
 const SUBMITTED_KEY = "kultura-kwento-leaderboard-submitted-v1";
 
@@ -44,6 +45,7 @@ export default function Leaderboard({
     } catch {
       // ignore
     }
+    setName(studentDisplayName(readStudentInfo()));
   }, []);
 
   if (status === "unavailable") return null;
@@ -75,7 +77,7 @@ export default function Leaderboard({
             className="leaderboard-input"
             type="text"
             placeholder="Ilagay ang iyong pangalan"
-            maxLength={24}
+            maxLength={48}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />

@@ -38,6 +38,7 @@ export type Scene = {
 export const scenes: Scene[] = [
   {
     scene: 1,
+    pace: 2.393,
     title: "Pag-alis sa Tutuban",
     beats: [
       { n: 1, text: "Ang tren ay tumulak sa gitna ng sali-salimuot na mga ingay." },
@@ -65,6 +66,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 2,
+    pace: 2.338,
     title: "Sa Loob ng Tren",
     beats: [
       { n: 5, text: "Huminga nang maluwag ang kanyang Tiya Juana at ang sabi, \"Salamat at tayo'y nakatulak na rin. Kay init doon sa istasyon.\"" },
@@ -82,7 +84,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 3,
-    pace: 1.8,
+    pace: 2.208,
     title: "Pagdating sa Malawig",
     beats: [
       { n: 9, text: "Sa unang malas, ang Malawig ay walang pagkakaiba sa alinmang nayon sa Kalagitnaang Luzon." },
@@ -102,6 +104,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 4,
+    pace: 2.250,
     title: "Mga Kamag-anak",
     beats: [
       { n: 11, text: "Kay rami pala niyang kamag-anak doon." },
@@ -125,7 +128,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 5,
-    pace: 1.8,
+    pace: 2.048,
     title: "Sa Harap ng Bangkay",
     beats: [
       { n: 16, text: "Isang manipis na dingding ng sawali ang tanging nakapagitan sa bulwagan at sa pinakaloob ng bahay, na siyang kinabuburulan ng patay." },
@@ -144,7 +147,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 6,
-    pace: 1.8,
+    pace: 1.986,
     title: "Mga Alaala",
     beats: [
       { n: 20, text: "Pagkaraan ng ilang sandali ay umabot siya ng isang album sa mesang kalapit, binuksan iyon, at pinagmuni-muni ang mahiwaga at makapangyarihang kaugnayan ng dugo na nagbubuklod ng mga tao." },
@@ -163,8 +166,8 @@ export const scenes: Scene[] = [
   },
   {
     scene: 7,
-    pace: 1.8,
-    title: "Kwento ni Lolo Tasyo",
+    pace: 1.855,
+    title: "Kuwento ni Lolo Tasyo",
     beats: [
       { n: 25, text: "\"May mga sandali pong kailangan ng tao ang mapag-isa.\"" },
       { n: 25, text: "\"Ganyan din siya kung magsalita, bata pa'y magulang na ang isip.\"" },
@@ -185,7 +188,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 8,
-    pace: 1.8,
+    pace: 2.078,
     title: "Ang Unang Tula",
     beats: [
       { n: 29, text: "\"At doon, sa kinauupuan mo kanina, doon niya isinulat ang kauna-unahan niyang tula — isang maikling papuri sa kagandahan ng isa sa mga dalagang nakilala niya sa bayan." },
@@ -204,7 +207,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 9,
-    pace: 1.8,
+    pace: 2.070,
     title: "Sa Libingan",
     beats: [
       { n: 31, text: "Ang libingan ay nasa gilid ng simbahan, bagay na nagpapagunita kay Danding ng sumpa ng Diyos kay Adan sa mga anak nito, at ng malungkot at batbat-sakit na pagkakawalay nila, na kamatayan lamang ang lubusang magwawakas." },
@@ -222,7 +225,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 10,
-    pace: 1.8,
+    pace: 3.079,
     title: "Pag-uwi sa Puso",
     beats: [
       { n: 33, text: "Ibig niyang mapag-isa kaya't nang makita niyang may taong naiwan sa bahay ay patalilis siyang nagtungo sa bukid." },

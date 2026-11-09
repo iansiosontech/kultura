@@ -23,8 +23,8 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kultura",
-  description: "Isang laro ng kultura, kuwento, at pagtuklas.",
+  title: "Kuwento-Quest",
+  description: "Isang paglalakbay sa panitikang Filipino.",
 };
 
 export default function RootLayout({
