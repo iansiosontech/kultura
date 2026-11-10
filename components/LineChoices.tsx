@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, type PanInfo } from "framer-motion";
+import { readStudentInfo, writeStudentInfo } from "@/lib/studentInfo";
 
 type Stage = "idle" | "dispensed" | "inserted";
 
@@ -10,6 +11,17 @@ export default function LineChoices() {
   const router = useRouter();
   const [stage, setStage] = useState<Stage>("idle");
   const gateRef = useRef<HTMLDivElement | null>(null);
+  const [name, setName] = useState("");
+  const [section, setSection] = useState("");
+  const canProceed = name.trim().length > 0 && section.trim().length > 0;
+
+  useEffect(() => {
+    const info = readStudentInfo();
+    if (info) {
+      setName(info.name);
+      setSection(info.section);
+    }
+  }, []);
 
   const handleBuy = () => {
     if (stage === "idle") setStage("dispensed");
@@ -82,7 +94,7 @@ export default function LineChoices() {
           >
             <span className="tk-card-line">LINYA 01</span>
             <span className="tk-card-route">Tutuban &rarr; Malawig</span>
-            <span className="tk-card-title">Maikling Kwento</span>
+            <span className="tk-card-title">Maikling Kuwento</span>
           </motion.div>
         )}
 
@@ -104,13 +116,35 @@ export default function LineChoices() {
       </div>
 
       {stage === "inserted" && (
-        <button
-          type="button"
-          className="tk-go"
-          onClick={() => router.push("/map/kwento")}
-        >
-          Pumasok sa Istasyon &rarr;
-        </button>
+        <div className="tk-student-form">
+          <input
+            type="text"
+            className="tk-student-input"
+            placeholder="Pangalan"
+            maxLength={40}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            type="text"
+            className="tk-student-input"
+            placeholder="Seksyon"
+            maxLength={30}
+            value={section}
+            onChange={(e) => setSection(e.target.value)}
+          />
+          <button
+            type="button"
+            className="tk-go"
+            disabled={!canProceed}
+            onClick={() => {
+              writeStudentInfo({ name: name.trim(), section: section.trim() });
+              router.push("/map/kwento");
+            }}
+          >
+            Pumasok sa Istasyon &rarr;
+          </button>
+        </div>
       )}
     </div>
   );

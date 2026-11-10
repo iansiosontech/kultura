@@ -3,12 +3,20 @@
 import { useEffect, useState } from "react";
 import { fetchLeaderboard, submitScore, type LeaderboardEntry } from "@/lib/leaderboard";
 import { playClick } from "@/lib/sfx";
+import type { QuizAnswer } from "@/lib/kwentoQuiz";
+import { readStudentInfo, studentDisplayName } from "@/lib/studentInfo";
 
 const SUBMITTED_KEY = "kultura-kwento-leaderboard-submitted-v1";
 
 type Status = "idle" | "loading" | "ready" | "unavailable";
 
-export default function Leaderboard({ score }: { score?: number }) {
+export default function Leaderboard({
+  score,
+  answers,
+}: {
+  score?: number;
+  answers?: QuizAnswer[];
+}) {
   const canSubmit = typeof score === "number";
   const [status, setStatus] = useState<Status>("idle");
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
@@ -37,6 +45,7 @@ export default function Leaderboard({ score }: { score?: number }) {
     } catch {
       // ignore
     }
+    setName(studentDisplayName(readStudentInfo()));
   }, []);
 
   if (status === "unavailable") return null;
@@ -46,7 +55,7 @@ export default function Leaderboard({ score }: { score?: number }) {
     const trimmed = name.trim();
     if (!trimmed || submitting || !canSubmit) return;
     setSubmitting(true);
-    const ok = await submitScore(trimmed, score);
+    const ok = await submitScore(trimmed, score, answers);
     setSubmitting(false);
     if (ok) {
       setSubmitted(true);
@@ -68,7 +77,7 @@ export default function Leaderboard({ score }: { score?: number }) {
             className="leaderboard-input"
             type="text"
             placeholder="Ilagay ang iyong pangalan"
-            maxLength={24}
+            maxLength={48}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />

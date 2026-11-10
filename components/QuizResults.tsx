@@ -39,7 +39,7 @@ export default function QuizResults({ answers, score }: QuizResultsProps) {
           );
         })}
       </div>
-      <Leaderboard score={score} />
+      <Leaderboard score={score} answers={answers} />
     </div>
   );
 }

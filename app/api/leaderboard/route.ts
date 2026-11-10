@@ -33,14 +33,29 @@ export async function POST(request: Request) {
   const name = typeof body?.name === "string" ? body.name.trim() : "";
   const score = body?.score;
 
-  if (!name || name.length > 24) {
+  if (!name || name.length > 48) {
     return NextResponse.json({ error: "Invalid name." }, { status: 400 });
   }
   if (!Number.isInteger(score) || score < 0 || score > 10) {
     return NextResponse.json({ error: "Invalid score." }, { status: 400 });
   }
 
-  const { error } = await supabase.from("leaderboard").insert({ name, score });
+  const rawAnswers = body?.answers;
+  const answers =
+    Array.isArray(rawAnswers) &&
+    rawAnswers.every(
+      (a) =>
+        a &&
+        typeof a.scene === "number" &&
+        typeof a.guess === "string" &&
+        typeof a.correct === "boolean"
+    )
+      ? rawAnswers
+      : null;
+
+  const { error } = await supabase
+    .from("leaderboard")
+    .insert({ name, score, answers });
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

@@ -6,11 +6,17 @@ export default function LandingPage() {
     <main className="relative h-full overflow-hidden">
       <TransitBackground />
       <div className="kap-hero">
-        <span className="kap-eyebrow">Isang Laro ng Kultura</span>
-        <h1 className="kap-title">KulturApp</h1>
+        <span className="kap-eyebrow">Isang Paglalakbay sa Panitikang Filipino</span>
+        <h1 className="kap-title">Kuwento-Quest</h1>
+        <p className="kap-subtitle">
+          Tuklasin ang Kuwento. Unawain ang Bawat Tagpo.
+        </p>
         <p className="kap-tagline">
-          Alamin ang mga kwento, may-akda, at diwa ng ating panitikan — isang
-          estasyon sa bawat pagkakataon.
+          Samahan si Danding sa kaniyang paglalakbay sa maikling kuwentong
+          &ldquo;Lupang Tinubuan&rdquo; ni Narciso G. Reyes. Suriin ang mga
+          pangyayari, tuklasin ang mga pahiwatig, at unawain ang mga
+          kaisipang nakapaloob sa kuwento sa bawat hamong iyong
+          malalampasan.
         </p>
         <Link href="/map" className="kap-start">
           SIMULAN &rarr;

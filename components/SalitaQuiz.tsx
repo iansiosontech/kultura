@@ -1,19 +1,19 @@
 "use client";
 
 import { useRef, useState, type KeyboardEvent } from "react";
-import type { QuizItem } from "@/lib/kwentoQuiz";
+import type { QuizItem, QuizAnswer } from "@/lib/kwentoQuiz";
 
 type SalitaQuizProps = {
   item: QuizItem;
-  answered: boolean;
+  answer?: QuizAnswer;
   onSubmit: (guess: string, correct: boolean) => void;
 };
 
-// One submission per scene, no right/wrong reveal here — the player only
-// finds out at the results screen once all 10 scenes are done.
+// One submission per scene — right/wrong is revealed immediately on
+// submit (the final score summary still only shows at the end).
 export default function SalitaQuiz({
   item,
-  answered,
+  answer,
   onSubmit,
 }: SalitaQuizProps) {
   // indices into pattern/answer that are blanks — pattern and answer are
@@ -29,12 +29,20 @@ export default function SalitaQuiz({
   const [incomplete, setIncomplete] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  if (answered) {
+  if (answer) {
     return (
-      <p className="quiz-feedback">
-        Naisumite na ang iyong sagot. Makikita ang resulta sa dulo ng
-        lahat ng eksena.
-      </p>
+      <div
+        className={`quiz-reveal ${
+          answer.correct ? "quiz-reveal--correct" : "quiz-reveal--wrong"
+        }`}
+      >
+        <span className="quiz-reveal-icon" aria-hidden="true">
+          {answer.correct ? "✓" : "✗"}
+        </span>
+        <p className="quiz-reveal-text">
+          {answer.correct ? "Tama!" : `Mali. Ang sagot: ${item.answer}`}
+        </p>
+      </div>
     );
   }
 

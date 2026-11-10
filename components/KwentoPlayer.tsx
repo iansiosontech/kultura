@@ -11,6 +11,7 @@ import {
 } from "@/lib/kwentoScenes";
 import AtStation from "@/components/AtStation";
 import SalitaQuiz from "@/components/SalitaQuiz";
+import FollowUpQuiz from "@/components/FollowUpQuiz";
 import QuizResults from "@/components/QuizResults";
 import CompletionBar from "@/components/CompletionBar";
 import {
@@ -20,8 +21,13 @@ import {
   POINTS_PER_CORRECT,
   type QuizAnswer,
 } from "@/lib/kwentoQuiz";
+import { followUpFor } from "@/lib/followUpQuestions";
 import { badges } from "@/lib/badges";
 import { playLevelComplete } from "@/lib/sfx";
+
+// how long the right/wrong (or follow-up) feedback stays on screen
+// before auto-advancing to the next step
+const FEEDBACK_HOLD_MS = 1400;
 
 export default function KwentoPlayer() {
   const router = useRouter();
@@ -34,13 +40,12 @@ export default function KwentoPlayer() {
   // is pressed, and again automatically between stations.
   const [jumpOpen, setJumpOpen] = useState(true);
   // true once the current scene's audio has played through — shows the
-  // REPEAT / EXIT / QUIZ choice instead of auto-advancing to the next station
+  // SALITA puzzle (then the follow-up question, if any), auto-advancing
+  // through each step instead of offering a choice screen
   const [ended, setEnded] = useState(false);
-  // what the end-of-scene popup is showing — the default three choices,
-  // that scene's own SALITA puzzle (via PAGSUSULIT), or the all-scenes
-  // results screen (via RESULTA, only offered on the last scene)
-  const [endView, setEndView] = useState<"choices" | "quiz" | "results">(
-    "choices"
+  // which step of the end-of-scene sequence is showing
+  const [endPhase, setEndPhase] = useState<"salita" | "followup" | "results">(
+    "salita"
   );
   // scenes whose audio has actually played through at least once — this is
   // what unlocks the next station, not merely having opened a scene.
@@ -55,6 +60,16 @@ export default function KwentoPlayer() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const boundariesRef = useRef<number[]>([]);
+  const advanceTimerRef = useRef<number | null>(null);
+
+  const clearAdvanceTimer = () => {
+    if (advanceTimerRef.current !== null) {
+      window.clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+  };
+
+  useEffect(() => clearAdvanceTimer, []);
 
   const scene = scenes[sceneIdx];
   const beat = scene.beats[beatIdx];
@@ -105,10 +120,11 @@ export default function KwentoPlayer() {
     (next: number) => {
       const maxUnlockedIdx = Math.min(activeStation, scenes.length) - 1;
       const clamped = Math.max(0, Math.min(maxUnlockedIdx, next));
+      clearAdvanceTimer();
       setSceneIdx(clamped);
       setBeatIdx(0);
       setEnded(false);
-      setEndView("choices");
+      setEndPhase("salita");
     },
     [activeStation]
   );
@@ -162,19 +178,38 @@ export default function KwentoPlayer() {
     );
     setPlaying(false);
     setEnded(true);
-    setEndView("choices");
+    setEndPhase("salita");
     playLevelComplete();
   };
 
-  const handleRepeat = () => {
-    const a = audioRef.current;
-    setEnded(false);
-    setEndView("choices");
-    setBeatIdx(0);
-    if (a) {
-      a.currentTime = 0;
-      a.play().catch(() => setPlaying(false));
-    }
+  // after SALITA (or the follow-up question, if this scene has one) is
+  // answered, hold the feedback on screen briefly, then move on — to the
+  // follow-up question, to the results screen on the last scene, or
+  // straight to the next station otherwise
+  const advanceAfterSalita = () => {
+    clearAdvanceTimer();
+    advanceTimerRef.current = window.setTimeout(() => {
+      if (followUpFor(scene.scene)) {
+        setEndPhase("followup");
+      } else if (scene.scene === scenes.length) {
+        setEndPhase("results");
+      } else {
+        setEnded(false);
+        setJumpOpen(true);
+      }
+    }, FEEDBACK_HOLD_MS);
+  };
+
+  const advanceAfterFollowUp = () => {
+    clearAdvanceTimer();
+    advanceTimerRef.current = window.setTimeout(() => {
+      if (scene.scene === scenes.length) {
+        setEndPhase("results");
+      } else {
+        setEnded(false);
+        setJumpOpen(true);
+      }
+    }, FEEDBACK_HOLD_MS);
   };
 
   // closes the at-station screen and plays the given scene — used for
@@ -184,8 +219,9 @@ export default function KwentoPlayer() {
   // was left off (always true when jumping to a *different* scene, since
   // that scene's audio hasn't started yet).
   const startScene = (idx: number, { restart = false } = {}) => {
+    clearAdvanceTimer();
     setEnded(false);
-    setEndView("choices");
+    setEndPhase("salita");
     setJumpOpen(false);
     setPlaying(true);
     if (idx !== sceneIdx) {
@@ -244,7 +280,7 @@ export default function KwentoPlayer() {
           >
             &larr; BUMALIK
           </button>
-          <div className="mk-title">Maikling Kwento</div>
+          <div className="mk-title">Maikling Kuwento</div>
         </div>
 
         <div className="mk-progress-row">
@@ -278,113 +314,39 @@ export default function KwentoPlayer() {
             <img src={imageSrc(beat.n)} alt={`Larawan ${beat.n}`} />
             {ended && (
               <div className="mk-end">
-                {endView === "choices" && (
-                  <div className="mk-end-sparkles" aria-hidden="true">
-                    <span className="mk-sparkle" style={{ left: "12%", top: "18%", animationDelay: "0s" }}>✦</span>
-                    <span className="mk-sparkle" style={{ left: "85%", top: "22%", animationDelay: ".4s" }}>✦</span>
-                    <span className="mk-sparkle" style={{ left: "20%", top: "68%", animationDelay: ".8s" }}>✧</span>
-                    <span className="mk-sparkle" style={{ left: "78%", top: "72%", animationDelay: "1.2s" }}>✦</span>
-                    <span className="mk-sparkle" style={{ left: "50%", top: "10%", animationDelay: "1.6s" }}>✧</span>
-                  </div>
-                )}
+                {endPhase === "salita" &&
+                  (() => {
+                    const q = quizItems.find((x) => x.scene === scene.scene);
+                    if (!q) return null;
+                    const a = quizAnswers.find((x) => x.scene === q.scene);
+                    return (
+                      <SalitaQuiz
+                        item={q}
+                        answer={a}
+                        onSubmit={(guess, correct) => {
+                          setQuizAnswers(
+                            recordQuizAnswer(q.scene, guess, correct)
+                          );
+                          advanceAfterSalita();
+                        }}
+                      />
+                    );
+                  })()}
 
-                {endView === "choices" && (
-                  <div className="mk-end-badge" aria-hidden="true">✓</div>
-                )}
+                {endPhase === "followup" &&
+                  (() => {
+                    const fq = followUpFor(scene.scene);
+                    if (!fq) return null;
+                    return (
+                      <FollowUpQuiz
+                        item={fq}
+                        onSubmit={() => advanceAfterFollowUp()}
+                      />
+                    );
+                  })()}
 
-                <div className="mk-end-title">
-                  {endView === "choices" ? "Eksena Tapos!" : `Eksena ${scene.scene} Tapos`}
-                </div>
-                {endView === "choices" && (
-                  <div className="mk-end-subtitle">{scene.title}</div>
-                )}
-
-                {endView === "quiz" && (
-                  <>
-                    {quizItems
-                      .filter((q) => q.scene === scene.scene)
-                      .map((q) => (
-                        <SalitaQuiz
-                          key={q.scene}
-                          item={q}
-                          answered={quizAnswers.some(
-                            (a) => a.scene === q.scene
-                          )}
-                          onSubmit={(guess, correct) =>
-                            setQuizAnswers(
-                              recordQuizAnswer(q.scene, guess, correct)
-                            )
-                          }
-                        />
-                      ))}
-                    <div className="mk-end-choices">
-                      <button
-                        type="button"
-                        className="mk-end-btn"
-                        onClick={() => setEndView("choices")}
-                      >
-                        &larr; BUMALIK
-                      </button>
-                    </div>
-                  </>
-                )}
-
-                {endView === "results" && (
-                  <>
-                    <QuizResults answers={quizAnswers} score={score} />
-                    <div className="mk-end-choices">
-                      <button
-                        type="button"
-                        className="mk-end-btn"
-                        onClick={() => setEndView("choices")}
-                      >
-                        &larr; BUMALIK
-                      </button>
-                    </div>
-                  </>
-                )}
-
-                {endView === "choices" && (
-                  <div className="mk-end-choices">
-                    <button
-                      type="button"
-                      className="mk-end-btn"
-                      onClick={handleRepeat}
-                    >
-                      ULITIN
-                    </button>
-                    <button
-                      type="button"
-                      className="mk-end-btn"
-                      onClick={() => {
-                        // closes the popup and shows the at-station screen
-                        // for the next station — stays inside Kwento
-                        // instead of leaving to the kiosk
-                        setEnded(false);
-                        setJumpOpen(true);
-                      }}
-                    >
-                      LUMABAS
-                    </button>
-                    {quizItems.some((q) => q.scene === scene.scene) && (
-                      <button
-                        type="button"
-                        className="mk-end-btn"
-                        onClick={() => setEndView("quiz")}
-                      >
-                        PAGSUSULIT
-                      </button>
-                    )}
-                    {scene.scene === scenes.length && (
-                      <button
-                        type="button"
-                        className="mk-end-btn"
-                        onClick={() => setEndView("results")}
-                      >
-                        RESULTA
-                      </button>
-                    )}
-                  </div>
+                {endPhase === "results" && (
+                  <QuizResults answers={quizAnswers} score={score} />
                 )}
               </div>
             )}
