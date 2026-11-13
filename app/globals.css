@@ -726,6 +726,8 @@ html, body { height: 100%; margin: 0; }
   font:600 10px/1.3 ui-monospace,monospace;color:#FFFBF0;}
 .facilitator-answer--correct{background:rgba(140,224,168,.14);}
 .facilitator-answer--wrong{background:rgba(255,155,122,.14);}
+.facilitator-detail-label{font:700 10px/1 ui-monospace,monospace;letter-spacing:.1em;
+  color:#FFD98A;text-transform:uppercase;margin:8px 0 2px;opacity:.8;}
 .facilitator-logout{align-self:center;padding:10px 20px;border-radius:99px;
   border:2px solid #3D3222;background:#FFFBF0;color:#3D3222;
   font:800 11px/1 ui-monospace,monospace;letter-spacing:.08em;cursor:pointer;}

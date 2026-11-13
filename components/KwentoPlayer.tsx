@@ -21,7 +21,13 @@ import {
   POINTS_PER_CORRECT,
   type QuizAnswer,
 } from "@/lib/kwentoQuiz";
-import { followUpFor } from "@/lib/followUpQuestions";
+import {
+  followUpsFor,
+  readFollowUpAnswers,
+  recordFollowUpAnswer,
+  FOLLOWUP_POINTS_PER_CORRECT,
+  type FollowUpAnswer,
+} from "@/lib/followUpQuestions";
 import { badges } from "@/lib/badges";
 import { playLevelComplete } from "@/lib/sfx";
 
@@ -47,6 +53,8 @@ export default function KwentoPlayer() {
   const [endPhase, setEndPhase] = useState<"salita" | "followup" | "results">(
     "salita"
   );
+  // index into followUpsFor(scene.scene) for the question currently shown
+  const [followUpIdx, setFollowUpIdx] = useState(0);
   // scenes whose audio has actually played through at least once — this is
   // what unlocks the next station, not merely having opened a scene.
   const [completed, setCompleted] = useState<number[]>([]);
@@ -54,8 +62,10 @@ export default function KwentoPlayer() {
   // per screen) so the score badge updates live the moment a puzzle is
   // answered, without needing a remount
   const [quizAnswers, setQuizAnswers] = useState<QuizAnswer[]>([]);
+  const [followUpAnswers, setFollowUpAnswers] = useState<FollowUpAnswer[]>([]);
   const score =
-    quizAnswers.filter((a) => a.correct).length * POINTS_PER_CORRECT;
+    quizAnswers.filter((a) => a.correct).length * POINTS_PER_CORRECT +
+    followUpAnswers.filter((a) => a.correct).length * FOLLOWUP_POINTS_PER_CORRECT;
   const [hydrated, setHydrated] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -102,6 +112,7 @@ export default function KwentoPlayer() {
       setHydrated(true);
     }
     setQuizAnswers(readQuizAnswers());
+    setFollowUpAnswers(readFollowUpAnswers());
   }, []);
 
   useEffect(() => {
@@ -125,6 +136,7 @@ export default function KwentoPlayer() {
       setBeatIdx(0);
       setEnded(false);
       setEndPhase("salita");
+      setFollowUpIdx(0);
     },
     [activeStation]
   );
@@ -179,35 +191,47 @@ export default function KwentoPlayer() {
     setPlaying(false);
     setEnded(true);
     setEndPhase("salita");
+    setFollowUpIdx(0);
     playLevelComplete();
   };
 
-  // after SALITA (or the follow-up question, if this scene has one) is
-  // answered, hold the feedback on screen briefly, then move on — to the
-  // follow-up question, to the results screen on the last scene, or
-  // straight to the next station otherwise
+  // reached once there's nothing left to show for this scene — results on
+  // the last scene, otherwise straight to the next station
+  const finishEndSequence = () => {
+    if (scene.scene === scenes.length) {
+      setEndPhase("results");
+    } else {
+      setEnded(false);
+      setJumpOpen(true);
+    }
+  };
+
+  // after SALITA is answered, hold the feedback on screen briefly, then
+  // move to this scene's first follow-up question if it has one,
+  // otherwise finish up
   const advanceAfterSalita = () => {
     clearAdvanceTimer();
     advanceTimerRef.current = window.setTimeout(() => {
-      if (followUpFor(scene.scene)) {
+      if (followUpsFor(scene.scene).length > 0) {
+        setFollowUpIdx(0);
         setEndPhase("followup");
-      } else if (scene.scene === scenes.length) {
-        setEndPhase("results");
       } else {
-        setEnded(false);
-        setJumpOpen(true);
+        finishEndSequence();
       }
     }, FEEDBACK_HOLD_MS);
   };
 
+  // after a follow-up question is answered, hold its feedback, then move
+  // to the next follow-up question for this scene if there is one,
+  // otherwise finish up
   const advanceAfterFollowUp = () => {
     clearAdvanceTimer();
     advanceTimerRef.current = window.setTimeout(() => {
-      if (scene.scene === scenes.length) {
-        setEndPhase("results");
+      const fups = followUpsFor(scene.scene);
+      if (followUpIdx + 1 < fups.length) {
+        setFollowUpIdx((i) => i + 1);
       } else {
-        setEnded(false);
-        setJumpOpen(true);
+        finishEndSequence();
       }
     }, FEEDBACK_HOLD_MS);
   };
@@ -222,6 +246,7 @@ export default function KwentoPlayer() {
     clearAdvanceTimer();
     setEnded(false);
     setEndPhase("salita");
+    setFollowUpIdx(0);
     setJumpOpen(false);
     setPlaying(true);
     if (idx !== sceneIdx) {
@@ -335,18 +360,33 @@ export default function KwentoPlayer() {
 
                 {endPhase === "followup" &&
                   (() => {
-                    const fq = followUpFor(scene.scene);
+                    const fq = followUpsFor(scene.scene)[followUpIdx];
                     if (!fq) return null;
                     return (
                       <FollowUpQuiz
+                        key={`${scene.scene}-${followUpIdx}`}
                         item={fq}
-                        onSubmit={() => advanceAfterFollowUp()}
+                        onSubmit={(choiceIndex, correct) => {
+                          setFollowUpAnswers(
+                            recordFollowUpAnswer(
+                              scene.scene,
+                              followUpIdx,
+                              choiceIndex,
+                              correct
+                            )
+                          );
+                          advanceAfterFollowUp();
+                        }}
                       />
                     );
                   })()}
 
                 {endPhase === "results" && (
-                  <QuizResults answers={quizAnswers} score={score} />
+                  <QuizResults
+                    answers={quizAnswers}
+                    followUpAnswers={followUpAnswers}
+                    score={score}
+                  />
                 )}
               </div>
             )}

@@ -14,12 +14,18 @@ export async function fetchLeaderboard(): Promise<LeaderboardEntry[] | null> {
 export async function submitScore(
   name: string,
   score: number,
-  answers?: { scene: number; guess: string; correct: boolean }[]
+  answers?: { scene: number; guess: string; correct: boolean }[],
+  followUpAnswers?: {
+    scene: number;
+    questionIndex: number;
+    choiceIndex: number;
+    correct: boolean;
+  }[]
 ): Promise<boolean> {
   const res = await fetch("/api/leaderboard", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, score, answers }),
+    body: JSON.stringify({ name, score, answers, followUpAnswers }),
   });
   return res.ok;
 }

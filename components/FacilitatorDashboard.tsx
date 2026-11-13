@@ -7,7 +7,10 @@ import {
   facilitatorLogout,
   type FacilitatorEntry,
 } from "@/lib/facilitator";
-import { quizItems } from "@/lib/kwentoQuiz";
+import { quizItems, MAX_SCORE } from "@/lib/kwentoQuiz";
+import { followUpQuestions, FOLLOWUP_MAX_SCORE } from "@/lib/followUpQuestions";
+
+const TOTAL_MAX_SCORE = MAX_SCORE + FOLLOWUP_MAX_SCORE;
 
 type Status = "checking" | "locked" | "unlocked" | "unavailable";
 
@@ -120,7 +123,9 @@ export default function FacilitatorDashboard() {
                 onClick={() => setExpanded(isOpen ? null : key)}
               >
                 <span className="facilitator-row-name">{entry.name}</span>
-                <span className="facilitator-row-score">{entry.score}/10</span>
+                <span className="facilitator-row-score">
+                  {entry.score}/{TOTAL_MAX_SCORE}
+                </span>
                 <span className="facilitator-row-time">
                   {new Date(entry.created_at).toLocaleString()}
                 </span>
@@ -150,6 +155,40 @@ export default function FacilitatorDashboard() {
                         </div>
                       );
                     })
+                  )}
+
+                  {entry.followup_answers && entry.followup_answers.length > 0 && (
+                    <>
+                      <p className="facilitator-detail-label">Mga Tanong</p>
+                      {followUpQuestions.map((q, idx) => {
+                        const questionNumber = followUpQuestions
+                          .slice(0, idx + 1)
+                          .filter((x) => x.scene === q.scene).length;
+                        const a = entry.followup_answers?.find(
+                          (x) =>
+                            x.scene === q.scene &&
+                            x.questionIndex === questionNumber - 1
+                        );
+                        return (
+                          <div
+                            key={`${q.scene}-${questionNumber}`}
+                            className={`facilitator-answer ${
+                              a?.correct
+                                ? "facilitator-answer--correct"
+                                : "facilitator-answer--wrong"
+                            }`}
+                          >
+                            <span>
+                              Eksena {q.scene}.{questionNumber}
+                            </span>
+                            <span>
+                              {a ? q.choices[a.choiceIndex] : "—"}
+                            </span>
+                            <span>{q.choices[q.correctIndex]}</span>
+                          </div>
+                        );
+                      })}
+                    </>
                   )}
                 </div>
               )}
