@@ -7,9 +7,17 @@ import { readStudentInfo, writeStudentInfo } from "@/lib/studentInfo";
 
 type Stage = "idle" | "dispensed" | "inserted";
 
-export default function LineChoices() {
+type LineChoicesProps = {
+  onStageChange?: (stage: Stage) => void;
+};
+
+export default function LineChoices({ onStageChange }: LineChoicesProps) {
   const router = useRouter();
-  const [stage, setStage] = useState<Stage>("idle");
+  const [stage, setStageState] = useState<Stage>("idle");
+  const setStage = (next: Stage) => {
+    setStageState(next);
+    onStageChange?.(next);
+  };
   const gateRef = useRef<HTMLDivElement | null>(null);
   const [name, setName] = useState("");
   const [section, setSection] = useState("");

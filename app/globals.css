@@ -205,7 +205,8 @@ html, body { height: 100%; margin: 0; }
 
 /* ---- line choice: ticket vending machine + gate ---- */
 .tk-wrap{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:30px;padding:0 4vw;}
+  align-items:center;justify-content:center;gap:30px;padding:0 4vw;
+  overflow-y:auto;scroll-padding-top:90px;}
 .tk-eyebrow{font:800 13px/1 ui-monospace,monospace;letter-spacing:.3em;color:#FFE9BE;
   text-transform:uppercase;text-shadow:0 2px 8px rgba(0,0,0,.6);}
 
@@ -297,6 +298,9 @@ html, body { height: 100%; margin: 0; }
 /* keep this LAST — it must override the card rules above */
 /* mobile: stack machine -> card -> gate vertically instead of side by side */
 @media (max-width:680px){
+  .tk-wrap{justify-content:flex-start;padding-top:min(26vh,210px);
+    padding-bottom:24px;gap:44px;}
+
   .tk-scene{width:min(300px,88vw);height:430px;}
 
   .tk-machine{left:50%;top:0;bottom:auto;transform:translateX(-50%);}
@@ -309,6 +313,19 @@ html, body { height: 100%; margin: 0; }
   .tk-card{left:calc(50% - 75px);top:212px;bottom:auto;}
 
   .tk-gate{left:50%;right:auto;bottom:0;transform:translateX(-50%);width:170px;}
+}
+
+/* short phones (e.g. 375x667): tighten everything enough that the
+   ticket flow fits without scrolling, instead of relying on
+   scroll-padding-top (not consistently honored by auto-scroll-on-focus
+   across mobile browsers) */
+@media (max-height:700px){
+  .tk-wrap{padding-top:96px;gap:34px;}
+  .tk-scene{height:290px;}
+  .tk-machine{width:100px;height:168px;}
+  .tk-track{top:168px;bottom:62px;}
+  .tk-card{top:156px;}
+  .tk-gate{width:140px;height:76px;}
 }
 
 /* ================= Maikling Kwento player ================= */
