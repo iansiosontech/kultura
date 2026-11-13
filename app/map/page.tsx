@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import TrainWindowBackground from "@/components/TrainWindowBackground";
 import LineChoices from "@/components/LineChoices";
@@ -6,6 +9,10 @@ import BadgesPanel from "@/components/BadgesPanel";
 import MapCompletionBar from "@/components/MapCompletionBar";
 
 export default function MapPage() {
+  // hides the bottom badges row while the ticket/name/section flow is
+  // active, so it doesn't visually collide with the form + button there
+  const [ticketActive, setTicketActive] = useState(false);
+
   return (
     <main className="relative h-full overflow-hidden">
       <TrainWindowBackground />
@@ -36,8 +43,8 @@ export default function MapPage() {
 
       <MapCompletionBar />
 
-      <LineChoices />
-      <BadgesPanel />
+      <LineChoices onStageChange={(stage) => setTicketActive(stage !== "idle")} />
+      {!ticketActive && <BadgesPanel />}
     </main>
   );
 }
