@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   if (!name || name.length > 48) {
     return NextResponse.json({ error: "Invalid name." }, { status: 400 });
   }
-  if (!Number.isInteger(score) || score < 0 || score > 10) {
+  if (!Number.isInteger(score) || score < 0 || score > 30) {
     return NextResponse.json({ error: "Invalid score." }, { status: 400 });
   }
 
@@ -53,9 +53,23 @@ export async function POST(request: Request) {
       ? rawAnswers
       : null;
 
+  const rawFollowUpAnswers = body?.followUpAnswers;
+  const followUpAnswers =
+    Array.isArray(rawFollowUpAnswers) &&
+    rawFollowUpAnswers.every(
+      (a) =>
+        a &&
+        typeof a.scene === "number" &&
+        typeof a.questionIndex === "number" &&
+        typeof a.choiceIndex === "number" &&
+        typeof a.correct === "boolean"
+    )
+      ? rawFollowUpAnswers
+      : null;
+
   const { error } = await supabase
     .from("leaderboard")
-    .insert({ name, score, answers });
+    .insert({ name, score, answers, followup_answers: followUpAnswers });
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

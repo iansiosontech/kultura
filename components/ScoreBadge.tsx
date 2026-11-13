@@ -1,4 +1,7 @@
 import { MAX_SCORE } from "@/lib/kwentoQuiz";
+import { FOLLOWUP_MAX_SCORE } from "@/lib/followUpQuestions";
+
+const TOTAL_MAX_SCORE = MAX_SCORE + FOLLOWUP_MAX_SCORE;
 
 type ScoreBadgeProps = {
   score: number;
@@ -14,7 +17,7 @@ export default function ScoreBadge({ score, floating = true }: ScoreBadgeProps) 
       className={`quiz-score-badge${floating ? "" : " quiz-score-badge--inline"}`}
       aria-label="Iskor sa pagsusulit"
     >
-      {score} / {MAX_SCORE}
+      {score} / {TOTAL_MAX_SCORE}
     </div>
   );
 }

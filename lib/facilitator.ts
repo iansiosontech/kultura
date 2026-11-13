@@ -1,9 +1,16 @@
 export type FacilitatorAnswer = { scene: number; guess: string; correct: boolean };
+export type FacilitatorFollowUpAnswer = {
+  scene: number;
+  questionIndex: number;
+  choiceIndex: number;
+  correct: boolean;
+};
 
 export type FacilitatorEntry = {
   name: string;
   score: number;
   answers: FacilitatorAnswer[] | null;
+  followup_answers: FacilitatorFollowUpAnswer[] | null;
   created_at: string;
 };
 
