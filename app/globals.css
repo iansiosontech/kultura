@@ -371,6 +371,13 @@ html, body { height: 100%; margin: 0; }
   padding:10px 6vw;background:radial-gradient(circle at 50% 38%,rgba(245,183,0,.22),rgba(27,43,40,.92) 62%);
   overflow-y:auto;overflow-x:hidden;animation:mk-fade-in .25s ease both;}
 
+/* the follow-up questions and results list need real room to show every
+   choice/row — the 16:9 image box is too short for that content, so
+   drop the fixed aspect ratio and let it grow with the content instead */
+.mk-window--roomy{aspect-ratio:auto;height:auto;min-height:60vh;}
+.mk-window--roomy img{display:none;}
+.mk-window--roomy .mk-end{position:relative;inset:auto;min-height:60vh;}
+
 @keyframes mk-fade-in{from{opacity:0}to{opacity:1}}
 @keyframes mk-pop-in{
   0%{opacity:0;transform:scale(.6);}
