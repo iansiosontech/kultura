@@ -12,6 +12,7 @@ export default function ResultCard({ score, maxScore }: ResultCardProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -67,6 +68,27 @@ export default function ResultCard({ score, maxScore }: ResultCardProps) {
     }
   };
 
+  const handleDownloadPdf = async () => {
+    const canvas = canvasRef.current;
+    if (!canvas || downloadingPdf) return;
+    playClick();
+    setDownloadingPdf(true);
+    try {
+      const { jsPDF } = await import("jspdf");
+      const pdfWidth = 210; // mm, A4 width
+      const pdfHeight = (canvas.height / canvas.width) * pdfWidth;
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: [pdfWidth, pdfHeight],
+      });
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("kuwento-quest-resulta.pdf");
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
+
   return (
     <div className="result-card">
       <p className="quiz-eyebrow">IBAHAGI ANG RESULTA</p>
@@ -79,14 +101,24 @@ export default function ResultCard({ score, maxScore }: ResultCardProps) {
           className="result-card-preview"
         />
       )}
-      <button
-        type="button"
-        className="result-card-btn"
-        onClick={handleShare}
-        disabled={sharing}
-      >
-        I-SHARE
-      </button>
+      <div className="result-card-actions">
+        <button
+          type="button"
+          className="result-card-btn"
+          onClick={handleShare}
+          disabled={sharing}
+        >
+          I-SHARE
+        </button>
+        <button
+          type="button"
+          className="result-card-btn result-card-btn--secondary"
+          onClick={handleDownloadPdf}
+          disabled={downloadingPdf}
+        >
+          I-DOWNLOAD (PDF)
+        </button>
+      </div>
     </div>
   );
 }
