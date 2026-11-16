@@ -342,7 +342,11 @@ export default function KwentoPlayer() {
             }`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={imageSrc(beat.n)} alt={`Larawan ${beat.n}`} />
+            <img
+              src={imageSrc(beat.n)}
+              alt={`Larawan ${beat.n}`}
+              className="mk-window-bg"
+            />
             {ended && (
               <div className="mk-end">
                 {endPhase === "salita" &&

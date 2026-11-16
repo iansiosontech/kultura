@@ -375,7 +375,7 @@ html, body { height: 100%; margin: 0; }
    choice/row — the 16:9 image box is too short for that content, so
    drop the fixed aspect ratio and let it grow with the content instead */
 .mk-window--roomy{aspect-ratio:auto;height:auto;min-height:60vh;}
-.mk-window--roomy img{display:none;}
+.mk-window--roomy .mk-window-bg{display:none;}
 .mk-window--roomy .mk-end{position:relative;inset:auto;min-height:60vh;}
 
 @keyframes mk-fade-in{from{opacity:0}to{opacity:1}}
@@ -688,6 +688,19 @@ html, body { height: 100%; margin: 0; }
 .quiz-results-words{display:flex;flex-direction:column;gap:2px;min-width:0;}
 .quiz-results-guess{font:700 12px/1.3 ui-monospace,monospace;color:#FFFBF0;
   overflow-wrap:anywhere;}
+.result-card{display:flex;flex-direction:column;align-items:center;gap:10px;
+  margin:4px 0 18px;}
+.result-card-canvas{display:none;}
+.result-card-preview{width:min(260px,85vw);height:auto;border-radius:14px;
+  border:2px solid rgba(255,217,138,.4);box-shadow:0 8px 20px rgba(0,0,0,.4);}
+.result-card-btn{border:3px solid #2A2317;background:#F5B700;border-radius:99px;
+  padding:12px 30px;font:800 13px/1 ui-monospace,monospace;letter-spacing:.14em;
+  color:#2A2317;box-shadow:0 5px 0 #2A2317;cursor:pointer;
+  transition:transform .15s ease,box-shadow .15s ease;}
+.result-card-btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 #2A2317;}
+.result-card-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #2A2317;}
+.result-card-btn:disabled{opacity:.6;cursor:default;}
+
 .quiz-results-answer{font:600 11px/1.3 ui-monospace,monospace;color:#FFD98A;
   opacity:.7;overflow-wrap:anywhere;}
 
