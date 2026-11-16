@@ -334,7 +334,13 @@ export default function KwentoPlayer() {
         )}
 
         <div className="mk-stage">
-          <div className="mk-window">
+          <div
+            className={`mk-window ${
+              ended && (endPhase === "followup" || endPhase === "results")
+                ? "mk-window--roomy"
+                : ""
+            }`}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={imageSrc(beat.n)} alt={`Larawan ${beat.n}`} />
             {ended && (
