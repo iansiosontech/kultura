@@ -25,6 +25,25 @@ function roundRect(
   ctx.roundRect(x, y, w, h, r);
 }
 
+function drawRibbonTail(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  topY: number,
+  bottomY: number,
+  side: -1 | 1
+) {
+  const innerX = cx + side * 20;
+  const outerX = cx + side * 90;
+  const notchY = bottomY - 40;
+  ctx.beginPath();
+  ctx.moveTo(innerX, topY);
+  ctx.lineTo(outerX, topY);
+  ctx.lineTo(outerX, bottomY);
+  ctx.lineTo(cx + side * 55, notchY);
+  ctx.lineTo(innerX, bottomY);
+  ctx.closePath();
+}
+
 export function drawResultCard(canvas: HTMLCanvasElement, data: ResultCardData) {
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
@@ -35,8 +54,8 @@ export function drawResultCard(canvas: HTMLCanvasElement, data: ResultCardData) 
   ctx.fillStyle = "#1A1208";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
   const glow = ctx.createRadialGradient(
-    WIDTH / 2, 420, 60,
-    WIDTH / 2, 420, 700
+    WIDTH / 2, 300, 60,
+    WIDTH / 2, 300, 760
   );
   glow.addColorStop(0, "rgba(242,193,78,.22)");
   glow.addColorStop(1, "rgba(242,193,78,0)");
@@ -51,88 +70,149 @@ export function drawResultCard(canvas: HTMLCanvasElement, data: ResultCardData) 
 
   ctx.textAlign = "center";
 
-  // brand
+  const cx = WIDTH / 2;
+  const medalCy = 260;
+  const outerR = 160;
+  const innerR = 125;
+
+  // ribbon tails (drawn first, so the medal face sits on top of them)
+  const tailTop = medalCy + 60;
+  const tailBottom = medalCy + 260;
+  const tailGradient = ctx.createLinearGradient(0, tailTop, 0, tailBottom);
+  tailGradient.addColorStop(0, "#F2C14E");
+  tailGradient.addColorStop(1, "#B9821F");
+  ctx.fillStyle = tailGradient;
+  drawRibbonTail(ctx, cx, tailTop, tailBottom, -1);
+  ctx.fill();
+  drawRibbonTail(ctx, cx, tailTop, tailBottom, 1);
+  ctx.fill();
+
+  // medal outer ring
+  const medalGradient = ctx.createRadialGradient(
+    cx, medalCy, innerR * 0.6,
+    cx, medalCy, outerR
+  );
+  medalGradient.addColorStop(0, "#FFE9B0");
+  medalGradient.addColorStop(1, "#C98A1B");
+  ctx.beginPath();
+  ctx.arc(cx, medalCy, outerR, 0, Math.PI * 2);
+  ctx.fillStyle = medalGradient;
+  ctx.fill();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = "rgba(255,255,255,.35)";
+  ctx.stroke();
+
+  // medal inner face
+  ctx.beginPath();
+  ctx.arc(cx, medalCy, innerR, 0, Math.PI * 2);
+  ctx.fillStyle = "#241B10";
+  ctx.fill();
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = "#F2C14E";
+  ctx.stroke();
+
+  // train icon
+  ctx.font = "150px sans-serif";
+  ctx.textBaseline = "middle";
+  ctx.fillText("🚂", cx, medalCy + 10);
+  ctx.textBaseline = "alphabetic";
+
+  // wordmark
   ctx.fillStyle = "#FFD98A";
-  ctx.font = "900 54px ui-monospace, monospace";
-  ctx.fillText("KUWENTO-QUEST", WIDTH / 2, 150);
+  ctx.font = "900 50px ui-monospace, monospace";
+  ctx.fillText("KUWENTO-QUEST", cx, 610);
 
   ctx.fillStyle = "rgba(242,230,204,.8)";
   ctx.font = "600 26px system-ui, sans-serif";
-  ctx.fillText("Isang Paglalakbay sa Panitikang Filipino", WIDTH / 2, 196);
+  ctx.fillText("Sertipikadong Manlalakbay", cx, 648);
 
-  // divider
-  ctx.strokeStyle = "rgba(255,255,255,.18)";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(140, 240);
-  ctx.lineTo(WIDTH - 140, 240);
-  ctx.stroke();
-
-  // completion headline
-  ctx.fillStyle = "#FFD98A";
-  ctx.font = "900 62px ui-monospace, monospace";
-  ctx.fillText("GANAP NA MANLALAKBAY!", WIDTH / 2, 340);
+  // headline banner
+  const bannerY = 686;
+  const bannerH = 88;
+  const bannerW = 860;
+  roundRect(ctx, cx - bannerW / 2, bannerY, bannerW, bannerH, 20);
+  ctx.fillStyle = "#F2C14E";
+  ctx.fill();
+  ctx.fillStyle = "#1A1208";
+  ctx.font = "900 46px ui-monospace, monospace";
+  ctx.fillText("GANAP NA MANLALAKBAY!", cx, bannerY + 58);
 
   // tier chip
   ctx.font = "800 28px ui-monospace, monospace";
   const tierText = data.tierName;
   const tierWidth = ctx.measureText(tierText).width + 64;
-  roundRect(ctx, WIDTH / 2 - tierWidth / 2, 380, tierWidth, 64, 99);
-  ctx.fillStyle = "#F2C14E";
+  const tierY = bannerY + bannerH + 36;
+  roundRect(ctx, cx - tierWidth / 2, tierY, tierWidth, 64, 99);
+  ctx.strokeStyle = "rgba(255,217,138,.6)";
+  ctx.lineWidth = 3;
+  ctx.fillStyle = "rgba(242,193,78,.12)";
   ctx.fill();
-  ctx.fillStyle = "#2A2317";
-  ctx.fillText(tierText, WIDTH / 2, 422);
+  ctx.stroke();
+  ctx.fillStyle = "#FFD98A";
+  ctx.fillText(tierText, cx, tierY + 42);
 
   // name
+  const nameTop = tierY + 100;
   ctx.fillStyle = "rgba(242,230,204,.75)";
   ctx.font = "700 24px ui-monospace, monospace";
-  ctx.fillText("MANLALAKBAY", WIDTH / 2, 530);
+  ctx.fillText("MANLALAKBAY", cx, nameTop);
 
   ctx.fillStyle = "#FFFBF0";
-  ctx.font = "800 58px system-ui, sans-serif";
-  const displayName = data.section ? `${data.name}` : data.name;
-  ctx.fillText(displayName, WIDTH / 2, 600);
+  ctx.font = "800 54px system-ui, sans-serif";
+  ctx.fillText(data.name, cx, nameTop + 62);
 
   if (data.section) {
     ctx.fillStyle = "rgba(242,230,204,.75)";
-    ctx.font = "600 30px system-ui, sans-serif";
-    ctx.fillText(data.section, WIDTH / 2, 645);
+    ctx.font = "600 28px system-ui, sans-serif";
+    ctx.fillText(data.section, cx, nameTop + 102);
   }
 
   // score
+  const scoreTop = nameTop + 160;
   ctx.fillStyle = "rgba(242,230,204,.75)";
-  ctx.font = "700 26px ui-monospace, monospace";
-  ctx.fillText("PUNTOS", WIDTH / 2, 760);
+  ctx.font = "700 24px ui-monospace, monospace";
+  ctx.fillText("PUNTOS", cx, scoreTop);
 
   ctx.fillStyle = "#FFD98A";
-  ctx.font = "900 150px ui-monospace, monospace";
-  ctx.fillText(`${data.score} / ${data.maxScore}`, WIDTH / 2, 900);
+  ctx.font = "900 110px ui-monospace, monospace";
+  ctx.fillText(`${data.score} / ${data.maxScore}`, cx, scoreTop + 95);
 
-  // badges row
+  // badge shelf
+  const shelfTop = scoreTop + 125;
+  const shelfH = 90;
+  roundRect(ctx, 100, shelfTop, WIDTH - 200, shelfH, 18);
+  ctx.fillStyle = "rgba(255,217,138,.08)";
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,217,138,.3)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
   const iconCount = badges.length;
-  const iconSize = 70;
-  const gap = 18;
+  const iconSize = 56;
+  const gap = 16;
   const totalWidth = iconCount * iconSize + (iconCount - 1) * gap;
-  let bx = WIDTH / 2 - totalWidth / 2;
-  const by = 1000;
-  ctx.font = "40px system-ui, sans-serif";
+  let bx = cx - totalWidth / 2;
+  const by = shelfTop + (shelfH - iconSize) / 2;
+  ctx.font = "34px system-ui, sans-serif";
+  ctx.textBaseline = "middle";
   for (const badge of badges) {
-    roundRect(ctx, bx, by, iconSize, iconSize, 16);
+    roundRect(ctx, bx, by, iconSize, iconSize, 14);
     ctx.fillStyle = "rgba(255,217,138,.18)";
     ctx.fill();
     ctx.strokeStyle = "rgba(255,217,138,.5)";
     ctx.lineWidth = 2;
-    roundRect(ctx, bx, by, iconSize, iconSize, 16);
+    roundRect(ctx, bx, by, iconSize, iconSize, 14);
     ctx.stroke();
     ctx.fillStyle = "#FFFBF0";
-    ctx.fillText(badge.icon, bx + iconSize / 2, by + iconSize / 2 + 14);
+    ctx.fillText(badge.icon, bx + iconSize / 2, by + iconSize / 2 + 2);
     bx += iconSize + gap;
   }
+  ctx.textBaseline = "alphabetic";
 
   // footer
   ctx.fillStyle = "rgba(242,230,204,.6)";
   ctx.font = "600 24px ui-monospace, monospace";
-  ctx.fillText("kuwentoquest.vercel.app", WIDTH / 2, HEIGHT - 70);
+  ctx.fillText("kuwentoquest.vercel.app", cx, HEIGHT - 48);
 }
 
 export function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
