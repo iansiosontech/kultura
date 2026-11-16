@@ -86,6 +86,7 @@ export default function SalitaQuiz({
   return (
     <div className="salita-quiz">
       <p className="quiz-eyebrow">SALITA</p>
+      <p className="salita-clue">{item.clue}</p>
       <div className="salita-boxes">
         {[...item.pattern].map((ch, i) => {
           if (ch === "_") {

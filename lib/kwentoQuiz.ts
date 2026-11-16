@@ -5,22 +5,77 @@ import { useEffect, useState } from "react";
 // The "SALITA: ____" identification puzzle printed at the end of each
 // scene in the original script PDF — one word/phrase per scene, with
 // some letters already revealed and the rest blanked out.
-export type QuizItem = { scene: number; pattern: string; answer: string };
+export type QuizItem = {
+  scene: number;
+  pattern: string;
+  answer: string;
+  clue: string;
+};
 
 export const quizItems: QuizItem[] = [
-  { scene: 1, pattern: "P_GL____B_Y", answer: "PAGLALAKBAY" },
-  { scene: 2, pattern: "D__D_NG", answer: "DANDING" },
-  { scene: 3, pattern: "N_Y_N", answer: "NAYON" },
-  { scene: 4, pattern: "K__A_-_N_K", answer: "KAMAG-ANAK" },
-  { scene: 5, pattern: "P_G___AM_Y", answer: "PAGLALAMAY" },
-  { scene: 6, pattern: "G_N_T_", answer: "GUNITA" },
-  { scene: 7, pattern: "K_B_T_A_", answer: "KABATAAN" },
-  { scene: 8, pattern: "B_L_K-T_N_W", answer: "BALIK-TANAW" },
-  { scene: 9, pattern: "P_G_U_UKS_", answer: "PAGLULUKSA" },
+  {
+    scene: 1,
+    pattern: "P_GL____B_Y",
+    answer: "PAGLALAKBAY",
+    clue: "Ang ginagawa ni Danding patungo sa Malawig.",
+  },
+  {
+    scene: 2,
+    pattern: "D__D_NG",
+    answer: "DANDING",
+    clue: "Ang pangalan ng ating pangunahing tauhan.",
+  },
+  {
+    scene: 3,
+    pattern: "N_Y_N",
+    answer: "NAYON",
+    clue: "Ang tawag sa isang maliit na pamayanan sa lalawigan.",
+  },
+  {
+    scene: 4,
+    pattern: "K__A_-_N_K",
+    answer: "KAMAG-ANAK",
+    clue: "Ang tawag sa mga taong may ugnayang dugo o pamilya.",
+  },
+  {
+    scene: 5,
+    pattern: "P_G___AM_Y",
+    answer: "PAGLALAMAY",
+    clue: "Ang pagbabantay sa bangkay bago ilibing.",
+  },
+  {
+    scene: 6,
+    pattern: "G_N_T_",
+    answer: "GUNITA",
+    clue: "Ang tawag sa mga bagay na naaalala mula sa nakaraan.",
+  },
+  {
+    scene: 7,
+    pattern: "K_B_T_A_",
+    answer: "KABATAAN",
+    clue: "Ang yugto ng buhay bago maging matanda.",
+  },
+  {
+    scene: 8,
+    pattern: "B_L_K-T_N_W",
+    answer: "BALIK-TANAW",
+    clue: "Ang pagmuni-muni tungkol sa nakalipas.",
+  },
+  {
+    scene: 9,
+    pattern: "P_G_U_UKS_",
+    answer: "PAGLULUKSA",
+    clue: "Ang pagdadalamhati para sa namatay.",
+  },
   // pattern must be the exact same length as answer, character-for-character
   // aligned (including the literal space and hyphen) — each "_" becomes one
   // letter-box input
-  { scene: 10, pattern: "L___NG-_I__BU_N", answer: "LUPANG-TINUBUAN" },
+  {
+    scene: 10,
+    pattern: "L___NG-_I__BU_N",
+    answer: "LUPANG-TINUBUAN",
+    clue: "Ang tawag sa lugar na pinanggalingan o pinagsilangan.",
+  },
 ];
 
 export const POINTS_PER_CORRECT = 1;
