@@ -86,7 +86,6 @@ export default function SalitaQuiz({
   return (
     <div className="salita-quiz">
       <p className="quiz-eyebrow">SALITA</p>
-      <p className="salita-clue">{item.clue}</p>
       <div className="salita-boxes">
         {[...item.pattern].map((ch, i) => {
           if (ch === "_") {
@@ -118,6 +117,7 @@ export default function SalitaQuiz({
           );
         })}
       </div>
+      <p className="salita-clue">{item.clue}</p>
       <button type="button" className="quiz-btn" onClick={handleSubmit}>
         SUBUKAN
       </button>

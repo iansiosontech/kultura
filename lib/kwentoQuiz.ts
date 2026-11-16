@@ -17,55 +17,55 @@ export const quizItems: QuizItem[] = [
     scene: 1,
     pattern: "P_GL____B_Y",
     answer: "PAGLALAKBAY",
-    clue: "Ang ginagawa ni Danding patungo sa Malawig.",
+    clue: "Pagtungo nina Danding sa Malawig.",
   },
   {
     scene: 2,
     pattern: "D__D_NG",
     answer: "DANDING",
-    clue: "Ang pangalan ng ating pangunahing tauhan.",
+    clue: "Pangunahing tauhan sa kuwento.",
   },
   {
     scene: 3,
     pattern: "N_Y_N",
     answer: "NAYON",
-    clue: "Ang tawag sa isang maliit na pamayanan sa lalawigan.",
+    clue: "Maliit na pamayanang kinatatagpuan ng Malawig.",
   },
   {
     scene: 4,
     pattern: "K__A_-_N_K",
     answer: "KAMAG-ANAK",
-    clue: "Ang tawag sa mga taong may ugnayang dugo o pamilya.",
+    clue: "Mga taong kabilang sa pamilya o angkan.",
   },
   {
     scene: 5,
     pattern: "P_G___AM_Y",
     answer: "PAGLALAMAY",
-    clue: "Ang pagbabantay sa bangkay bago ilibing.",
+    clue: "Pakikiramay sa pagpanaw ni Tata Inong.",
   },
   {
     scene: 6,
     pattern: "G_N_T_",
     answer: "GUNITA",
-    clue: "Ang tawag sa mga bagay na naaalala mula sa nakaraan.",
+    clue: "Mga alaalang nananatili sa isip.",
   },
   {
     scene: 7,
     pattern: "K_B_T_A_",
     answer: "KABATAAN",
-    clue: "Ang yugto ng buhay bago maging matanda.",
+    clue: "Mga karanasan ng ama ni Danding noong bata pa.",
   },
   {
     scene: 8,
     pattern: "B_L_K-T_N_W",
     answer: "BALIK-TANAW",
-    clue: "Ang pagmuni-muni tungkol sa nakalipas.",
+    clue: "Paggunita sa mga pangyayari sa nakaraan ng ama ni Danding.",
   },
   {
     scene: 9,
     pattern: "P_G_U_UKS_",
     answer: "PAGLULUKSA",
-    clue: "Ang pagdadalamhati para sa namatay.",
+    clue: "Kalungkutang dulot ng pagpanaw ni Tata Inong.",
   },
   // pattern must be the exact same length as answer, character-for-character
   // aligned (including the literal space and hyphen) — each "_" becomes one
@@ -74,7 +74,7 @@ export const quizItems: QuizItem[] = [
     scene: 10,
     pattern: "L___NG-_I__BU_N",
     answer: "LUPANG-TINUBUAN",
-    clue: "Ang tawag sa lugar na pinanggalingan o pinagsilangan.",
+    clue: "Lupang pinagmulan at minamahal ng mga tao.",
   },
 ];
 
