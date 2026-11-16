@@ -117,6 +117,7 @@ export default function SalitaQuiz({
           );
         })}
       </div>
+      <p className="salita-clue">{item.clue}</p>
       <button type="button" className="quiz-btn" onClick={handleSubmit}>
         SUBUKAN
       </button>

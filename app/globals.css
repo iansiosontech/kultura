@@ -630,6 +630,8 @@ html, body { height: 100%; margin: 0; }
 .quiz-feedback--wrong{color:#FF9B7A;margin-top:4px;}
 
 .salita-quiz{margin:4px 0 18px;}
+.salita-clue{font:600 12px/1.5 system-ui,sans-serif;color:#FFFBF0;opacity:.8;
+  max-width:300px;margin:0 auto 14px;text-align:center;}
 .salita-boxes{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:16px;}
 .salita-box{width:30px;height:38px;flex-shrink:0;border:2px solid #FFD98A;border-radius:8px;
   background:rgba(0,0,0,.25);color:#FFD98A;font:800 17px/1 ui-monospace,monospace;

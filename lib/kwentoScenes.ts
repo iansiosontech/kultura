@@ -38,7 +38,7 @@ export type Scene = {
 export const scenes: Scene[] = [
   {
     scene: 1,
-    pace: 2.393,
+    pace: 2.756,
     title: "Pag-alis sa Tutuban",
     beats: [
       { n: 1, text: "Ang tren ay tumulak sa gitna ng sali-salimuot na mga ingay." },
@@ -84,11 +84,11 @@ export const scenes: Scene[] = [
   },
   {
     scene: 3,
-    pace: 2.208,
+    pace: 2.136,
     title: "Pagdating sa Malawig",
     beats: [
       { n: 9, text: "Sa unang malas, ang Malawig ay walang pagkakaiba sa alinmang nayon sa Kalagitnaang Luzon." },
-      { n: 10, at: 8, text: "Isang daang makitid, paliko-liko, natatalukapan ng makapal at manilaw-nilaw na alikabok." },
+      { n: 10, at: 5.5, text: "Isang daang makitid, paliko-liko, natatalukapan ng makapal at manilaw-nilaw na alikabok." },
       { n: 10, text: "Mga puno ng kawayan, mangga, niyog at akasya." },
       { n: 10, text: "Mga bahay na pawid, luma na ang karamihan at sunog sa araw ang mga dingding at bubong." },
       { n: 10, text: "Pasalit-salit, isang tindahang hindi mapagwari kung tititigan sa malapit." },
@@ -104,7 +104,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 4,
-    pace: 2.250,
+    pace: 2.256,
     title: "Mga Kamag-anak",
     beats: [
       { n: 11, text: "Kay rami pala niyang kamag-anak doon." },
@@ -147,7 +147,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 6,
-    pace: 1.986,
+    pace: 2.002,
     title: "Mga Alaala",
     beats: [
       { n: 20, text: "Pagkaraan ng ilang sandali ay umabot siya ng isang album sa mesang kalapit, binuksan iyon, at pinagmuni-muni ang mahiwaga at makapangyarihang kaugnayan ng dugo na nagbubuklod ng mga tao." },
@@ -166,7 +166,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 7,
-    pace: 1.855,
+    pace: 1.881,
     title: "Kuwento ni Lolo Tasyo",
     beats: [
       { n: 25, text: "\"May mga sandali pong kailangan ng tao ang mapag-isa.\"" },
@@ -188,7 +188,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 8,
-    pace: 2.078,
+    pace: 2.100,
     title: "Ang Unang Tula",
     beats: [
       { n: 29, text: "\"At doon, sa kinauupuan mo kanina, doon niya isinulat ang kauna-unahan niyang tula — isang maikling papuri sa kagandahan ng isa sa mga dalagang nakilala niya sa bayan." },
@@ -225,7 +225,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 10,
-    pace: 3.079,
+    pace: 2.685,
     title: "Pag-uwi sa Puso",
     beats: [
       { n: 33, text: "Ibig niyang mapag-isa kaya't nang makita niyang may taong naiwan sa bahay ay patalilis siyang nagtungo sa bukid." },
@@ -273,6 +273,13 @@ export const audioSrc = (scene: number) =>
 // old duration-based split silently never advance past the first beat.
 const WORDS_PER_SECOND = 2.5;
 
+// a very short beat (e.g. "Muli siyang napangiti.") divided by pace alone
+// can land under a second on screen — unreadable, and faster than anyone
+// actually speaks a short, often dramatic line. Floor every beat's own
+// duration so it never flashes by quicker than this, regardless of word
+// count.
+const MIN_BEAT_DURATION = 1.6;
+
 export function beatBoundaries(beats: Beat[], pace = WORDS_PER_SECOND): number[] {
   // Rebase the running estimate off each beat's actual `at` (when set)
   // instead of ignoring it — otherwise a manual correction on one beat
@@ -282,7 +289,7 @@ export function beatBoundaries(beats: Beat[], pace = WORDS_PER_SECOND): number[]
   return beats.map((b) => {
     const at = b.at ?? acc;
     const words = b.text.split(/\s+/).filter(Boolean).length;
-    acc = at + words / pace;
+    acc = at + Math.max(words / pace, MIN_BEAT_DURATION);
     return at;
   });
 }
