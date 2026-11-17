@@ -7,6 +7,7 @@ import {
   type FollowUpAnswer,
 } from "@/lib/followUpQuestions";
 import Leaderboard from "@/components/Leaderboard";
+import ResultCard from "@/components/ResultCard";
 
 type QuizResultsProps = {
   answers: QuizAnswer[];
@@ -27,6 +28,9 @@ export default function QuizResults({
       <p className="quiz-results-score">
         {score} / {TOTAL_MAX_SCORE}
       </p>
+
+      <ResultCard score={score} maxScore={TOTAL_MAX_SCORE} />
+
       <div className="quiz-results-list">
         {quizItems.map((item) => {
           const a = answers.find((x) => x.scene === item.scene);
