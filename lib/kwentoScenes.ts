@@ -89,7 +89,7 @@ export const scenes: Scene[] = [
     beats: [
       { n: 9, text: "Sa unang malas, ang Malawig ay walang pagkakaiba sa alinmang nayon sa Kalagitnaang Luzon." },
       { n: 10, at: 5.5, text: "Isang daang makitid, paliko-liko, natatalukapan ng makapal at manilaw-nilaw na alikabok." },
-      { n: 10, text: "Mga puno ng kawayan, mangga, niyog at akasya." },
+      { n: 10, at: 9.2, text: "Mga puno ng kawayan, mangga, niyog at akasya." },
       { n: 10, text: "Mga bahay na pawid, luma na ang karamihan at sunog sa araw ang mga dingding at bubong." },
       { n: 10, text: "Pasalit-salit, isang tindahang hindi mapagwari kung tititigan sa malapit." },
       { n: 10, text: "Doon at dito, nasisilip sa kabila ang madalang na hanay ng mga bahay." },
