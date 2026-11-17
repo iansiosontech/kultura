@@ -225,7 +225,7 @@ export const scenes: Scene[] = [
   },
   {
     scene: 10,
-    pace: 2.685,
+    pace: 2.265,
     title: "Pag-uwi sa Puso",
     beats: [
       { n: 33, text: "Ibig niyang mapag-isa kaya't nang makita niyang may taong naiwan sa bahay ay patalilis siyang nagtungo sa bukid." },
