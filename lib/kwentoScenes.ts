@@ -42,7 +42,7 @@ export const scenes: Scene[] = [
     title: "Pag-alis sa Tutuban",
     beats: [
       { n: 1, text: "Ang tren ay tumulak sa gitna ng sali-salimuot na mga ingay." },
-      { n: 2, at: 4, text: "Nagsisigawan ang mga batang nagtitinda ng mga babasahin — Tibune, mama, Tribune, Taliba." },
+      { n: 2, at: 3, text: "Nagsisigawan ang mga batang nagtitinda ng mga babasahin — Tibune, mama, Tribune, Taliba." },
       { n: 2, text: "Ubos na po." },
       { n: 2, text: "Liwayway, bagong labas." },
       { n: 2, text: "Alingawngaw ng mga habilinan at pagpapaalam." },
@@ -108,7 +108,7 @@ export const scenes: Scene[] = [
     title: "Mga Kamag-anak",
     beats: [
       { n: 11, text: "Kay rami pala niyang kamag-anak doon." },
-      { n: 12, at: 5, text: "Hindi mapatid-patid ang pagpapakilala ng kanyang Tiya Juana." },
+      { n: 12, at: 4, text: "Hindi mapatid-patid ang pagpapakilala ng kanyang Tiya Juana." },
       { n: 13, text: "Sila ang iyong Lolo Tasyo, at sila ang iyong Lola Ines." },
       { n: 13, text: "Ang mga pinsan mong Juan, Seling, Marya at Asyas." },
       { n: 13, text: "Ang iyong Nana Bito." },
@@ -132,7 +132,7 @@ export const scenes: Scene[] = [
     title: "Sa Harap ng Bangkay",
     beats: [
       { n: 16, text: "Isang manipis na dingding ng sawali ang tanging nakapagitan sa bulwagan at sa pinakaloob ng bahay, na siyang kinabuburulan ng patay." },
-      { n: 16, text: "At sa bukas na lagusan, na napapalamutihan sa magkabilang panig ng mga puting kurtina salo ng pinagbuhol na lasong itim, ay walang tigil ang pagyayaot-yaot dito ng mga taong nakikiramay sa mga namatayan, nagmamasid sa bangkay." },
+      { n: 16, at: 9.25, text: "At sa bukas na lagusan, na napapalamutihan sa magkabilang panig ng mga puting kurtina salo ng pinagbuhol na lasong itim, ay walang tigil ang pagyayaot-yaot dito ng mga taong nakikiramay sa mga namatayan, nagmamasid sa bangkay." },
       { n: 16, text: "Ngunit pagpasok na pagpasok ni Danding ay nag-iba ang kanyang pakiramdam." },
       { n: 17, text: "Napawi sa kanyang pandinig ang alingawngaw sa labas, at dumampi sa kanyang puso ang katahimikan ng kamatayan." },
       { n: 18, text: "Dahan-dahan siyang lumapit sa kabaong, at pinagmasdan ang mukha ng bangkay." },
