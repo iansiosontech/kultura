@@ -293,7 +293,11 @@ export default function KwentoPlayer() {
 
   return (
     <>
-      <div className="mk">
+      <div
+        className={`mk ${
+          ended && endPhase === "results" ? "mk--results" : ""
+        }`}
+      >
         <div className="mk-top">
           <button
             type="button"

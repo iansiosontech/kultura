@@ -362,7 +362,7 @@ html, body { height: 100%; margin: 0; }
 .mk-window{position:relative;height:100%;aspect-ratio:16/9;max-width:100%;
   border-radius:26px;overflow:hidden;background:#2E4A44;border:10px solid #E8763A;
   box-shadow:0 0 0 6px #F2C14E, 0 16px 34px rgba(80,55,20,.4);}
-.mk-window img{width:100%;height:100%;object-fit:cover;display:block;}
+.mk-window-bg{width:100%;height:100%;object-fit:cover;display:block;}
 .mk-window::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(115deg,rgba(255,255,255,.22) 0 18%,transparent 34%);}
 
@@ -374,9 +374,18 @@ html, body { height: 100%; margin: 0; }
 /* the follow-up questions and results list need real room to show every
    choice/row — the 16:9 image box is too short for that content, so
    drop the fixed aspect ratio and let it grow with the content instead */
-.mk-window--roomy{aspect-ratio:auto;height:auto;min-height:60vh;}
+.mk-window--roomy{aspect-ratio:auto;height:auto;min-height:420px;}
 .mk-window--roomy .mk-window-bg{display:none;}
-.mk-window--roomy .mk-end{position:relative;inset:auto;min-height:60vh;}
+.mk-window--roomy .mk-end{position:relative;inset:auto;min-height:420px;}
+
+/* RESULTA is the end of the story: the caption and player controls have
+   nothing left to do, and the results take their natural height so the
+   page scrolls as one piece instead of a short box scrolling inside it */
+.mk--results{overflow-y:auto;}
+.mk--results .mk-text,.mk--results .mk-ctrl{display:none;}
+.mk--results .mk-stage{flex:0 0 auto;align-items:flex-start;}
+.mk--results .mk-window{width:100%;max-width:560px;min-height:0;}
+.mk--results .mk-end{min-height:0;justify-content:flex-start;padding:22px 18px;}
 
 @keyframes mk-fade-in{from{opacity:0}to{opacity:1}}
 @keyframes mk-pop-in{
@@ -671,8 +680,8 @@ html, body { height: 100%; margin: 0; }
 .followup-choice--correct{border-color:#8CE0A8;background:rgba(140,224,168,.18);color:#8CE0A8;}
 .followup-choice--wrong{border-color:#FF9B7A;background:rgba(255,155,122,.18);color:#FF9B7A;}
 
-.quiz-results{margin:4px 0 18px;max-height:46vh;overflow-y:auto;}
-.quiz-results-score{font:800 clamp(22px,6vw,30px)/1 ui-monospace,monospace;
+.quiz-results{width:100%;max-width:420px;margin:4px 0 18px;}
+.quiz-results-score{font:800 26px/1 ui-monospace,monospace;
   letter-spacing:.1em;color:#FFD98A;margin:4px 0 14px;}
 .quiz-results-list{display:flex;flex-direction:column;gap:6px;text-align:left;}
 .quiz-results-row{display:flex;align-items:center;gap:10px;padding:8px 10px;
@@ -691,7 +700,7 @@ html, body { height: 100%; margin: 0; }
 .result-card{display:flex;flex-direction:column;align-items:center;gap:10px;
   margin:4px 0 18px;}
 .result-card-canvas{display:none;}
-.result-card-preview{width:min(260px,85vw);height:auto;border-radius:14px;
+.result-card-preview{width:260px;max-width:100%;height:auto;border-radius:14px;
   border:2px solid rgba(255,217,138,.4);box-shadow:0 8px 20px rgba(0,0,0,.4);}
 .result-card-btn{border:3px solid #2A2317;background:#F5B700;border-radius:99px;
   padding:12px 30px;font:800 13px/1 ui-monospace,monospace;letter-spacing:.14em;
@@ -811,7 +820,7 @@ html, body { height: 100%; margin: 0; }
 .leaderboard-submitted{font:600 12px/1.4 ui-monospace,monospace;color:#8CE0A8;
   margin:8px 0 12px;}
 .leaderboard-list{display:flex;flex-direction:column;gap:6px;text-align:left;
-  list-style:none;margin:0;padding:0;max-height:30vh;overflow-y:auto;}
+  list-style:none;margin:0;padding:0;max-height:260px;overflow-y:auto;}
 .leaderboard-row{display:flex;align-items:center;gap:10px;padding:8px 10px;
   border-radius:10px;background:rgba(255,255,255,.06);}
 .leaderboard-rank{flex-shrink:0;width:20px;text-align:center;font:800 13px/1 ui-monospace,monospace;
