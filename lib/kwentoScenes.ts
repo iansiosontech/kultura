@@ -70,7 +70,7 @@ export const scenes: Scene[] = [
     title: "Sa Loob ng Tren",
     beats: [
       { n: 5, text: "Huminga nang maluwag ang kanyang Tiya Juana at ang sabi, \"Salamat at tayo'y nakatulak na rin. Kay init doon sa istasyon.\"" },
-      { n: 5, text: "Ang kanyang Tiyo Goryo ay nakadungaw at nagmamasid sa mga bahay at halaman sa dinaraanan." },
+      { n: 5, at: 7.5, text: "Ang kanyang Tiyo Goryo ay nakadungaw at nagmamasid sa mga bahay at halaman sa dinaraanan." },
       { n: 6, text: "Ang galaw ng makina ngayon ay mabilis na't tugma-tugma, tila pintig ng isang pusong wala nang alinlangan." },
       { n: 6, text: "Napawing tila ulap sa isip ni Danding ang gulo at ingay ng pag-alis, at gumitaw ang pakay ng kanilang pag-uwi sa Malawig." },
       { n: 6, text: "Nagsasalita na naman ang kanyang Tiya Juana," },
