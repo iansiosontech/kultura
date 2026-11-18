@@ -12,10 +12,14 @@ type AtStationProps = {
   title: string;
   visited: { scene: number; title: string }[];
   hasProgress: boolean;
+  // this station's audio has finished but some of its questions are still
+  // unanswered — offer the questions (or a re-listen) instead of moving on
+  questionsPending: boolean;
   score: number;
   completedCount: number;
   onStart: () => void;
   onRestart: () => void;
+  onAnswer: () => void;
   onClose: () => void;
   onRevisit: (scene: number) => void;
 };
@@ -25,10 +29,12 @@ export default function AtStation({
   title,
   visited,
   hasProgress,
+  questionsPending,
   score,
   completedCount,
   onStart,
   onRestart,
+  onAnswer,
   onClose,
   onRevisit,
 }: AtStationProps) {
@@ -51,7 +57,11 @@ export default function AtStation({
   };
 
   return (
-    <div className={`ats-overlay ${hasProgress ? "ats-overlay--two-actions" : ""}`}>
+    <div
+      className={`ats-overlay ${
+        questionsPending || hasProgress ? "ats-overlay--two-actions" : ""
+      }`}
+    >
       <StationPlatformBackground />
       <ScoreBadge score={score} />
 
@@ -102,7 +112,26 @@ export default function AtStation({
       </div>
 
       <div className="ats-bottom">
-        {hasProgress ? (
+        {questionsPending ? (
+          <>
+            <button
+              type="button"
+              className="ats-start"
+              disabled={departing}
+              onClick={() => depart(onAnswer)}
+            >
+              SAGUTIN ANG TANONG &rarr;
+            </button>
+            <button
+              type="button"
+              className="ats-start ats-start--alt"
+              disabled={departing}
+              onClick={() => depart(onRestart)}
+            >
+              PAKINGGAN MULI
+            </button>
+          </>
+        ) : hasProgress ? (
           <>
             <button
               type="button"
