@@ -21,20 +21,52 @@ export default function FacilitatorDashboard() {
   const [loginError, setLoginError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshFailed, setRefreshFailed] = useState(false);
 
-  const load = async () => {
-    const result = await fetchFacilitatorData();
+  // `background` refreshes keep the current list on screen if they fail
+  // (e.g. a Wi-Fi blip), instead of replacing the dashboard with an error
+  const load = async (background = false) => {
+    let result: Awaited<ReturnType<typeof fetchFacilitatorData>>;
+    try {
+      result = await fetchFacilitatorData();
+    } catch {
+      result = { ok: false, status: 0 };
+    }
     if (!result.ok) {
+      if (background && result.status !== 401) {
+        setRefreshFailed(true);
+        return;
+      }
       setStatus(result.status === 401 ? "locked" : "unavailable");
       return;
     }
     setEntries(result.entries);
     setStatus("unlocked");
+    setLastUpdated(new Date());
+    setRefreshFailed(false);
   };
 
   useEffect(() => {
     load();
   }, []);
+
+  // the list was only fetched once, so submissions made while the page was
+  // open never showed up — re-fetch every 15s and when the tab is reopened
+  useEffect(() => {
+    if (status !== "unlocked") return;
+    const refresh = () => {
+      if (document.visibilityState === "visible") load(true);
+    };
+    const id = window.setInterval(refresh, 15000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener("visibilitychange", refresh);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   if (status === "checking") {
     return <p className="facilitator-msg">Naglo-load...</p>;
@@ -89,6 +121,28 @@ export default function FacilitatorDashboard() {
 
   return (
     <div className="facilitator-dash">
+      <div className="facilitator-toolbar">
+        <span className="facilitator-updated" role="status">
+          {refreshFailed
+            ? "Hindi ma-update ngayon — susubukan muli."
+            : lastUpdated
+              ? `Na-update: ${lastUpdated.toLocaleTimeString()}`
+              : ""}
+        </span>
+        <button
+          type="button"
+          className="facilitator-refresh"
+          disabled={refreshing}
+          onClick={async () => {
+            setRefreshing(true);
+            await load(true);
+            setRefreshing(false);
+          }}
+        >
+          {refreshing ? "NAGLO-LOAD..." : "↻ I-REFRESH"}
+        </button>
+      </div>
+
       <div className="facilitator-stats">
         <div className="facilitator-stat">
           <span className="facilitator-stat-value">{total}</span>

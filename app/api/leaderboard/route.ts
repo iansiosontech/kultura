@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabaseServer";
+import { LEADERBOARD_NAME_MAX } from "@/lib/leaderboard";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
   const name = typeof body?.name === "string" ? body.name.trim() : "";
   const score = body?.score;
 
-  if (!name || name.length > 48) {
+  if (!name || name.length > LEADERBOARD_NAME_MAX) {
     return NextResponse.json({ error: "Invalid name." }, { status: 400 });
   }
   if (!Number.isInteger(score) || score < 0 || score > 30) {

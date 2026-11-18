@@ -1,3 +1,9 @@
+// longest name the leaderboard accepts — enforced by the API too
+export const LEADERBOARD_NAME_MAX = 48;
+
+// sessionStorage flag: this tab already submitted its finished run
+export const LEADERBOARD_SUBMITTED_KEY = "kultura-kwento-leaderboard-submitted-v1";
+
 export type LeaderboardEntry = {
   name: string;
   score: number;
