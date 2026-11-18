@@ -104,8 +104,9 @@ export default function TrainParked({
           return (
             <circle
               key={i}
-              cx={470 + Math.cos(a) * 38}
-              cy={131 + Math.sin(a) * 38}
+              // rounded so the server- and browser-rendered values match
+              cx={Math.round((470 + Math.cos(a) * 38) * 100) / 100}
+              cy={Math.round((131 + Math.sin(a) * 38) * 100) / 100}
               r="2.6"
               className="trp-rivet"
             />

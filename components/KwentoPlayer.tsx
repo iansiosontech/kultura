@@ -314,9 +314,16 @@ export default function KwentoPlayer() {
     !ended &&
     (audioRef.current?.currentTime ?? 0) > 0.5;
 
-  // keyboard nav
+  // keyboard nav — only while the story itself is showing, and never while
+  // typing: otherwise Space/arrows in the SALITA boxes or the leaderboard
+  // name field would start the audio, drop spaces, or leave the screen
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (jumpOpen || ended) return;
+      const el = e.target instanceof HTMLElement ? e.target : null;
+      if (el?.closest("input, textarea, select, [contenteditable='true']")) return;
+      // a focused button/link already handles Space itself
+      if (e.key === " " && el?.closest("button, a")) return;
       if (e.key === "ArrowRight") goScene(sceneIdx + 1);
       if (e.key === "ArrowLeft") goScene(sceneIdx - 1);
       if (e.key === " ") {
@@ -327,7 +334,7 @@ export default function KwentoPlayer() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sceneIdx, playing]);
+  }, [sceneIdx, playing, jumpOpen, ended]);
 
   const pct = ((sceneIdx + 1) / scenes.length) * 100;
 
