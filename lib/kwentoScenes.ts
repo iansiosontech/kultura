@@ -57,7 +57,7 @@ export const scenes: Scene[] = [
       { n: 3, at: 45, text: "Paalam." },
       { n: 3, at: 45, text: "Paalam." },
       { n: 3, at: 46, text: "Hanggang sa muli." },
-      { n: 3, at: 49.9, text: "Ang tren ay nabuhay at dahan-dahang kumilos." },
+      { n: 3, at: 47, text: "Ang tren ay nabuhay at dahan-dahang kumilos." },
       { n: 4, at: 50, text: "Naiwan sa likuran nina Danding ang takipsilim ng Tutuban, at sila'y napagitna sa malayang hangin at sa liwanag ng umaga." },
     ],
   },
