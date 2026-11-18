@@ -35,6 +35,28 @@ import { playLevelComplete } from "@/lib/sfx";
 // before auto-advancing to the next step
 const FEEDBACK_HOLD_MS = 1400;
 
+type EndStep = { phase: "salita" } | { phase: "followup"; idx: number };
+
+// the first question of a scene that hasn't been answered yet, in the order
+// they're asked (SALITA, then each follow-up) — null once all are answered
+function nextEndStep(
+  sceneNum: number,
+  quizAnswers: QuizAnswer[],
+  followUpAnswers: FollowUpAnswer[]
+): EndStep | null {
+  const hasSalita = quizItems.some((q) => q.scene === sceneNum);
+  if (hasSalita && !quizAnswers.some((a) => a.scene === sceneNum)) {
+    return { phase: "salita" };
+  }
+  const fups = followUpsFor(sceneNum);
+  for (let i = 0; i < fups.length; i++) {
+    if (!followUpAnswers.some((a) => a.scene === sceneNum && a.questionIndex === i)) {
+      return { phase: "followup", idx: i };
+    }
+  }
+  return null;
+}
+
 export default function KwentoPlayer() {
   const router = useRouter();
   const [sceneIdx, setSceneIdx] = useState(0);
@@ -84,10 +106,19 @@ export default function KwentoPlayer() {
   const scene = scenes[sceneIdx];
   const beat = scene.beats[beatIdx];
 
-  // the next station that isn't finished yet — this is where the train sits
+  // a scene is done once its audio has played through AND all of its
+  // questions are answered — only then does the next station unlock, so
+  // leaving the questions (BUMALIK, ISTASYON, a badge) can't skip them
+  const isSceneDone = (n: number) =>
+    completed.includes(n) &&
+    nextEndStep(n, quizAnswers, followUpAnswers) === null;
+  // the first station that isn't done yet — this is where the train sits
   // on the map, and nothing past it is unlocked.
-  const maxCompleted = completed.length ? Math.max(...completed) : 0;
-  const activeStation = Math.min(maxCompleted + 1, scenes.length);
+  const activeStation =
+    scenes.find((s) => !isSceneDone(s.scene))?.scene ?? scenes.length;
+  // its audio already played through, only questions are left
+  const activeQuestionsPending =
+    completed.includes(activeStation) && !isSceneDone(activeStation);
 
   // restore last position
   useEffect(() => {
@@ -176,7 +207,9 @@ export default function KwentoPlayer() {
   const handleTimeUpdate = () => {
     const a = audioRef.current;
     const bounds = boundariesRef.current;
-    if (!a || bounds.length === 0) return;
+    // the questions are showing over the scene's last picture — don't let a
+    // reload of the audio flip it back to the first one
+    if (!a || bounds.length === 0 || ended) return;
     let next = 0;
     for (let i = 0; i < bounds.length; i++) {
       if (a.currentTime >= bounds[i]) next = i;
@@ -190,9 +223,8 @@ export default function KwentoPlayer() {
     );
     setPlaying(false);
     setEnded(true);
-    setEndPhase("salita");
-    setFollowUpIdx(0);
     playLevelComplete();
+    showEndStep(nextEndStep(scene.scene, quizAnswers, followUpAnswers));
   };
 
   // reached once there's nothing left to show for this scene — results on
@@ -206,34 +238,43 @@ export default function KwentoPlayer() {
     }
   };
 
-  // after SALITA is answered, hold the feedback on screen briefly, then
-  // move to this scene's first follow-up question if it has one,
-  // otherwise finish up
-  const advanceAfterSalita = () => {
+  // shows the given question, or wraps up the scene once none are left —
+  // so the sequence always picks up at the first unanswered question
+  // instead of restarting at SALITA
+  const showEndStep = (step: EndStep | null) => {
+    if (!step) {
+      finishEndSequence();
+    } else if (step.phase === "salita") {
+      setEndPhase("salita");
+    } else {
+      setFollowUpIdx(step.idx);
+      setEndPhase("followup");
+    }
+  };
+
+  // after an answer, hold its feedback on screen briefly, then move on to
+  // this scene's next unanswered question, or finish up if there's none
+  const advanceAfterAnswer = (qa: QuizAnswer[], fa: FollowUpAnswer[]) => {
     clearAdvanceTimer();
+    const sceneNum = scene.scene;
     advanceTimerRef.current = window.setTimeout(() => {
-      if (followUpsFor(scene.scene).length > 0) {
-        setFollowUpIdx(0);
-        setEndPhase("followup");
-      } else {
-        finishEndSequence();
-      }
+      showEndStep(nextEndStep(sceneNum, qa, fa));
     }, FEEDBACK_HOLD_MS);
   };
 
-  // after a follow-up question is answered, hold its feedback, then move
-  // to the next follow-up question for this scene if there is one,
-  // otherwise finish up
-  const advanceAfterFollowUp = () => {
+  // opens a scene whose audio already played through straight at its
+  // first unanswered question, without making the student re-listen
+  const answerScene = (idx: number) => {
+    const step = nextEndStep(scenes[idx].scene, quizAnswers, followUpAnswers);
+    if (!step) return;
     clearAdvanceTimer();
-    advanceTimerRef.current = window.setTimeout(() => {
-      const fups = followUpsFor(scene.scene);
-      if (followUpIdx + 1 < fups.length) {
-        setFollowUpIdx((i) => i + 1);
-      } else {
-        finishEndSequence();
-      }
-    }, FEEDBACK_HOLD_MS);
+    audioRef.current?.pause();
+    setPlaying(false);
+    setJumpOpen(false);
+    if (idx !== sceneIdx) setSceneIdx(idx);
+    setBeatIdx(scenes[idx].beats.length - 1);
+    setEnded(true);
+    showEndStep(step);
   };
 
   // closes the at-station screen and plays the given scene — used for
@@ -363,10 +404,9 @@ export default function KwentoPlayer() {
                         item={q}
                         answer={a}
                         onSubmit={(guess, correct) => {
-                          setQuizAnswers(
-                            recordQuizAnswer(q.scene, guess, correct)
-                          );
-                          advanceAfterSalita();
+                          const next = recordQuizAnswer(q.scene, guess, correct);
+                          setQuizAnswers(next);
+                          advanceAfterAnswer(next, followUpAnswers);
                         }}
                       />
                     );
@@ -381,15 +421,14 @@ export default function KwentoPlayer() {
                         key={`${scene.scene}-${followUpIdx}`}
                         item={fq}
                         onSubmit={(choiceIndex, correct) => {
-                          setFollowUpAnswers(
-                            recordFollowUpAnswer(
-                              scene.scene,
-                              followUpIdx,
-                              choiceIndex,
-                              correct
-                            )
+                          const next = recordFollowUpAnswer(
+                            scene.scene,
+                            followUpIdx,
+                            choiceIndex,
+                            correct
                           );
-                          advanceAfterFollowUp();
+                          setFollowUpAnswers(next);
+                          advanceAfterAnswer(quizAnswers, next);
                         }}
                       />
                     );
@@ -487,8 +526,10 @@ export default function KwentoPlayer() {
             .sort((a, b) => a.scene - b.scene)
             .map((s) => ({ scene: s.scene, title: s.title }))}
           hasProgress={activeHasProgress}
+          questionsPending={activeQuestionsPending}
           onStart={() => startScene(activeStation - 1)}
           onRestart={() => startScene(activeStation - 1, { restart: true })}
+          onAnswer={() => answerScene(activeStation - 1)}
           onRevisit={(sceneNumber) =>
             startScene(sceneNumber - 1, { restart: true })
           }
