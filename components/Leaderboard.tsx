@@ -1,13 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchLeaderboard, submitScore, type LeaderboardEntry } from "@/lib/leaderboard";
+import {
+  fetchLeaderboard,
+  submitScore,
+  LEADERBOARD_NAME_MAX,
+  LEADERBOARD_SUBMITTED_KEY,
+  type LeaderboardEntry,
+} from "@/lib/leaderboard";
 import { playClick } from "@/lib/sfx";
 import { MAX_SCORE, type QuizAnswer } from "@/lib/kwentoQuiz";
 import { FOLLOWUP_MAX_SCORE, type FollowUpAnswer } from "@/lib/followUpQuestions";
 import { readStudentInfo, studentDisplayName } from "@/lib/studentInfo";
 
-const SUBMITTED_KEY = "kultura-kwento-leaderboard-submitted-v1";
 const TOTAL_MAX_SCORE = MAX_SCORE + FOLLOWUP_MAX_SCORE;
 
 type Status = "idle" | "loading" | "ready" | "unavailable";
@@ -27,6 +32,7 @@ export default function Leaderboard({
   const [name, setName] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitFailed, setSubmitFailed] = useState(false);
 
   const load = () => {
     setStatus("loading");
@@ -45,11 +51,13 @@ export default function Leaderboard({
   useEffect(() => {
     load();
     try {
-      setSubmitted(sessionStorage.getItem(SUBMITTED_KEY) === "1");
+      setSubmitted(sessionStorage.getItem(LEADERBOARD_SUBMITTED_KEY) === "1");
     } catch {
       // ignore
     }
-    setName(studentDisplayName(readStudentInfo()));
+    // the prefill isn't limited by the input's maxLength, and the API
+    // rejects longer names — trim it so a long name + section still submits
+    setName(studentDisplayName(readStudentInfo()).slice(0, LEADERBOARD_NAME_MAX));
   }, []);
 
   if (status === "unavailable") return null;
@@ -59,17 +67,25 @@ export default function Leaderboard({
     const trimmed = name.trim();
     if (!trimmed || submitting || !canSubmit) return;
     setSubmitting(true);
-    const ok = await submitScore(trimmed, score, answers, followUpAnswers);
-    setSubmitting(false);
-    if (ok) {
-      setSubmitted(true);
-      try {
-        sessionStorage.setItem(SUBMITTED_KEY, "1");
-      } catch {
-        // ignore
-      }
-      load();
+    setSubmitFailed(false);
+    let ok = false;
+    try {
+      ok = await submitScore(trimmed, score, answers, followUpAnswers);
+    } catch {
+      ok = false;
     }
+    setSubmitting(false);
+    if (!ok) {
+      setSubmitFailed(true);
+      return;
+    }
+    setSubmitted(true);
+    try {
+      sessionStorage.setItem(LEADERBOARD_SUBMITTED_KEY, "1");
+    } catch {
+      // ignore
+    }
+    load();
   };
 
   return (
@@ -81,7 +97,7 @@ export default function Leaderboard({
             className="leaderboard-input"
             type="text"
             placeholder="Ilagay ang iyong pangalan"
-            maxLength={48}
+            maxLength={LEADERBOARD_NAME_MAX}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -91,9 +107,14 @@ export default function Leaderboard({
             disabled={!name.trim() || submitting}
             onClick={() => playClick()}
           >
-            IPASA
+            {submitting ? "..." : "IPASA"}
           </button>
         </form>
+      )}
+      {canSubmit && !submitted && submitFailed && (
+        <p className="leaderboard-error" role="alert">
+          Hindi naipasa ang iskor. Pakisubukan muli.
+        </p>
       )}
       {canSubmit && submitted && (
         <p className="leaderboard-submitted">Naipasa na ang iskor mo!</p>
