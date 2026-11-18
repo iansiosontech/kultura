@@ -17,19 +17,25 @@ export const followUpQuestions: FollowUpQuestion[] = [
   {
     scene: 1,
     question:
-      'Ano ang ipinahihiwatig ng paglipat nina Danding mula sa magulong istasyon tungo sa "malayang hangin at liwanag ng umaga"?',
+      "Ano ang ipinahihiwatig ng paglipat nina Danding mula sa magulong istasyon tungo sa “malayang hangin at liwanag ng umaga”?",
     choices: [
       "Nagsimula ang isang bagong karanasan para kay Danding.",
-      "Nagkaroon siya ng pagkakataong pansamantalang makalayo sa gulo ng Maynila.",
-      "Naging mas interesado siya sa mga tanawing makikita sa kanilang paglalakbay.",
       "Naramdaman niyang magiging payapa ang kanilang pagpunta sa Malawig.",
+      "Naging mas interesado siya sa mga tanawing makikita sa kanilang paglalakbay.",
+      "Nagkaroon siya ng pagkakataong pansamantalang makalayo sa gulo ng Maynila.",
     ],
     correctIndex: 0,
   },
   {
     scene: 1,
-    question: "Ano ang ipinagbibili ng mga batang nagtitinda sa istasyon?",
-    choices: ["Mga pasalubong", "Mga babasahin", "Mga pagkain", "Mga laruan"],
+    question:
+      "Ano ang ipinagbibili ng mga batang nagtitinda sa istasyon?",
+    choices: [
+      "Mga pasalubong",
+      "Mga babasahin",
+      "Mga pagkain",
+      "Mga laruan",
+    ],
     correctIndex: 1,
   },
   {
@@ -37,82 +43,84 @@ export const followUpQuestions: FollowUpQuestion[] = [
     question:
       "Bakit nakaramdam ng lungkot si Danding para kay Tata Inong kahit hindi niya ito nakilala?",
     choices: [
-      "Dahil naantig siya sa pagkakalarawan dito bilang isang mabuting tao.",
       "Dahil iniugnay niya si Tata Inong sa kaniyang ama at pamilya.",
+      "Dahil naantig siya sa pagkakalarawan dito bilang isang mabuting tao.",
       "Dahil naisip niyang bahagi rin siya ng pagdadalamhati ng kanilang angkan.",
       "Dahil naging interesado siya sa mga kamag-anak na hindi pa niya nakikilala.",
     ],
-    correctIndex: 1,
+    correctIndex: 0,
   },
   {
     scene: 2,
-    question: "Ano ang naisip itanong ni Danding tungkol sa Malawig?",
+    question:
+      "Ano ang naisip itanong ni Danding tungkol sa Malawig?",
     choices: [
-      "Kung tahimik o matao at kung malawak ang mga bukirin doon.",
-      "Kung maraming kamag-anak ang naninirahan at kung gaano ito kalayo.",
-      "Kung mayaman o dukha at liblib o malapit sa bayan.",
       "Kung maunlad ang pamumuhay at kung madalas puntahan ng mga taga-Maynila.",
+      "Kung maraming kamag-anak ang naninirahan at kung gaano ito kalayo.",
+      "Kung tahimik o matao at kung malawak ang mga bukirin doon.",
+      "Kung mayaman o dukha at liblib o malapit sa bayan.",
     ],
-    correctIndex: 2,
+    correctIndex: 3,
   },
   {
     scene: 3,
     question:
-      'Sa iyong palagay, alin ang pinakamakatuwirang pagsusuri sa pananaw ni Danding matapos sabihin ng kutsero na, "Walang maganda rito kundi ang langit"?',
+      "Sa iyong palagay, alin ang pinakamakatuwirang pagsusuri sa pananaw ni Danding matapos sabihin ng kutsero na, “Walang maganda rito kundi ang langit”?",
     choices: [
-      "Hindi lubos na sang-ayon si Danding dahil nakita niyang may halaga ang Malawig.",
+      "Hindi lubos na sang-ayon si Danding dahil nakita niyang may halaga ito.",
+      "Nagbago ang pananaw ni Danding dahil sa sinabi ng kutsero.",
       "Sang-ayon si Danding dahil payak lamang ang Malawig.",
       "Hindi pinansin ni Danding ang sinabi ng kutsero.",
-      "Nagbago ang pananaw ni Danding dahil sa sinabi ng kutsero.",
     ],
     correctIndex: 0,
   },
   {
     scene: 3,
-    question: "Ano ang kalagayan ng langit sa Malawig nang umaga?",
+    question:
+      "Ano ang kalagayan ng langit sa Malawig nang umaga?",
     choices: [
       "Makulimlim, madilim, at walang ulap",
-      "Bughaw, maulap, at madilim",
       "Bughaw, maaliwalas, at walang ulap",
       "Madilim, maulap, at maaliwalas",
+      "Bughaw, maulap, at madilim",
     ],
-    correctIndex: 2,
+    correctIndex: 1,
   },
   {
     scene: 4,
     question:
       "Ano ang pinakamainam na paliwanag kung bakit naging mas palagay ang loob ni Danding sa piling ng kaniyang mga kamag-anak?",
     choices: [
-      "Dahil naging abala siya sa pagsagot sa mga tanong tungkol sa kaniyang pamilya.",
-      "Dahil unti-unti niyang naramdaman na kabilang siya sa kanilang pamilya.",
-      "Dahil marami siyang bagong kamag-anak na ipinakilala ng kaniyang Tiya Juana.",
-      "Dahil tinulungan siya ng kaniyang Tiya Juana sa pakikiharap sa mga taong naroon.",
+      "Dahil marami siyang kamag-anak na nakilala.",
+      "Dahil tinulungan siya ng kaniyang Tiya Juana sa pakikiharap.",
+      "Dahil unti-unti niyang naramdaman na kabilang siya sa pamilya.",
+      "Dahil nabawasan ang kaniyang pag-aalala sa kalagayan ng kaniyang ama at ina habang nasa pagtitipon.",
     ],
-    correctIndex: 1,
+    correctIndex: 2,
   },
   {
     scene: 4,
     question:
       "Sa iyong palagay, mabuti ba para kay Danding ang pakikisalamuha niya sa kaniyang mga kamag-anak? Bakit?",
     choices: [
-      "Oo, dahil nakatulong ito upang maging mas magaan ang kaniyang pakiramdam at makilala ang kaniyang pinagmulan.",
-      "Oo, dahil nais niyang makilala ang lahat ng taong nakatira sa Malawig.",
-      "Hindi, dahil mas gusto niyang mapag-isa kaysa makipag-usap sa kaniyang mga kamag-anak.",
-      "Hindi, dahil lalo lamang siyang naalala sa mga suliraning kinakaharap ng kaniyang ama.",
+      "Hindi, dahil naalala niya ang suliranin ng kaniyang ama.",
+      "Oo, dahil nakatulong ito upang gumaan ang kaniyang pakiramdam.",
+      "Hindi, dahil mas gusto niyang mapag-isa kaysa makihalubilo sa ibang tao.",
+      "Oo, dahil naging pagkakataon ito upang malaman niya ang mga tunay nilang kaugalian.",
     ],
-    correctIndex: 0,
+    correctIndex: 1,
   },
   {
     scene: 5,
     question:
-      'Ano ang ipinahihiwatig ng linyang "napawi sa kanyang pandinig ang alingawngaw sa labas"?',
+      "Ano ang ipinahihiwatig ng linyang “napawi sa kaniyang pandinig ang alingawngaw sa labas”?",
     choices: [
       "Nais ni Danding na umalis agad sa bahay ng namatayan.",
-      "Nawala sa kaniyang pansin ang mga ingay sa paligid dahil sa bigat ng kaniyang nararamdaman.",
-      "Hindi nakilala ni Danding ang mga taong nasa paligid ng kabaong.",
-      "Nahirapan si Danding na marinig ang sinasabi at bilin ng kaniyang Tiya Juana.",
+      "Hindi niya marinig nang maayos ang paalala ng kaniyang Tiya Juana.",
+      "Nawala sa kaniyang pansin ang mga ingay sa paligid dahil sa bigat ng nararamdaman.",
+      "Hindi napansin ang pag-uusap ng mga taong nakikiramay sa loob ng bahay dahil sa ingay.",
     ],
-    correctIndex: 1,
+    correctIndex: 2,
   },
   {
     scene: 5,
@@ -121,74 +129,75 @@ export const followUpQuestions: FollowUpQuestion[] = [
     choices: [
       "Mula sa pagiging tahimik tungo sa pagiging madaldal.",
       "Mula sa pagiging malungkot tungo sa pagiging masigla.",
-      "Mula sa pagiging maingay tungo sa pagiging masayahin.",
       "Mula sa pakikinig sa ingay tungo sa pagdama ng katahimikan.",
+      "Mula sa pagiging maingay at tahimik tungo sa pagiging masayahin.",
     ],
-    correctIndex: 3,
+    correctIndex: 2,
   },
   {
     scene: 6,
     question:
       "Ano ang kahalagahan ng sinabi ni Lolo Tasyo na kaparis ni Danding ang kaniyang ama?",
     choices: [
-      "Nakatulong itong makita ni Danding ang pagkakatulad nila ng kaniyang ama sa ugali at pagkatao.",
-      "Nakatulong itong makilala ni Danding kung paano namuhay ang kaniyang ama noong kabataan nito.",
-      "Naging daan ito upang higit niyang maunawaan ang ugnayan ng kaniyang ama sa Malawig.",
-      "Nagbigay ito sa kaniya ng pagkakataong malaman kung paano siya tinitingnan ng ibang kamag-anak.",
+      "Nalaman ni Danding ang ilang karanasan ng kaniyang ama noong matanda na ito.",
+      "Naunawaan ni Danding ang pagkakatulad nila ng kaniyang ama sa ugali.",
+      "Nalaman niya ang dahilan ng pagkahilig ng kaniyang ama sa pag-iisa.",
+      "Nagkaroon siya ng ideya kung paano siya lumaki.",
     ],
-    correctIndex: 0,
+    correctIndex: 1,
   },
   {
     scene: 6,
     question:
       "Sa iyong palagay, angkop ba kay Danding ang sinabi ni Lolo Tasyo na siya ay balisa sa gitna ng karamihan at ibig lamang mapag-isa? Bakit?",
     choices: [
-      "Hindi, dahil naging madaldal at masayahin siya sa buong panahon ng kaniyang paglalakbay.",
-      "Oo, dahil ayaw niyang makisalamuha sa kaniyang mga kamag-anak sa Malawig.",
-      "Hindi, dahil mas gusto niyang manatili sa gitna ng maraming tao kaysa pumunta sa bukid.",
-      "Oo, dahil makikita kay Danding na mas nagiging komportable siya kapag tahimik at nag-iisa.",
-    ],
-    correctIndex: 3,
-  },
-  {
-    scene: 7,
-    question:
-      "Ano ang ipinahihiwatig ng mga kuwentong sinabi ni Lolo Tasyo tungkol sa kabataan ng ama ni Danding?",
-    choices: [
-      "Malaki ang naging bahagi ni Lolo Tasyo sa mga karanasan ng ama ni Danding.",
-      "Marami ang naging kaibigan ng ama ni Danding noong siya ay bata.",
-      "Madalas na nag-iisa ang ama ni Danding habang siya ay lumalaki.",
-      "Maraming lugar ang napuntahan ng ama ni Danding noong siya ay bata.",
+      "Oo, dahil pinili niyang mapag-isa sa bukid.",
+      "Hindi, dahil nakipagkuwentuhan siya sa ibang tao.",
+      "Hindi, dahil hinanap niya ang kaniyang mga kamag-anak.",
+      "Oo, dahil lumapit siya kay Lolo Tasyo upang makipag-usap.",
     ],
     correctIndex: 0,
   },
   {
     scene: 7,
     question:
+      "Ano ang ipinahihiwatig ng mga kuwentong sinabi ni Lolo Tasyo tungkol sa kabataan ng ama ni Danding?",
+    choices: [
+      "Madalas na nag-iisa ang ama ni Danding habang siya ay lumalaki.",
+      "Marami ang naging kaibigan ng ama ni Danding noong siya ay bata.",
+      "Maraming lugar ang napuntahan ng ama ni Danding noong siya ay bata.",
+      "Malaki ang naging bahagi ni Lolo Tasyo sa mga karanasan ng ama ni Danding.",
+    ],
+    correctIndex: 3,
+  },
+  {
+    scene: 7,
+    question:
       "Ano ang nangyari sa ama ni Danding nang minsang sumama siya kay Lolo Tasyo sa pag-aararo?",
     choices: [
-      "Nagtago siya sa kabilang pitak.",
-      "Nagpalipad siya ng saranggola.",
-      "Umakyat siya sa punong mangga.",
+      "Umakyat siya sa puno.",
       "Nahulog siya sa kalabaw.",
+      "Nagtago siya sa kabilang pitak.",
+      "Nagpalipad siya ng saranggola sa bukid.",
+    ],
+    correctIndex: 1,
+  },
+  {
+    scene: 8,
+    question:
+      "Nang sabihin ni Danding na “Ang araw” habang pinanood niya ang bukid, ano ang pinakamalalim na kahulugan nito?",
+    choices: [
+      "Itinago niya ang damdaming nabuo sa usapan.",
+      "Pinahalagahan niya ang katahimikan ng kapaligiran.",
+      "Hindi niya tuwirang sinabi ang kaniyang iniisip at saloobin.",
+      "Pinagnilayan niya ang nalaman tungkol sa ama at pinagmulan.",
     ],
     correctIndex: 3,
   },
   {
     scene: 8,
     question:
-      'Nang sabihin ni Danding na "Ang araw" ang pinanood niya sa bukid, ano ang pinakamalalim na kahulugan nito?',
-    choices: [
-      "Hindi niya tuwirang sinabi ang kaniyang iniisip.",
-      "Pinagnilayan niya ang nalaman tungkol sa ama at pinagmulan.",
-      "Pinahalagahan niya ang katahimikan ng bukid.",
-      "Itinago niya ang damdaming nabuo sa usapan.",
-    ],
-    correctIndex: 1,
-  },
-  {
-    scene: 8,
-    question: "Ano ang itinanong ng pinsan ni Danding tungkol sa kaniyang ginawa sa bukid?",
+      "Ano ang itinanong ng pinsan ni Danding tungkol sa kaniyang ginawa sa bukid?",
     choices: [
       "Ano ang pinanood niya sa bukid?",
       "Ano ang isinulat niya sa bukid?",
@@ -199,12 +208,13 @@ export const followUpQuestions: FollowUpQuestion[] = [
   },
   {
     scene: 9,
-    question: "Bakit kaya dahan-dahang lumayo si Danding sa libingan?",
+    question:
+      "Bakit kaya dahan-dahang lumayo si Danding sa libingan?",
     choices: [
       "Dahil sa matinding dalamhati.",
-      "Dahil sa matinding takot.",
-      "Dahil sa matinding pag-aalala.",
-      "Dahil sa matinding pagkalito.",
+      "Dahil sa matinding pangamba.",
+      "Dahil sa pagkalito at kawalan ng katiyakan.",
+      "Dahil sa matinding pag-aalala at pagkabahala.",
     ],
     correctIndex: 0,
   },
@@ -213,32 +223,34 @@ export const followUpQuestions: FollowUpQuestion[] = [
     question:
       "Sa iyong palagay, naging angkop ba ang naging kilos ni Danding matapos maramdaman ang matinding dalamhati? Bakit?",
     choices: [
-      "Hindi, dahil hindi nararapat na ipakita niya ang kaniyang kalungkutan sa harap ng kaniyang mga kamag-anak.",
-      "Oo, dahil nais niyang iwasan ang kaniyang mga kamag-anak hanggang matapos ang paglilibing.",
-      "Hindi, dahil dapat ay nanatili siya sa libingan upang hindi siya mapag-isa.",
-      "Oo, dahil pinili niyang mapag-isa upang maproseso ang kaniyang nararamdaman at makahanap ng kapanatagan.",
+      "Oo, dahil ayaw niya ng kausap at nais mapag-isa muna.",
+      "Hindi, dahil dapat siyang manatili sa libingan at pigilan ang nararamdaman.",
+      "Hindi, dahil hindi niya dapat iwasan ang kaniyang mga kamag-anak sa oras ng pagluluksa.",
+      "Oo, dahil kailangan niya ng panahon upang mapanatag ang sarili at maunawaan ang kaniyang nararamdaman.",
     ],
     correctIndex: 3,
   },
   {
     scene: 10,
-    question: "Ano ang kalagayan ng paligid nang nagtungo si Danding sa bukid?",
+    question:
+      "Ano ang kalagayan ng paligid nang nagtungo si Danding sa bukid?",
     choices: [
       "Papalubog na ang araw ngunit nananatiling mainit ang paligid.",
       "Takipsilim na at nagsisimula nang dumilim ang kalangitan.",
-      "Lumulubog na ang araw at lumalamig ang hangin.",
-      "Humihina na ang liwanag habang lumalakas ang hangin sa bukid.",
+      "Lumulubog na ang araw at lumalamig na ang hangin.",
+      "Humihina na ang liwanag at lumalakas ang hangin.",
     ],
     correctIndex: 2,
   },
   {
     scene: 10,
-    question: 'Bakit angkop ang pamagat na "Lupang Tinubuan" sa kabuoang kuwento?',
+    question:
+      "Bakit angkop ang pamagat na “Lupang Tinubuan” sa kabuoang kuwento?",
     choices: [
-      "Dahil naging mahalaga ang Malawig sa pagkilala ni Danding sa nakaraan ng kaniyang ama.",
-      "Dahil naging daan ang paglalakbay upang makilala ni Danding ang kaniyang mga kamag-anak at pinagmulan.",
-      "Dahil ipinakita ang kahalagahan ng pagbabalik sa lugar na pinagmulan ng isang pamilya.",
-      "Dahil ipinakita nito kung paano nauugnay ang lugar sa pamilya, alaala, pinagmulan, at pagkakakilanlan ni Danding.",
+      "Dahil mahalaga ang Malawig sa pamilya ni Danding.",
+      "Dahil nakilala ni Danding ang mga kamag-anak ng kaniyang ama.",
+      "Dahil natuklasan ni Danding ang kahalagahan ng lugar na pinagmulan ng kaniyang ama.",
+      "Dahil naramdaman ni Danding ang malalim na ugnayan niya sa lupang sinilangan ng kaniyang ama at sa mga alaalang iniwan nito.",
     ],
     correctIndex: 3,
   },
