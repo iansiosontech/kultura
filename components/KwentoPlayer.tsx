@@ -28,7 +28,6 @@ import {
   FOLLOWUP_POINTS_PER_CORRECT,
   type FollowUpAnswer,
 } from "@/lib/followUpQuestions";
-import { badges } from "@/lib/badges";
 import { playLevelComplete } from "@/lib/sfx";
 
 // how long the right/wrong (or follow-up) feedback stays on screen
@@ -108,7 +107,7 @@ export default function KwentoPlayer() {
 
   // a scene is done once its audio has played through AND all of its
   // questions are answered — only then does the next station unlock, so
-  // leaving the questions (BUMALIK, ISTASYON, a badge) can't skip them
+  // leaving the questions (BUMALIK) can't skip them
   const isSceneDone = (n: number) =>
     completed.includes(n) &&
     nextEndStep(n, quizAnswers, followUpAnswers) === null;
@@ -357,26 +356,6 @@ export default function KwentoPlayer() {
           <CompletionBar completed={completed.length} total={scenes.length} />
         </div>
 
-        {completed.length > 0 && (
-          <div className="mk-nodes" aria-label="Mga naratingang istasyon">
-            {scenes
-              .filter((s) => completed.includes(s.scene))
-              .sort((a, b) => a.scene - b.scene)
-              .map((s) => (
-                <button
-                  key={s.scene}
-                  type="button"
-                  className={`mk-node ${
-                    s.scene === scene.scene ? "mk-node--active" : ""
-                  }`}
-                  onClick={() => goScene(s.scene - 1)}
-                  aria-label={`Balikan ang Istasyon ${s.scene}`}
-                >
-                  {badges.find((b) => b.scene === s.scene)?.icon ?? s.scene}
-                </button>
-              ))}
-          </div>
-        )}
 
         <div className="mk-stage">
           <div
@@ -504,13 +483,6 @@ export default function KwentoPlayer() {
             aria-label="Mute"
           >
             {muted ? "🔇" : "🔊"}
-          </button>
-          <button
-            type="button"
-            className="mk-toggle"
-            onClick={() => setJumpOpen((v) => !v)}
-          >
-            ISTASYON
           </button>
         </div>
       </div>
