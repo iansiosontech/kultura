@@ -14,6 +14,21 @@ const TOTAL_MAX_SCORE = MAX_SCORE + FOLLOWUP_MAX_SCORE;
 
 type Status = "checking" | "locked" | "unlocked" | "unavailable";
 
+// lowercase, accents dropped (Peña → pena) so a search matches however
+// the name was typed
+const fold = (s: string) =>
+  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+// every word of the search must appear somewhere in the entry's name,
+// which also carries the section: "Juan Dela Cruz (7-Mapagmahal)"
+function matchesSearch(name: string, search: string) {
+  const haystack = fold(name);
+  return fold(search)
+    .split(/\s+/)
+    .filter(Boolean)
+    .every((word) => haystack.includes(word));
+}
+
 export default function FacilitatorDashboard() {
   const [status, setStatus] = useState<Status>("checking");
   const [entries, setEntries] = useState<FacilitatorEntry[]>([]);
@@ -24,6 +39,7 @@ export default function FacilitatorDashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshFailed, setRefreshFailed] = useState(false);
+  const [search, setSearch] = useState("");
 
   // `background` refreshes keep the current list on screen if they fail
   // (e.g. a Wi-Fi blip), instead of replacing the dashboard with an error
@@ -115,6 +131,7 @@ export default function FacilitatorDashboard() {
   }
 
   const total = entries.length;
+  const shown = entries.filter((e) => matchesSearch(e.name, search));
   const avg = total > 0 ? entries.reduce((sum, e) => sum + e.score, 0) / total : 0;
   const highest = total > 0 ? Math.max(...entries.map((e) => e.score)) : 0;
   const lowest = total > 0 ? Math.min(...entries.map((e) => e.score)) : 0;
@@ -162,11 +179,42 @@ export default function FacilitatorDashboard() {
         </div>
       </div>
 
+      <div className="facilitator-search">
+        <input
+          type="search"
+          className="facilitator-search-input"
+          placeholder="Hanapin ang pangalan o seksyon"
+          aria-label="Hanapin ang mag-aaral"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        {search && (
+          <button
+            type="button"
+            className="facilitator-search-clear"
+            onClick={() => setSearch("")}
+            aria-label="Burahin ang hinahanap"
+          >
+            ×
+          </button>
+        )}
+      </div>
+      {search.trim() && (
+        <p className="facilitator-search-count" role="status">
+          {shown.length} sa {total} na sagot ang tumugma
+        </p>
+      )}
+
       <div className="facilitator-table">
         {entries.length === 0 && (
           <p className="facilitator-msg">Wala pang mga sagot.</p>
         )}
-        {entries.map((entry) => {
+        {entries.length > 0 && shown.length === 0 && (
+          <p className="facilitator-msg">
+            Walang mag-aaral na tumugma sa &ldquo;{search.trim()}&rdquo;.
+          </p>
+        )}
+        {shown.map((entry) => {
           const key = `${entry.name}-${entry.created_at}`;
           const isOpen = expanded === key;
           return (
