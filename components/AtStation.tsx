@@ -51,7 +51,7 @@ export default function AtStation({
   };
 
   return (
-    <div className="ats-overlay">
+    <div className={`ats-overlay ${hasProgress ? "ats-overlay--two-actions" : ""}`}>
       <StationPlatformBackground />
       <ScoreBadge score={score} />
 

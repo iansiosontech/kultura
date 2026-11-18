@@ -197,7 +197,10 @@ html, body { height: 100%; margin: 0; }
 .kap-start:active{transform:translateY(4px);box-shadow:0 2px 0 #2A2317;}
 
 @media (max-width:860px){
-  .kap-hero{padding-bottom:7vh;}
+  /* bottom-aligned when it fits; scrolls from the top when it doesn't
+     (smallest phones) instead of pushing the heading off the screen */
+  .kap-hero{padding:24px 24px 56px;justify-content:flex-start;overflow-y:auto;}
+  .kap-hero > :first-child{margin-top:auto;}
   .kap-tagline{font-size:13px}
   .kap-subtitle{font-size:20px}
   .kap-start{padding:10px 22px;font-size:12px}
@@ -298,34 +301,20 @@ html, body { height: 100%; margin: 0; }
 /* keep this LAST — it must override the card rules above */
 /* mobile: stack machine -> card -> gate vertically instead of side by side */
 @media (max-width:680px){
-  .tk-wrap{justify-content:flex-start;padding-top:min(26vh,210px);
-    padding-bottom:24px;gap:44px;}
+  .tk-wrap{justify-content:flex-start;padding:96px 16px 24px;gap:34px;}
 
-  .tk-scene{width:min(300px,88vw);height:430px;}
+  .tk-scene{width:300px;height:290px;}
 
-  .tk-machine{left:50%;top:0;bottom:auto;transform:translateX(-50%);}
+  .tk-machine{left:50%;top:0;bottom:auto;transform:translateX(-50%);width:100px;height:168px;}
   .tk-machine:hover:not(:disabled){transform:translateX(-50%) translateY(-3px);}
   .tk-machine:active:not(:disabled){transform:translateX(-50%) translateY(4px);}
 
-  .tk-track{left:50%;right:auto;top:224px;bottom:88px;width:0;height:auto;
+  .tk-track{left:50%;right:auto;top:168px;bottom:62px;width:0;height:auto;
     border-top:none;border-left:3px dashed rgba(61,50,34,.4);transform:translateX(-50%);}
 
-  .tk-card{left:calc(50% - 75px);top:212px;bottom:auto;}
+  .tk-card{left:calc(50% - 75px);top:156px;bottom:auto;}
 
-  .tk-gate{left:50%;right:auto;bottom:0;transform:translateX(-50%);width:170px;}
-}
-
-/* short phones (e.g. 375x667): tighten everything enough that the
-   ticket flow fits without scrolling, instead of relying on
-   scroll-padding-top (not consistently honored by auto-scroll-on-focus
-   across mobile browsers) */
-@media (max-height:700px){
-  .tk-wrap{padding-top:96px;gap:34px;}
-  .tk-scene{height:290px;}
-  .tk-machine{width:100px;height:168px;}
-  .tk-track{top:168px;bottom:62px;}
-  .tk-card{top:156px;}
-  .tk-gate{width:140px;height:76px;}
+  .tk-gate{left:50%;right:auto;bottom:0;transform:translateX(-50%);width:140px;height:76px;}
 }
 
 /* ================= Maikling Kwento player ================= */
@@ -576,8 +565,12 @@ html, body { height: 100%; margin: 0; }
   transform-box:fill-box;transform-origin:center;}
 @keyframes trp-sheen-sweep{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 
+/* phones/tablets: fixed sizes so the station looks the same on every
+   phone; the train is placed from the centre (where the station sign
+   stands) so the two keep the same arrangement on every width */
 @media (max-width:860px){
-  .trp-dock{left:-18vh;height:22vh;bottom:13vh;}
+  .trp-dock{left:calc(50% - 347px);height:186px;bottom:110px;}
+  .trp-tier-tag{left:max(8px,calc(50% - 161px));bottom:101px;}
 }
 
 .ats-bottom{position:absolute;left:0;right:0;bottom:4vh;z-index:4;
@@ -595,20 +588,32 @@ html, body { height: 100%; margin: 0; }
 .ats-start:disabled{opacity:.6;cursor:default;transform:none!important;}
 
 @media (max-width:860px){
-  .ats-scene{gap:8vw;padding:0 5vw 13vh;}
-  .ats-sign{font-size:11px;min-height:38px;padding:6px 11px;max-width:40vw;}
+  .ats-scene{padding:0 16px 110px;}
+  .ats-sign{font-size:11px;min-height:38px;padding:6px 11px;max-width:156px;}
   .ats-node{width:46px;height:46px;font-size:16px;}
   .ats-stand{width:32px;height:10px;}
-  .ats-platform{height:16vh;}
+  .ats-platform{height:135px;}
+  .ats-bottom{bottom:34px;padding:0 16px;}
   .ats-head-title{font-size:11px;letter-spacing:.14em}
 }
 
+/* phones: "IPAGPATULOY" + "MULA SA SIMULA" (442px together) never fit
+   side by side, so they stack; lift the station, train and platform by
+   one button row (48px + 14px gap) so the upper button doesn't cover them */
+@media (max-width:480px){
+  .ats-overlay--two-actions .ats-scene{padding-bottom:172px;}
+  .ats-overlay--two-actions .trp-dock{bottom:172px;}
+  .ats-overlay--two-actions .trp-tier-tag{bottom:163px;}
+  .ats-overlay--two-actions .ats-platform{height:197px;}
+}
+
 @media (max-width:860px){
-  .mk{padding:10px 4vw 10px;gap:8px;justify-content:flex-start;overflow-y:auto;}
+  .mk{padding:10px 16px;gap:8px;justify-content:flex-start;overflow-y:auto;}
+  .mk-end{padding:10px 24px;}
   .mk-title{font-size:11px;letter-spacing:.14em}
   .mk-node{width:26px;height:26px;font-size:11px;}
   .mk-window{border-width:7px;box-shadow:0 0 0 4px #F2C14E,0 10px 22px rgba(80,55,20,.35)}
-  .mk-text{max-height:26vh;padding:10px 13px}
+  .mk-text{max-height:220px;padding:10px 13px}
   .mk-text p{font-size:13.5px}
   .mk-stage{flex:0 0 auto;align-items:flex-start;}
   .mk-window{height:auto;width:100%;max-height:100%;}
@@ -625,7 +630,7 @@ html, body { height: 100%; margin: 0; }
 .quiz-score-badge--inline{position:static;top:auto;right:auto;}
 
 .reset-btn{border:2px solid #3D3222;background:#FFFBF0;border-radius:99px;
-  padding:8px 14px;font:700 11px/1 ui-monospace,monospace;letter-spacing:.1em;
+  padding:8px 10px;font:700 11px/1 ui-monospace,monospace;letter-spacing:.05em;
   color:#B5451B;box-shadow:0 3px 0 #3D3222;cursor:pointer;
   transition:transform .15s ease, box-shadow .15s ease;}
 .reset-btn:hover{transform:translateY(-1px);box-shadow:0 4px 0 #3D3222;}
@@ -684,6 +689,13 @@ html, body { height: 100%; margin: 0; }
 .quiz-results-score{font:800 26px/1 ui-monospace,monospace;
   letter-spacing:.1em;color:#FFD98A;margin:4px 0 14px;}
 .quiz-results-list{display:flex;flex-direction:column;gap:6px;text-align:left;}
+.quiz-results-toggle{display:block;width:100%;margin:2px 0 4px;padding:12px 14px;
+  border:2px solid rgba(255,217,138,.55);border-radius:12px;background:rgba(0,0,0,.2);
+  color:#FFD98A;font:800 12px/1 ui-monospace,monospace;letter-spacing:.12em;cursor:pointer;
+  transition:background .15s ease;}
+.quiz-results-toggle:hover{background:rgba(255,217,138,.1);}
+.quiz-results-answers{margin-top:14px;animation:mk-fade-in .25s ease both;}
+.quiz-results-answers .quiz-results-list + .quiz-eyebrow{margin-top:16px;}
 .quiz-results-row{display:flex;align-items:center;gap:10px;padding:8px 10px;
   border-radius:10px;background:rgba(255,255,255,.06);}
 .quiz-results-row--correct{background:rgba(140,224,168,.14);}
@@ -894,3 +906,11 @@ html, body { height: 100%; margin: 0; }
 .sync-export textarea{box-sizing:border-box;width:100%;background:#2A2317;color:#FFFBF0;border:1px solid #6B5A3A;
   border-radius:8px;padding:8px;font:500 12px/1.4 ui-monospace,monospace;}
 .sync-export .sync-btn{align-self:flex-start;}
+
+/* phones/tablets: fixed edge spacing instead of a share of screen width */
+@media (max-width:860px){
+  .map-progress-row{left:20px;right:20px;}
+  .quiz-score-badge{right:16px;}
+  .badges-panel{padding-left:16px;padding-right:16px;}
+  .badges-row{max-width:100%;}
+}
