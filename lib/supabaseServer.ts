@@ -9,6 +9,16 @@ export function getSupabaseServer(): SupabaseClient | null {
 
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  client = url && key ? createClient(url, key) : null;
+  // Next.js caches server-side fetches by default, and supabase-js reads
+  // through fetch — the facilitator dashboard kept getting its first
+  // response forever. Every database read must be live.
+  client =
+    url && key
+      ? createClient(url, key, {
+          global: {
+            fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+          },
+        })
+      : null;
   return client;
 }
